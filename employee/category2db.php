@@ -20,6 +20,8 @@ switch($action){
 				$insertArr['mobile_no'] 			= $_POST['mobile_no'];
 				$insertArr['city']= $_POST['city'];
 				$insertArr['gender'] 		= $_POST['gender'];
+				$insertArr['experties'] 		= $_POST['experties'];
+				$insertArr['gender'] 		= $_POST['gender'];
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
 				$insertArr['author_name']			= "Prashant";
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
@@ -40,6 +42,8 @@ switch($action){
 				$updateArr['mobile_no'] 		= $_POST['mobile_no'];
 				$updateArr['city'] 		= $_POST['city'];
 				$updateArr['gender']	 	= $_POST['gender'];
+				$updateArr['experties']	 	= $_POST['experties'];
+
 
 				$whereArr = array('id' => $employee_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);
