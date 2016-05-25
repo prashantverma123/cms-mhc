@@ -7,6 +7,7 @@ class Product {
 	public function __construct() {
 		$this -> tableName = 'product';
 		$this -> db = Database::Instance();
+		checkRole('product');
 	}
 
 

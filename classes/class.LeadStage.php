@@ -7,6 +7,7 @@ class LeadStage {
 	public function __construct() {
 		$this -> tableName = 'leadstage';
 		$this -> db = Database::Instance();
+		checkRole('leadstage');
 	}
 
 

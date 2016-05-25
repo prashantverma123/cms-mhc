@@ -408,4 +408,63 @@ function replacespecialcharsurl($str){
 		}
 		return $style_no;
 	}
+
+	/**
+	* checkRole
+	*@param (string) roles who can access the page (write in comma separate e.g admin,customer_care) 
+	*
+	**/
+	function checkRole($class){
+		switch($class):
+			case "category" :
+				$access = 'admin';
+			break;
+			case "employee" :
+				$access = 'admin';
+			break;
+			case "city" :
+				$access = 'admin';
+			break;
+			case "leadsource" :
+				$access = 'admin,customer_care';
+			break;
+			case "leadstage" :
+				$access = 'admin';
+			break;
+			case "orders" :
+				$access = 'admin';
+			break;
+			case "pricelist" :
+				$access = 'admin';
+			break;
+			case "product" :
+				$access = 'admin';
+			break;
+		endswitch;
+
+		$roles = explode(',',$access);
+		$condition ='';
+		$i = 1;
+		//print_r(count($roles));exit;
+		foreach ($roles as $role) {
+			if($_SESSION['tmobi']['role']==$role){
+				$condition .= true;
+			}else{
+				$condition .= false;
+			}
+			//$condition .= $_SESSION['tmobi']['role'] ."==".$role;
+			if(count($roles) > $i){
+				$condition .= ' || ';
+			}else{
+				$condition .= '';
+			}
+			$i++;	
+		}
+		if($condition){
+			//"nothing to do";
+		}else{
+			header('location: '.SITEPATH.'/dashboard/display.php');
+			//redirect(SITEPATH.'dashboard/display.php');
+		}
+	}
 ?>

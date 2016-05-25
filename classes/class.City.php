@@ -7,6 +7,7 @@ class City {
 	public function __construct() {
 		$this -> tableName = 'city';
 		$this -> db = Database::Instance();
+		checkRole('city');
 	}
 
 

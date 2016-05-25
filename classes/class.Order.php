@@ -7,6 +7,7 @@ class Order {
 	public function __construct() {
 		$this -> tableName = 'orders';
 		$this -> db = Database::Instance();
+		checkRole('orders');
 	}
 
 

@@ -7,6 +7,7 @@ class LeadSource {
 	public function __construct() {
 		$this -> tableName = 'leadsource';
 		$this -> db = Database::Instance();
+		checkRole('leadsource');
 	}
 
 

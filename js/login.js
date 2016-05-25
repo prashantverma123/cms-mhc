@@ -68,7 +68,7 @@ var Login = function () {
 							data: datastring,
 							success: function(data){ alert(data);
 								if(data.substring(data.length - 1,data.length)=='1'){
-									window.location.href = CMSROOTPATH+'category/display.php';
+									window.location.href = CMSROOTPATH+'dashboard/display.php';
 								}
 								else{//failure
 									//alert('here');

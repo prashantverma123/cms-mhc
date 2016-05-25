@@ -7,6 +7,7 @@ class Employee {
 	public function __construct() {
 		$this -> tableName = 'employee';
 		$this -> db = Database::Instance();
+		checkRole('employee');
 	}
 
 

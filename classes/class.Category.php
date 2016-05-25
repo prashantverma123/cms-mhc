@@ -7,6 +7,7 @@ class Category {
 	public function __construct() {
 		$this -> tableName = 'category';
 		$this -> db = Database::Instance();
+		checkRole('category');
 	}
 
 

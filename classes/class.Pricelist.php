@@ -7,6 +7,7 @@ class Pricelist {
 	public function __construct() {
 		$this -> tableName = 'pricelist';
 		$this -> db = Database::Instance();
+		checkRole('pricelist');
 	}
 
 
