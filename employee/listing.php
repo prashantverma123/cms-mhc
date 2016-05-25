@@ -16,6 +16,8 @@ $userId = $session->get('UserId');
 				 <th class="hidden-480">Mobile No</th>
 				 <th class="hidden-480">City</th>
 				 <th class="hidden-480">Designation</th>
+				 <th class="hidden-480">Experties</th>
+				 <th class="hidden-480">Action</th>
 			  </tr>
 		   </thead>
 		   <tbody>
@@ -37,6 +39,8 @@ $userId = $session->get('UserId');
 				<td class="hidden-480"><?php print $key['mobile_no'];?></td>
 				<td class="hidden-480"><?php print $key['city'];?></td>
 				<td class="hidden-480"><?php print $key['designation'];?></td>
+				<td class="hidden-480"><?php print $key['experties'];?></td>
+				<!-- <td class="hidden-480"><?php print $key['experties'];?></td> -->
 				 <td>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/employee/display.php?employee_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_employee(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>

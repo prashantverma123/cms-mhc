@@ -123,6 +123,21 @@ if($employee_id > 0){
 				</div>
 
 				</div>
+				  <div class="row-fluid">
+
+          <div class="span6 ">
+         <div class="control-group">
+          <label class="control-label">Experties <!--<span class="required">*</span>--></label>
+          <div class="controls">
+          <textarea rows="3" name="experties" id="experties" class="m-wrap span12"><?php echo isset($data)?trim($data['experties']):''; ?></textarea>
+             <span class="help-block" id="experties_error"> </span>
+
+          </div>
+         </div>
+        </div>
+
+         <!--/span-->
+        </div>
 
 
 			<div class="form-actions">
