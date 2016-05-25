@@ -134,6 +134,10 @@
 
 					<a href="<?php print SITEPATH.'/employee/display.php?flag=new';?>"><img src="../img/add.png" style="padding-right:10px;"/> Add New Employee </a>
 			</li>
+			<li class="<?php if($flag == 'attendance'){ echo 'active'; } ?>" id="li_new" >
+
+					<a href="<?php print SITEPATH.'/employee/attendance.php?flag=attendance';?>"><img src="../img/add.png" style="padding-right:10px;"/> Attendance </a>
+			</li>
 		</ul>
 	</li>
 	<li class="active ">

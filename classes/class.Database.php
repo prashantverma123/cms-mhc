@@ -243,7 +243,7 @@ public function query($sql, $debug=0, $ismongo=''){
       echo $sql;
     }
     $this->query($sql);
-	while($row  = $this->fetch()){
+	 while($row  = $this->fetch()){
       array_push($posts, $row);
     }
 
@@ -288,6 +288,60 @@ public function query($sql, $debug=0, $ismongo=''){
   {
     return $this->connection->real_escape_string(trim($string));
   }
+
+   public function getAssociatedDataFromTable($keyValueArray, $table, $fields='*', $orderBy = "", $limit = "",$joinArray="", $debug=false){
+
+      $posts = array();
+      $countTableData=count($keyValueArray);
+
+      $sql = "SELECT $fields FROM $table";
+      $i=0;
+      //echo $sql;
+      if($joinArray!=""){
+        foreach ($joinArray as $join) {
+          switch ($join['type']) {
+            case 'left':
+              $sql .= " LEFT JOIN ".$join['table']." ON (".$join['condition'].")";
+            break;
+            case 'right':
+              $sql .= " RIGHT JOIN ".$join['table']." ON (".$join['condition'].")";
+            break;
+          }
+        }
+      }
+      foreach($keyValueArray as $key=>$val){
+        $i++;
+        if($i==1){
+          $sql .=" where ";
+        }
+
+        if($key == 'sqlclause' || $key=='notequal'){
+          $sql .= $val;
+        }else{
+          $sql .= $key."='".$val."'";
+        }
+
+        if($countTableData !=$i){
+          $sql .=" and ";
+        }
+      }
+      if($orderBy!=""){
+        $sql .=" order by ".$orderBy;
+      }
+      if($limit!=""){
+        $sql .=" limit ".$limit;
+      }
+      
+      if($debug){
+        echo $sql;
+      }
+      $this->query($sql);
+     while($row  = $this->fetch()){
+        array_push($posts, $row);
+      }
+
+      return $posts;
+    }
 
 } // eof class
 ?>

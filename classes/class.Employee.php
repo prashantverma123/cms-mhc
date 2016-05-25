@@ -6,6 +6,7 @@ class Employee {
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'employee';
+		$this -> tableName1 = 'attendance';
 		$this -> db = Database::Instance();
 		checkRole('employee');
 	}
@@ -41,7 +42,9 @@ class Employee {
 		$keyValueArray['sqlclause'] = $main_sql;
 		$limit = $offset . "," . $recperpage;
 
-		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", $limit, false);
+		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", $limit, true);
+		$joinArray[] = array('type'=>'left','table'=>'attendance','condition'=>'attendance.employee_id=employee.id AND DATE(attendance.date)=CURRENT_DATE');
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " employee.*,attendance.attendance ", " name ASC ", $limit,$joinArray, false);
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;
@@ -114,5 +117,22 @@ class Employee {
 		return $rowCount;
 	}// eof toggleStatus
 
+	public function get_employee_attendance($emp_id,$attendance){
+		$keyValueArray['employee_id'] = $emp_id;
+		$keyValueArray['DATE(date)'] = date('Y-m-d');
+		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName1, " attendance,date ",'','',false);
+		//print_r($dataArr);exit;
+		if(count($dataArr) > 0){
+			$updateArr['attendance'] = $attendance;
+			$whereArr = array('employee_id' => $emp_id);
+			return $this -> db -> updateDataIntoTable($updateArr, $whereArr, $this -> tableName1);
+		}else{
+			$insertArr['employee_id'] = $emp_id;
+			$insertArr['attendance'] = $attendance;
+			$insertArr['date'] = date('Y-m-d h:i:s');
+ 			return $this -> db -> insertDataIntoTable($insertArr, $this -> tableName1);	
+		}
+		
+	}
 }
 ?>

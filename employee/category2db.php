@@ -53,6 +53,11 @@ switch($action){
 				$arrReturn['employee_id'] = encryptdata($employee_id);
 
 			}
-			break;
+	break;
+	case "save_attendance":
+		$attendance 	= isset($_POST['attendance']) ? $_POST['attendance'] : '';
+		$result = $modelObj->get_employee_attendance($employee_id,$attendance);
+		$arrReturn['result'] = $result;
+	break;
 }
 echo json_encode($arrReturn);

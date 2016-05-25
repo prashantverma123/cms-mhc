@@ -24,7 +24,7 @@ $userId = $session->get('UserId');
 		   <?php
 			$result_data = $modelObj->getListingData('', '0', '10',$searchData);
 
-			foreach ($result_data as $key){
+			foreach ($result_data as $j=>$key){
 				// if($key['parent_id'] == 0){
 				// 	$is_parent_val = 'Yes';
 				// }else{
@@ -42,6 +42,8 @@ $userId = $session->get('UserId');
 				<td class="hidden-480"><?php print $key['experties'];?></td>
 				<!-- <td class="hidden-480"><?php print $key['experties'];?></td> -->
 				 <td>
+				 	<!--a href="javascript:void(0);" onclick="attendance(<?php print $key['id'];?>)" class="" title="Edit" style="color:#FFFFFF"><img src="../img/attendance.png"/> </a-->
+				 	<span class="label"><input type="checkbox" name="attendance<?php echo $j; ?>" value="1" title="Attendance" onchange="attendance(<?php print $key['id'];?>,<?php echo $j; ?>)" <?php if($key['attendance']=='0'): echo "checked"; else: echo ""; endif; ?> /></span> &nbsp;
 					<span class="label label-success"><a href="<?php print SITEPATH.'/employee/display.php?employee_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_employee(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
 			  </tr>
@@ -59,6 +61,37 @@ $userId = $session->get('UserId');
 				data: 'action=delete_employee&employee_id='+d_id,
 				success: function(res){
 					$('#row_id_'+d_id).hide('slow');
+				},
+				//success: getData,
+				error:function(){
+					alert("failure");
+					//$("#result").html('there is error while submit');
+				}
+
+			});
+		}
+	}
+	function attendance(d_id,val){
+		if(d_id !=''){
+			if($("input[type='checkbox'][name='attendance"+val+"']:checked").length == 1){
+				var attendance = '0';
+			}else{
+				var attendance = '-1';
+			}
+			//alert($(this).val());
+			$.ajax({
+				type: "POST",
+				url: "<?php print SITEPATH.'/employee/category2db.php';?>",
+				data: 'action=save_attendance&employee_id='+d_id+'&attendance='+attendance,
+				success: function(res){
+					//$('#row_id_'+d_id).hide('slow');
+					console.log(res);
+					if(res == true){
+						if(attendance == '0')
+							alert('Attendance marked as present');
+						else
+							alert('Attendance marked as absent');
+					}
 				},
 				//success: getData,
 				error:function(){
