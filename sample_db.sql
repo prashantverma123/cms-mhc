@@ -243,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `city` varchar(255) NOT NULL,
   `mobile_no` varchar(255) NOT NULL,
   `gender` varchar(10) NOT NULL,
-  `experties` varchar(255),NOT NULL,
+  `experties` varchar(255) NOT NULL,
   `attendence` tinyint(1) NOT NULL,
   `author_id` int(50) NOT NULL,
   `author_name` varchar(255) NOT NULL,
@@ -277,3 +277,38 @@ INSERT INTO `variantMaster` (`id`, `varianttype`, `city`, `category`,`author_id`
 (1,'1BHK','Mumbai' ,'AC Servicing',3, '', '2016-04-03 12:30:35', '2016-04-03 12:24:06', '127.0.0.1', 0),
 (2,'2BHK','Mumbai' ,'Office Cleaning',3, '', '2016-04-03 12:30:35', '2016-04-03 12:30:35', '127.0.0.1', 0),
 (3,'1RK','Mumbai' ,'Pest Control',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0);
+
+
+CREATE TABLE IF NOT EXISTS `designationMaster` (
+  `id` int(50) NOT NULL AUTO_INCREMENT,
+  `designation` varchar(255) NOT NULL,
+  `author_id` int(50) NOT NULL,
+  `author_name` varchar(255) NOT NULL,
+  `insert_date` datetime NOT NULL,
+  `update_date` datetime NOT NULL,
+  `ip` varchar(50) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+INSERT INTO `designationMaster` (`id`, `designation`, `author_id`, `author_name`, `insert_date`, `update_date`, `ip`, `status`) VALUES
+(1,'Ass. Operation Controller',3, '', '2016-04-03 12:30:35', '2016-04-03 12:24:06', '127.0.0.1', 0),
+(2,'Asst. Manager',3, '', '2016-04-03 12:30:35', '2016-04-03 12:30:35', '127.0.0.1', 0),
+(3,'Car Care',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(4,'Carpenter',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(5,'Chambermaid',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(6,'Driver',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(7,'Electrician',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(8,'H/k boy',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(9,'HK Boy',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(10,'MST',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(11,'Office Boy',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(12,'Plumber',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(13,'Store keeper',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(14,'Supervisor',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(15,'Team Leader',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(16,'Trainer',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(17,'Training Supervisor',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(18,'Supervisor',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(19,'Supervisor',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0),
+(20,'Van Driver',3, '', '2016-04-03 17:53:52', '2016-04-03 17:53:52', '127.0.0.1', 0);
