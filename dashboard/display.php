@@ -80,9 +80,11 @@ $titlename 		= 'Dashboard';
                         <?php echo $modelObj->get_statistics('city'); ?>
                          <h4>Order</h4>
                         <?php echo $modelObj->get_statistics('orders'); ?>
+                        <h4>Employees</h4>
+                       <?php echo $modelObj->get_statistics('employee'); ?>
                       </div>
-                     
-                      
+
+
                   </div>
                </div>
             </div>
