@@ -19,7 +19,13 @@ $userId = $session->get('UserId');
 		   </thead>
 		   <tbody>
 		   <?php
-			$result_data = $modelObj->getListingData('', '0', '10',$searchData);
+		   if(!$_GET['p']){
+		   		$page = 0;
+		   }else{
+		   		$page = $_GET['p']-1;
+		   }
+		   $recperpage=PER_PAGE_ROWS;
+			$result_data = $modelObj->getListingData('',$page,$recperpage,$searchData);
 
 			foreach ($result_data as $key){
 				// if($key['parent_id'] == 0){
@@ -42,6 +48,7 @@ $userId = $session->get('UserId');
 		<?php } ?>
 		   </tbody>
 		</table>
+		<?php echo $modelObj->pagination($recperpage,$page); ?>
       </div>
    </div>
 <script>

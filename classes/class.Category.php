@@ -6,6 +6,7 @@ class Category {
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'category';
+		$this -> folderName = "category";
 		$this -> db = Database::Instance();
 		checkRole('category');
 	}
@@ -118,6 +119,11 @@ class Category {
 		return $rowCount;
 	}// eof toggleStatus
 
+	/**
+	* pagination
+	* @param int,int
+	* @return void
+	**/
 	public function pagination($recperpage,$page){
 		$page =$page+1;
 		$numOfRows = $this-> db ->getCount($this -> tableName);
@@ -128,20 +134,20 @@ class Category {
 		 			$prev = "";
 		 			$class= "disabled";
 		 		}else{
-		 			$prev= SITEPATH."/category/display.php?p=".($page-1);
+		 			$prev= SITEPATH."/".$this -> folderName."/display.php?p=".($page-1);
 		 			$class= "";
 		 		}
 		 		if($page==($pagecount+1)){
 		 			$next = "";
 		 			$class1= "disabled";
 		 		}else{
-		 			$next= SITEPATH."/category/display.php?p=".($page+1);
+		 			$next= SITEPATH."/".$this -> folderName."/display.php?p=".($page+1);
 		 			$class1= "";
 		 		}
 
 		 		$pagination = "<div class='pagination'><ul><li class='".$class."'><a href='".$prev."'>Prev</a></li>";
 				for($c= 0; $c<=$pagecount;$c++):
-					$pagination .= "<li><a href='".SITEPATH."/category/display.php?p=".($c+1)."'>" .($c+1)."</a></li>";
+					$pagination .= "<li><a href='".SITEPATH."/".$this -> folderName."/display.php?p=".($c+1)."'>" .($c+1)."</a></li>";
 				endfor; 
 				$pagination .= '<li class="'.$class1.'"><a href="'.$next.'">Next</a></li>';
 				$pagination .="</ul></div>";
