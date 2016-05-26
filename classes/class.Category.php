@@ -119,6 +119,7 @@ class Category {
 	}// eof toggleStatus
 
 	public function pagination($recperpage,$page){
+		$page =$page+1;
 		$numOfRows = $this-> db ->getCount($this -> tableName);
 		$pageCount = $numOfRows/$recperpage;
 			$pagecount = floor($pageCount);
