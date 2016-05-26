@@ -13,6 +13,8 @@ class Category {
 
 	/**************************** END OF CONSTRUCTOR **************************/
 	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(), $status = '') {
+		
+		$offset = $offset*$recperpage;
 		$keyValueArray = array();
 		if ($status == '-1') {
 			$keyValueArray['status'] = -1;
@@ -48,6 +50,7 @@ class Category {
 			for ($p = 0; $p < $finalData['rowcount']; $p++) {
 				$this -> finalData[] = $dataArr[$p];
 			}
+
 		}
 		//echo '<pre>'; print_r($this -> finalData);
 		return $this -> finalData;
@@ -115,5 +118,34 @@ class Category {
 		return $rowCount;
 	}// eof toggleStatus
 
+	public function pagination($recperpage,$page){
+		$numOfRows = $this-> db ->getCount($this -> tableName);
+		$pageCount = $numOfRows/$recperpage;
+			$pagecount = floor($pageCount);
+		 	if($pagecount > 0){
+		 		if($page==1){
+		 			$prev = "";
+		 			$class= "disabled";
+		 		}else{
+		 			$prev= SITEPATH."/category/display.php?p=".($page-1);
+		 			$class= "";
+		 		}
+		 		if($page==($pagecount+1)){
+		 			$next = "";
+		 			$class1= "disabled";
+		 		}else{
+		 			$next= SITEPATH."/category/display.php?p=".($page+1);
+		 			$class1= "";
+		 		}
+
+		 		$pagination = "<div class='pagination'><ul><li class='".$class."'><a href='".$prev."'>Prev</a></li>";
+				for($c= 0; $c<=$pagecount;$c++):
+					$pagination .= "<li><a href='".SITEPATH."/category/display.php?p=".($c+1)."'>" .($c+1)."</a></li>";
+				endfor; 
+				$pagination .= '<li class="'.$class1.'"><a href="'.$next.'">Next</a></li>';
+				$pagination .="</ul></div>";
+		 } 
+		 return $pagination;
+	}
 }
 ?>

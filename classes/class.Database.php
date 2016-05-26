@@ -103,7 +103,7 @@ public function query($sql, $debug=0, $ismongo=''){
     return $this->connection->insert_id ;
   }
 
-  public function getAffectedRowCount(){
+  public function getAffectedRowCogetInsertedAutoIdunt(){
     return $this->connection->affected_rows;
   }
 
@@ -343,5 +343,11 @@ public function query($sql, $debug=0, $ismongo=''){
       return $posts;
     }
 
+    public function getCount($table){
+      $sql = "SELECT COUNT('id') as cnt FROM ".$table." WHERE status='0'";
+      $this->query($sql);
+      $r = $this->fetch();
+      return $r['cnt'];
+    }
 } // eof class
 ?>
