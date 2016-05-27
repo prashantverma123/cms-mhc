@@ -29,11 +29,9 @@ if($product_id > 0){
 						   <!-- <input type="text" placeholder="Please Enter Category Id" value="<?php echo isset($data)?$data['product_id']:''; ?>" id="product_id" name="product_id" class="m-wrap span12">
 						   <span class="help-block" id="product_id_error"> </span> -->
 							 <select tabindex="1" class="large m-wrap" id="category_id" name="category_id">
-							 <option value="" >Select the Category</option>
-							 <option value="0" >Cat1</option>
-							 <option value="1" >Cat2</option>
-							 <option value="2" >Cat3</option>
+							 <?php echo $modelObj->optionsGenerator('category', 'name', 'id',$data['category_id'], " where status='0'"); ?>
 							</select>
+							
 						</div>
 					 </div>
 				  </div>
@@ -82,11 +80,13 @@ if($product_id > 0){
  							<!-- <input type="text" placeholder="Please Enter City Id" value="<?php echo isset($data)?$data['city_id']:''; ?>" id="city_id" name="city_id" class="m-wrap span12">
  							<span class="help-block" id="city_id_error"> </span> -->
 							<select tabindex="1" class="large m-wrap" id="city_id" name="city_id">
-							<option value="" >Select the City</option>
+								<?php echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city_id'], " where status='0'"); ?>
+							</select>
+							<!-- <option value="" >Select the City</option>
 							<option value="0" >Mumbai</option>
 							<option value="1" >Delhi</option>
 							<option value="2" >Bangalore</option>
-						 </select>
+						 </select> -->
  					 </div>
  					</div>
  				 </div>
@@ -103,11 +103,8 @@ if($product_id > 0){
 	 						<!-- <input type="text" placeholder="Please Enter Lead Source" value="<?php echo isset($data)?$data['lead_source_id']:''; ?>" id="lead_source_id" name="lead_source_id" class="m-wrap span12">
 	 						<span class="help-block" id="lead_source_id"> </span> -->
 							<select tabindex="1" class="large m-wrap" id="lead_source_id" name="lead_source_id">
-							<option value="" >Select the Lead Source</option>
-							<option value="0" >HouseJoy</option>
-							<option value="1" >Zimber</option>
-							<option value="2" >Mr Homecare</option>
-						</select>
+							<?php echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['lead_source_id'], " where status='0'"); ?>
+							</select>
 	 				 </div>
 	 				</div>
 	 			 </div>

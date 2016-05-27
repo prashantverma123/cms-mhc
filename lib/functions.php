@@ -467,4 +467,7 @@ function replacespecialcharsurl($str){
 			//redirect(SITEPATH.'dashboard/display.php');
 		}
 	}
+
+	
+
 ?>

@@ -26,11 +26,10 @@ if($order_id > 0){
 					 <div class="control-group">
 						<label class="control-label">Lead Source <!--<span class="required">*</span>--></label>
 						<div class="controls">
-						 <select tabindex="1" class="large m-wrap lead_source" id="lead_source" name="lead_source">
+						<!--  <select tabindex="1" class="large m-wrap lead_source" id="lead_source" name="lead_source">
 							<option value="1" >Select Lead Source</option>
-							<!-- <?php  $arVal = $modelObj->getLeadSource();?> -->
 							<?php
-							$arVal = $modelObj->getLeadSource();
+						/*	$arVal = $modelObj->getLeadSource();
 							echo '<pre>'; print_r($$arVal); echo '</pre>';
 							foreach($arVal as $key){
 							 if(isset($data) && $data['id'] == $key["id"]){
@@ -39,9 +38,13 @@ if($order_id > 0){
 								 $sel ='';
 							 }
 							 echo '<option value="'.$key["id"].'" '.$sel.'>'.$key["name"].'</option>';
-							}
+							}*/
 							?>
-						 </select>
+						 </select> -->
+
+						 <select tabindex="1" class="large m-wrap lead_source" id="lead_source" name="lead_source">
+								<?php echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['id'], " where status='0'"); ?>
+						</select>
 						</div>
 					 </div>
 				  </div>
