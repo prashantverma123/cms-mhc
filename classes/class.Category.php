@@ -13,9 +13,9 @@ class Category {
 
 
 	/**************************** END OF CONSTRUCTOR **************************/
-	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(), $status = '',$sort) {
+	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(), $status = '',$sort='') {
 		
-		$offset = $offset*$recperpage;
+		$offset = $offset*$recperpage;	
 		$keyValueArray = array();
 		if ($status == '-1') {
 			$keyValueArray['status'] = -1;
@@ -39,7 +39,6 @@ class Category {
 				}
 				$j++;
 			}
-			
 		}
 			//print_r($searchData);
 		  /*	foreach($searchData as $key=>$val){
@@ -58,7 +57,7 @@ class Category {
 		
 		$keyValueArray['sqlclause'] = $main_sql;
 		$limit = $offset . "," . $recperpage;
-		if($sort) {
+		if($sort != '') {
 			$sort = 'name '.$sort;
 		}else{
 			$sort = 'name ASC';

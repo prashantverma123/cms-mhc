@@ -13,7 +13,7 @@ class LeadStage {
 
 
 	/**************************** END OF CONSTRUCTOR **************************/
-	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(), $status = '') {
+	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(), $status = '',$sort='') {
 		$offset = $offset * $recperpage;
 		$keyValueArray = array();
 		if ($status == '-1') {
@@ -23,13 +23,26 @@ class LeadStage {
 		}
 	    $main_sql = '1=1';
 		if(count($searchData)>0){
-			if(array_key_exists('name',$searchData)) {
+			/*if(array_key_exists('name',$searchData)) {
 					$main_sql .= ' and name like \''.$searchData['event_name'].'%\'';
+			}*/
+			if($search){
+				$main_sql .= ' and ';
+				$fields = explode(',',$search);
+				
+				$j = 1;
+				foreach ($fields as $field) {
+					$main_sql .= $field." like '%".$searchData['filter']."%'";
+					if($j < count($fields)){
+						$main_sql .= " OR "; 
+					}
+					$j++;
+				}
 			}
 			//print_r($searchData);
-			foreach($searchData as $key=>$val){
+			/*foreach($searchData as $key=>$val){
 				$keyValueArray[$key]=$val;
-			}
+			}*/
 			if(array_key_exists('parent_id',$searchData)) {
 		    	$keyValueArray['parentid'] = $searchData['parent_id'];
 			}
@@ -42,8 +55,12 @@ class LeadStage {
 
 		$keyValueArray['sqlclause'] = $main_sql;
 		$limit = $offset . "," . $recperpage;
-
-		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", $limit, false);
+		if($sort != '') {
+			$sort = 'name '.$sort;
+		}else{
+			$sort = 'name ASC';
+		}
+		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;
@@ -51,8 +68,11 @@ class LeadStage {
 				$this -> finalData[] = $dataArr[$p];
 			}
 		}
+		$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", '', false);
+		$result['rows'] = $this -> finalData;
+		$result['count'] = count($countAll);
 		//echo '<pre>'; print_r($this -> finalData);
-		return $this -> finalData;
+		return $result;
 	}// eof getDefault
 
 	public function getParentList(){
@@ -121,9 +141,9 @@ class LeadStage {
 	* @param int,int
 	* @return void
 	**/
-	public function pagination($recperpage,$page){
+	public function pagination($recperpage,$page,$numOfRows){
 		$page =$page+1;
-		$numOfRows = $this-> db ->getCount($this -> tableName);
+		//$numOfRows = $this-> db ->getCount($this -> tableName);
 		$pageCount = $numOfRows/$recperpage;
 			$pagecount = floor($pageCount);
 		 	if($pagecount > 0){
