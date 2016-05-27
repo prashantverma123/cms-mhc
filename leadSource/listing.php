@@ -5,6 +5,12 @@ $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
 ?>
 <div class="portlet-body">
+	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
+	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>ASC</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>DESC</option></select>
+		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
+		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
+	<button type="submit">Submit</button>
+	</form>
 	<div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
     	<table class="table table-striped table-bordered table-hover" id="">
 		   <thead>
@@ -26,9 +32,13 @@ $userId = $session->get('UserId');
 		   }else{
 		   		$page = $_GET['p']-1;
 		   }
+		   if($_GET['filter'] || $_GET['sort']){
+		   		$searchData['filter'] = $_GET['filter'];
+		   		$sort = $_GET['sort'];
+		   }
 		   $recperpage=PER_PAGE_ROWS;
-			$result_data = $modelObj->getListingData('', $page,$recperpage,$searchData);
-			foreach ($result_data as $key){
+			$result_data = $modelObj->getListingData('name', $page,$recperpage,$searchData);
+			foreach ($result_data['rows'] as $key){
 				// if($key['parent_id'] == 0){
 				// 	$is_parent_val = 'Yes';
 				// }else{
@@ -50,7 +60,7 @@ $userId = $session->get('UserId');
 		<?php } ?>
 		   </tbody>
 		</table>
-		<?php echo $modelObj->pagination($recperpage,$page); ?>
+		<?php echo $modelObj->pagination($recperpage,$page,$result_data['count']); ?>
       </div>
    </div>
 <script>

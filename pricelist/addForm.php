@@ -27,8 +27,7 @@ if($pricelist_id > 0){
 						<label class="control-label">Lead Source <!--<span class="required">*</span>--></label>
 						<div class="controls">
 						 <select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
-							<option value="0" >Select Lead Source</option>
-							<!-- <?php  $arVal = $modelObj->getLeadSource();?> -->
+							<!-- <option value="0" >Select Lead Source</option>
 							<?php
 							$arVal = $modelObj->getLeadSource();
 							echo '<pre>'; print_r($$arVal); echo '</pre>';
@@ -41,7 +40,9 @@ if($pricelist_id > 0){
 							 echo '<option value="'.$key["id"].'" '.$sel.'>'.$key["name"].'</option>';
 							}
 							?>
-						 </select>
+						 </select> -->
+						 <?php echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['id'], " where status='0'"); ?>
+						</select>
 						</div>
 					 </div>
 				  </div>
@@ -122,11 +123,10 @@ if($pricelist_id > 0){
 							<!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
  						<span class="help-block" id="efburl_error"> </span> -->
 						<select tabindex="1" class="large m-wrap" id="city" name="city">
-						 <option value="0" >Select City</option>
+						<!--  <option value="0" >Select City</option>
 						 <!-- <?php  $arVal = $modelObj->getLeadSource();?> -->
 						 <?php
-						 $arVal = $modelObj->getCityList();
-						 //echo '<pre>'; print_r($$arVal); echo '</pre>';
+						 /*$arVal = $modelObj->getCityList();
 						 foreach($arVal as $key){
 							if(isset($data) && $data['id'] == $key["id"]){
 								$sel = 'selected="selected"';
@@ -134,8 +134,9 @@ if($pricelist_id > 0){
 								$sel ='';
 							}
 							echo '<option value="'.$key["id"].'" '.$sel.'>'.$key["name"].'</option>';
-						 }
-						 ?>
+						 }*/
+						 ?> -->
+						 <?php echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id'], " where status='0'"); ?>
 						</select>
 						</div>
 					 </div>

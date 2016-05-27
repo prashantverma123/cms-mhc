@@ -204,7 +204,8 @@ class Util {
     public static function optionsGenerator($table, $display_field, $value_field, $selected_value="", $conditions="") {
         $db = Database::getInstance();
         $options_str = "";
-        $stmt = "select distinct " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " order by " . $display_field;
+       echo $stmt = "select distinct " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " order by " . $display_field;
+       exit;
         $db->execute($stmt);
         $result = $db->fetchAll();
         while (list($key, $valueArr) = each($result)) {
