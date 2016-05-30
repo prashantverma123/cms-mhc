@@ -16,8 +16,10 @@ $userId = $session->get('UserId');
 		   <thead>
 			  <tr>
 				 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
-				 <th>lead Name</th>
-				 <th class="hidden-480">lead Tier</th>
+				 <th class="hidden-480">Lead Id</th>
+				 <th>Lead Name</th>
+				 <th class="hidden-480">Lead Order</th>
+				<th class="hidden-480">Action</th>
 			  </tr>
 		   </thead>
 		   <tbody>
@@ -42,10 +44,9 @@ $userId = $session->get('UserId');
 		 ?>
 			  <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
 				<!-- <td><input type="checkbox" class="checkboxes" value="1" /></td>-->
-				 <td><?php print $key['name'];?></td>
-				 <td class="hidden-480"><?php print $is_parent_val;?></td>
-				 <td class="hidden-480"><?php print $key['lead_id'];?></td>
-				 <td class="hidden-480"><?php print $key['lead_stage'];?></td>
+				 <td class="hidden-480"><?php print $key['id'];?></td>
+				 <td><?php print $key['name'];?></td>				
+				 <td class="hidden-480"><?php print $key['lead_order'];?></td>
 				 <td>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/leadStage/display.php?lead_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_lead(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
