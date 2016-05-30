@@ -103,7 +103,7 @@ public function query($sql, $debug=0, $ismongo=''){
     return $this->connection->insert_id ;
   }
 
-  public function getAffectedRowCogetInsertedAutoIdunt(){
+  public function getAffectedRowCount(){
     return $this->connection->affected_rows;
   }
 

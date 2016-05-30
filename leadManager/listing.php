@@ -10,11 +10,14 @@ $userId = $session->get('UserId');
 		   <thead>
 			  <tr>
 				 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
-				 <th>Product Category</th>
-				 <th class="hidden-480">Product Validity</th>
-				 <th class="hidden-480">Cost</th>
-				 <th class="hidden-480">City</th>
 				 <th class="hidden-480">Lead Source</th>
+				 <th class="hidden-480">Lead Owner</th>
+				 <th class="hidden-480">Client Name</th>
+				  <th class="hidden-480">Client Mobile No</th>
+				 <th class="hidden-480">Service Date</th>
+				 <th class="hidden-480">Service Time</th>
+				 <th class="hidden-480">Job Status</th>
+				 <th class="hidden-480">Action</th>
 			  </tr>
 		   </thead>
 		   <tbody>
@@ -24,10 +27,14 @@ $userId = $session->get('UserId');
 		   }else{
 		   		$page = $_GET['p']-1;
 		   }
+		   if($_GET['filter'] || $_GET['sort']){
+		   		$searchData['filter'] = $_GET['filter'];
+		   		$sort = $_GET['sort'];
+		   }
 		   $recperpage=PER_PAGE_ROWS;
-			$result_data = $modelObj->getListingData('', $page,$recperpage,$searchData);
+			$result_data = $modelObj->getListingData('lead_source', $page,$recperpage,$searchData,$sort);
 
-			foreach ($result_data as $key){
+			foreach ($result_data['rows'] as $key){
 				// if($key['parent_id'] == 0){
 				// 	$is_parent_val = 'Yes';
 				// }else{
@@ -37,29 +44,73 @@ $userId = $session->get('UserId');
 			  <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
 				<!-- <td><input type="checkbox" class="checkboxes" value="1" /></td>-->
 				<!-- <td><?php print $key['category_id'];?></td> -->
-				<td class="hidden-480"><?php print $key['validity'];?></td>
-				<td class="hidden-480"><?php print $key['cost'];?></td>
-				<td class="hidden-480"><?php print $key['city_id'];?></td>
-				<td class="hidden-480"><?php print $key['lead_source_id'];?></td>
-				 <td>
-					<span class="label label-success"><a href="<?php print SITEPATH.'/product/display.php?product_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
-					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_product(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
+				<td class="hidden-480"><?php print $key['leadsource_name'];?></td>
+				<td class="hidden-480"><?php print $key['lead_owner'];?></td>
+				<td class="hidden-480"><?php print $key['client_firstname'];?></td>
+				<td class="hidden-480"><?php print $key['client_mobile_no'];?></td>
+				<td class="hidden-480"><?php print $key['service_date'];?></td>
+				<td class="hidden-480"><?php print $key['service_time'];?></td>
+				 <td id="confirmed<?php echo $key['id']; ?>">
+				 	<?php if($key['job_status']=='confirmed'): 
+				 	echo "Confirmed";
+				 else: ?>
+				 	<select name="job_status<?php echo $key['id']; ?>" id="job_status<?php echo $key['id']; ?>" tabindex="1" class="small m-wrap" onchange="update_status('<?php echo $key['id']; ?>');">
+				 		<option value="pending" <?php if($key['job_status']=='pending'): echo "selected"; else: echo "";endif; ?>>Pending</option>
+				 		<option value='in_process' <?php if($key['job_status']=='in_process'): echo "selected"; else: echo "";endif; ?>>In Process</option>
+				 		<option value='confirmed' <?php if($key['job_status']=='confirmed'): echo "selected"; else: echo "";endif; ?>>Confirmed</option>
+				 	</select>
+				 <?php endif; ?>
+				</td>
+				<td>
+					<span class="label label-success"><a href="<?php print SITEPATH.'/leadManager/display.php?leadmanager_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
+					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_leadmanager(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
 			  </tr>
 		<?php } ?>
 		   </tbody>
 		</table>
-		<?php echo $modelObj->pagination($recperpage,$page); ?>
+		<?php echo $modelObj->pagination($recperpage,$page,$result_data['count']); ?>
       </div>
    </div>
 <script>
-	function dele_product(d_id){ //alert(d_id);
+	function dele_leadmanager(d_id){ //alert(d_id);
 		if(d_id !=''){
 			$.ajax({
 				type: "POST",
-				url: "<?php print SITEPATH.'/product/category2db.php';?>",
-				data: 'action=delete_product&product_id='+d_id,
+				url: "<?php print SITEPATH.'/leadManager/category2db.php';?>",
+				data: 'action=delete_leadmanager&leadmanager_id='+d_id,
 				success: function(res){
 					$('#row_id_'+d_id).hide('slow');
+				},
+				//success: getData,
+				error:function(){
+					alert("failure");
+					//$("#result").html('there is error while submit');
+				}
+
+			});
+		}
+	}
+	function update_status(id){
+		if(id !=''){
+			var status = $('#job_status'+id).val();
+			$.ajax({
+				type: "POST",
+				url: "<?php print SITEPATH.'/leadManager/category2db.php';?>",
+				data: 'action=update_leadmanager_status&leadmanager_id='+id+'&status='+status,
+				success: function(res){
+					//if(res.result == 'success'){
+						if(status == "confirmed"){
+							$.ajax({
+								type: "POST",
+								url: "<?php print SITEPATH.'/leadManager/category2db.php';?>",
+								data: 'action=saveIntoOrder&leadmanager_id='+id,
+								success: function(r){
+									$('#confirmed'+id).html('Confirmed');
+								}
+							});
+						}
+					//}
+					alert("Status updated!");
 				},
 				//success: getData,
 				error:function(){

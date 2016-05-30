@@ -431,6 +431,9 @@ function replacespecialcharsurl($str){
 			case "leadsource" :
 				$access = 'admin,customer_care';
 			break;
+			case "leadmanager" :
+				$access = 'admin';
+			break;
 			case "leadstage" :
 				$access = 'admin';
 			break;
