@@ -411,7 +411,7 @@ function replacespecialcharsurl($str){
 
 	/**
 	* checkRole
-	*@param (string) roles who can access the page (write in comma separate e.g admin,customer_care) 
+	*@param (string) roles who can access the page (write in comma separate e.g admin,customer_care)
 	*
 	**/
 	function checkRole($class){
@@ -423,6 +423,9 @@ function replacespecialcharsurl($str){
 				$access = 'admin';
 			break;
 			case "city" :
+				$access = 'admin';
+			break;
+			case "CmsUser" :
 				$access = 'admin';
 			break;
 			case "leadsource" :
@@ -458,7 +461,7 @@ function replacespecialcharsurl($str){
 			}else{
 				$condition .= '';
 			}
-			$i++;	
+			$i++;
 		}
 		if($condition){
 			//"nothing to do";
@@ -468,6 +471,6 @@ function replacespecialcharsurl($str){
 		}
 	}
 
-	
+
 
 ?>
