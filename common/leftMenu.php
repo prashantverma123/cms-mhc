@@ -97,6 +97,26 @@
 			</ul>
 		</li>
 		<li class="active ">
+				<a href="javascript:;">
+		<i class="icon-table"></i>
+		<span class="title">Lead Manager</span>
+
+							<span class="selected"></span>
+
+							<span class="arrow open"></span>
+							</a>
+
+			<ul class="sub-menu">
+				<li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
+					<a href="<?php print SITEPATH.'/leadManager/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/>Lead Manager</a>
+				</li>
+				<li class="<?php if($flag == 'new'){ echo 'active'; } ?>" id="li_new" >
+
+						<a href="<?php print SITEPATH.'/leadManager/display.php?flag=new';?>"><img src="../img/add.png" style="padding-right:10px;"/> Add New Lead Manager </a>
+				</li>
+			</ul>
+		</li>
+		<li class="active ">
 			<a href="javascript:;">
 	<i class="icon-table"></i>
 	<span class="title">Product</span>

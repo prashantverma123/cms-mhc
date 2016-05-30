@@ -1,11 +1,11 @@
 <?php
 include_once('../config.php');
 include_once('variable.php');
-$product_id   	= isset($_GET['product_id']) ? $_GET['product_id'] : '';
-$original_product_id =  decryptdata($product_id);
+$leadmanager_id   	= isset($_GET['leadmanager_id']) ? $_GET['leadmanager_id'] : '';
+$original_product_id =  decryptdata($leadmanager_id);
 $flag   		= isset($_GET['flag']) ? $_GET['flag'] : '';
 $filename 		= 'addForm.php';
-$titlename 		= 'Add Product Basic Info';
+$titlename 		= 'Add Lead Manager Basic Info';
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -59,7 +59,7 @@ $titlename 		= 'Add Product Basic Info';
 
                   <!-- END BEGIN STYLE CUSTOMIZER -->
                   <h3 class="page-title">
-                    Product
+                    Lead Manager
                      <?php /*?><small>advance form layout samples</small><?php */?>
                   </h3>
 
@@ -71,18 +71,18 @@ $titlename 		= 'Add Product Basic Info';
                <div class="span12">
                   <div class="tabbable tabbable-custom boxless">
                      <ul class="nav nav-tabs">
-                        <li class="<?php if($product_id == '' || $product_id =='0'){ echo 'active'; } ?>"  id="li_pat0"><a data-toggle="tab" href="#tab_1" onClick="change_tab(0);">Product Listing</a></li>
-                        <li class="<?php if($product_id > 0){ echo 'active'; } ?>"  id="li_pat1"><a data-toggle="tab" href="#tab_2"  onclick="change_tab(1);">Add/Edit Product</a></li>
+                        <li class="<?php if($leadmanager_id == '' || $leadmanager_id =='0'){ echo 'active'; } ?>"  id="li_pat0"><a data-toggle="tab" href="#tab_1" onClick="change_tab(0);">Lead Manager Listing</a></li>
+                        <li class="<?php if($leadmanager_id > 0){ echo 'active'; } ?>"  id="li_pat1"><a data-toggle="tab" href="#tab_2"  onclick="change_tab(1);">Add/Edit Lead Manager</a></li>
                      </ul>
                      <div class="tab-content">
-                        <div id="tab_1" class="tab-pane <?php if($product_id == '' || $product_id =='0'){ echo 'active'; } ?>">
+                        <div id="tab_1" class="tab-pane <?php if($leadmanager_id == '' || $leadmanager_id =='0'){ echo 'active'; } ?>">
                            <?php include_once('listing.php');?>
                         </div>
-                        <div id="tab_2" class="tab-pane <?php if($product_id > 0){ echo 'active'; } ?>">
+                        <div id="tab_2" class="tab-pane <?php if($leadmanager_id > 0){ echo 'active'; } ?>">
 						<?php
-							 $product_id   = decryptdata($product_id);
+							 $leadmanager_id   = decryptdata($leadmanager_id);
 							 include_once($filename);
-							 $product_id   = encryptdata($product_id);
+							 $leadmanager_id   = encryptdata($leadmanager_id);
 						?>
                         </div>
                      </div>
