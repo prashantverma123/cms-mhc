@@ -66,7 +66,7 @@ var Login = function () {
 							type: "post",
 							url: CMSROOTPATH+"2db/login2db.php",
 							data: datastring,
-							success: function(data){ alert(data);
+							success: function(data){// alert(data);
 								if(data.substring(data.length - 1,data.length)=='1'){
 									window.location.href = CMSROOTPATH+'dashboard/display.php';
 								}

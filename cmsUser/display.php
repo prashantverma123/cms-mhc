@@ -1,11 +1,11 @@
 <?php
 include_once('../config.php');
 include_once('variable.php');
-$source_id   	= isset($_GET['source_id']) ? $_GET['source_id'] : '';
-$original_source_id =  decryptdata($source_id);
+$cmsuser_id   	= isset($_GET['cmsuser_id']) ? $_GET['cmsuser_id'] : '';
+$original_cmsuser_id =  decryptdata($cmsuser_id);
 $flag   		= isset($_GET['flag']) ? $_GET['flag'] : '';
 $filename 		= 'addForm.php';
-$titlename 		= 'Dashboard';
+$titlename 		= 'Add CMS User';
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -14,7 +14,7 @@ $titlename 		= 'Dashboard';
 <!-- BEGIN HEAD -->
 <head>
    <meta charset="utf-8" />
-   <title>T- Lead Source Control Panel |  <?php print $titlename;?> </title>
+   <title>T- CMS User Control Panel |  <?php print $titlename;?> </title>
    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
    <meta content="" name="description" />
    <meta content="" name="author" />
@@ -59,7 +59,7 @@ $titlename 		= 'Dashboard';
 
                   <!-- END BEGIN STYLE CUSTOMIZER -->
                   <h3 class="page-title">
-                    Dashboard
+                    CMS User
                      <?php /*?><small>advance form layout samples</small><?php */?>
                   </h3>
 
@@ -70,46 +70,22 @@ $titlename 		= 'Dashboard';
             <div class="row-fluid">
                <div class="span12">
                   <div class="tabbable tabbable-custom boxless">
-
-                     <!-- <div class="tab-content">
-                        <h4>Lead Source</h4>
-                        <?php echo $modelObj->get_statistics('leadsource'); ?>
-                         <h4>Category</h4>
-                        <?php echo $modelObj->get_statistics('category'); ?>
-                         <h4>City</h4>
-                        <?php echo $modelObj->get_statistics('city'); ?>
-                         <h4>Order</h4>
-                        <?php echo $modelObj->get_statistics('orders'); ?>
-                        <h4>Employees</h4>
-                       <?php echo $modelObj->get_statistics('employee'); ?>
-                      </div> -->
-                        <div class="tab-content">
-                          <div class="header-stats-container" style="width:100%;height:100px;" >
-                         <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;color: #a94442;background-color: #f2dede;border-color: #ebccd1;">
-                           <h4 style="text-align:center;">Lead Source</h4>
-                           <p style="text-align:center;"><?php echo $modelObj->get_statistics('leadsource'); ?></p>
-                         </div>
-                         <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;color: #3c763d;background-color: #dff0d8;border-color: #d6e9c6;">
-                           <h4 style="text-align:center;">City</h4>
-                          <p style="text-align:center;"><?php echo $modelObj->get_statistics('city'); ?></p>
-                         </div>
-                         <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;color: #31708f;background-color: #d9edf7;border-color: #bce8f1;">
-                           <h4 style="text-align:center;">Order</h4>
-                          <p style="text-align:center;"><?php echo $modelObj->get_statistics('orders'); ?></p>
-                         </div>
-                         <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;color: #8a6d3b;background-color: #fcf8e3;border-color: #faebcc;">
-                           <h4 style="text-align:center;">Employees</h4>
-                          <p style="text-align:center;"><?php echo $modelObj->get_statistics('employee'); ?></p>
-                         </div>
-                         <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;background-color: #acf8e3;border-color: #aaebcc;">
-                           <h4 style="text-align:center;">Category</h4>
-                          <p style="text-align:center;"><?php echo $modelObj->get_statistics('category'); ?></p>
-                         </div>
-
-                       </div>
-                       </div>
-
-
+                     <ul class="nav nav-tabs">
+                        <li class="<?php if($cmsuser_id == '' || $cmsuser_id =='0'){ echo 'active'; } ?>"  id="li_pat0"><a data-toggle="tab" href="#tab_1" onClick="change_tab(0);">CMS User Listing</a></li>
+                        <li class="<?php if($cmsuser_id > 0){ echo 'active'; } ?>"  id="li_pat1"><a data-toggle="tab" href="#tab_2"  onclick="change_tab(1);">Add/Edit CMS User</a></li>
+                     </ul>
+                     <div class="tab-content">
+                        <div id="tab_1" class="tab-pane <?php if($cmsuser_id == '' || $cmsuser_id =='0'){ echo 'active'; } ?>">
+                           <?php include_once('listing.php');?>
+                        </div>
+                        <div id="tab_2" class="tab-pane <?php if($cmsuser_id > 0){ echo 'active'; } ?>">
+						<?php
+							 $cmsuser_id   = decryptdata($cmsuser_id);
+							 include_once($filename);
+							 $cmsuser_id   = encryptdata($cmsuser_id);
+						?>
+                        </div>
+                     </div>
                   </div>
                </div>
             </div>
@@ -122,7 +98,6 @@ $titlename 		= 'Dashboard';
    <!-- END CONTAINER -->
    <!-- BEGIN FOOTER -->
    <?php include_once(COMMONFILEPATH.'/footer.php'); ?>
-
 </body>
 <!-- END BODY -->
 </html>

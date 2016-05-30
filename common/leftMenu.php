@@ -1,6 +1,6 @@
 <div class="page-sidebar nav-collapse collapse">
          <!-- BEGIN SIDEBAR MENU -->
-         
+
          <ul>
 				<li>
 					<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
@@ -13,12 +13,12 @@
 					</form>
 					<!-- END RESPONSIVE QUICK SEARCH FORM -->
 				</li>
-				<?php switch($_SESSION['tmobi']['role']){ 
+				<?php switch($_SESSION['tmobi']['role']){
 				 case 'admin': ?>
         		<li class="active">
         			<a href="javascript:;">
 					<i class="icon-table"></i>
-					<span class="title">Basic</span>
+					<span class="title">Category</span>
 
 										<span class="selected"></span>
 
@@ -35,6 +35,28 @@
 							</li>
 						</ul>
 					</li>
+
+          <li class="active">
+            <a href="javascript:;">
+        <i class="icon-table"></i>
+        <span class="title">CMS User</span>
+
+                  <span class="selected"></span>
+
+                  <span class="arrow open"></span>
+                  </a>
+
+          <ul class="sub-menu">
+            <li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
+              <a href="<?php print SITEPATH.'/cmsUser/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/>Users</a>
+            </li>
+            <li class="<?php if($flag == 'new'){ echo 'active'; } ?>" id="li_new" >
+
+                <a href="<?php print SITEPATH.'/cmsUser/display.php?flag=new';?>"><img src="../img/add.png" style="padding-right:10px;"/> Add New CMS User </a>
+            </li>
+          </ul>
+        </li>
+
 					<li class="active ">
 						<a href="javascript:;">
 				<i class="icon-table"></i>
@@ -154,7 +176,7 @@
 
 					<a href="<?php print SITEPATH.'/employee/display.php?flag=new';?>"><img src="../img/add.png" style="padding-right:10px;"/> Add New Employee </a>
 			</li>
-			
+
 		</ul>
 	</li>
 	<li class="active ">
@@ -225,6 +247,6 @@
 
 
 					</ul>
-		
+
 		<!-- END SIDEBAR MENU -->
       </div>
