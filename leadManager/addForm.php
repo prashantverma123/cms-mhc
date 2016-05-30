@@ -133,10 +133,10 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">client lasttname <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">client lastname <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter client_lasttname" value="<?php echo isset($data)?$data['client_lasttname']:''; ?>" id="client_lasttname" name="client_lasttname" class="m-wrap span12">
-	 						<span class="help-block" id="client_lasttname_error"> </span>
+	 						<input type="text" placeholder="Please Enter client lastname" value="<?php echo isset($data)?$data['client_lastname']:''; ?>" id="client_lastname" name="client_lastname" class="m-wrap span12">
+	 						<span class="help-block" id="client_lastname_error"> </span>
 	 				 </div>
 	 				</div>
 	 			 </div>
@@ -146,7 +146,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">client mobile no <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter client_mobile_no" value="<?php echo isset($data)?$data['client_mobile_no']:''; ?>" id="client_mobile_no" name="client_mobile_no" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter client mobile no" value="<?php echo isset($data)?$data['client_mobile_no']:''; ?>" id="client_mobile_no" name="client_mobile_no" class="m-wrap span12">
 	 						<span class="help-block" id="client_mobile_no_error"> </span>
 	 				 </div>
 	 				</div>
@@ -157,7 +157,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">alternate no <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter alternate_no" value="<?php echo isset($data)?$data['alternate_no']:''; ?>" id="alternate_no" name="alternate_no" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter alternate no" value="<?php echo isset($data)?$data['alternate_no']:''; ?>" id="alternate_no" name="alternate_no" class="m-wrap span12">
 	 						<span class="help-block" id="alternate_no_error"> </span>
 	 				 </div>
 	 				</div>
@@ -168,7 +168,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">client email id <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter client_email_id" value="<?php echo isset($data)?$data['client_email_id']:''; ?>" id="client_email_id" name="client_email_id" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter client email id" value="<?php echo isset($data)?$data['client_email_id']:''; ?>" id="client_email_id" name="client_email_id" class="m-wrap span12">
 	 						<span class="help-block" id="client_email_id_error"> </span>
 	 				 </div>
 	 				</div>
@@ -267,7 +267,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">service inquiry1 booked <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter service_inquiry1_booked" value="<?php echo isset($data)?$data['service_inquiry1_booked']:''; ?>" id="service_inquiry1_booked" name="service_inquiry1_booked" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter service inquiry1 booked" value="<?php echo isset($data)?$data['service_inquiry1_booked']:''; ?>" id="service_inquiry1_booked" name="service_inquiry1_booked" class="m-wrap span12">
 	 						<span class="help-block" id="service_inquiry1_booked_error"> </span>
 	 				 </div>
 	 				</div>
@@ -278,7 +278,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">service inquiry2 <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter service_inquiry2" value="<?php echo isset($data)?$data['service_inquiry2']:''; ?>" id="service_inquiry2" name="service_inquiry2" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter service inquiry2" value="<?php echo isset($data)?$data['service_inquiry2']:''; ?>" id="service_inquiry2" name="service_inquiry2" class="m-wrap span12">
 	 						<span class="help-block" id="service_inquiry2_error"> </span>
 	 				 </div>
 	 				</div>
@@ -289,7 +289,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">service inquiry2 booked <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter service_inquiry2_booked" value="<?php echo isset($data)?$data['service_inquiry2_booked']:''; ?>" id="service_inquiry2_booked" name="service_inquiry2_booked" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter service inquiry2 booked" value="<?php echo isset($data)?$data['service_inquiry2_booked']:''; ?>" id="service_inquiry2_booked" name="service_inquiry2_booked" class="m-wrap span12">
 	 						<span class="help-block" id="service_inquiry2_booked_error"> </span>
 	 				 </div>
 	 				</div>
@@ -300,7 +300,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">service inquiry3 <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter service_inquiry3" value="<?php echo isset($data)?$data['service_inquiry3']:''; ?>" id="service_inquiry3" name="service_inquiry3" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter service inquiry3" value="<?php echo isset($data)?$data['service_inquiry3']:''; ?>" id="service_inquiry3" name="service_inquiry3" class="m-wrap span12">
 	 						<span class="help-block" id="service_inquiry3_error"> </span>
 	 				 </div>
 	 				</div>
@@ -311,7 +311,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">service inquiry3 booked <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter service_inquiry3_booked" value="<?php echo isset($data)?$data['service_inquiry3_booked']:''; ?>" id="service_inquiry3_booked" name="service_inquiry3_booked" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter service inquiry3 booked" value="<?php echo isset($data)?$data['service_inquiry3_booked']:''; ?>" id="service_inquiry3_booked" name="service_inquiry3_booked" class="m-wrap span12">
 	 						<span class="help-block" id="service_inquiry3_booked_error"> </span>
 	 				 </div>
 	 				</div>
@@ -322,7 +322,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">promo code <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter promo_code" value="<?php echo isset($data)?$data['promo_code']:''; ?>" id="promo_code" name="promo_code" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter promo code" value="<?php echo isset($data)?$data['promo_code']:''; ?>" id="promo_code" name="promo_code" class="m-wrap span12">
 	 						<span class="help-block" id="promo_code_error"> </span>
 	 				 </div>
 	 				</div>
@@ -366,7 +366,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">taxed cost <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter taxed_cost" value="<?php echo isset($data)?$data['taxed_cost']:''; ?>" id="taxed_cost" name="taxed_cost" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter taxed cost" value="<?php echo isset($data)?$data['taxed_cost']:''; ?>" id="taxed_cost" name="taxed_cost" class="m-wrap span12">
 	 						<span class="help-block" id="taxed_cost_error"> </span>
 	 				 </div>
 	 				</div>
@@ -394,6 +394,10 @@ $(document).ready(function() {
 <?php }else if($flag=='new'){ ?>
 $(document).ready(function() {
   change_tab('new');
+  $('#service_date').datepicker({
+  	format:'yyyy/mm/dd'
+  });
+   
 });
 <?php } ?>
 function saveData(frm_id, action){

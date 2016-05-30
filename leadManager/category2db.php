@@ -18,9 +18,8 @@ switch($action){
 				$insertArr['lead_owner'] 	= $_POST['lead_owner'];
 				$insertArr['job_status']	= $_POST['job_status'];
 				$insertArr['lead_stage']    = $_POST['lead_stage'];
-				$insertArr['service_date'] 		= $_POST['service_date'];
+				$insertArr['service_date'] 		=  date("Y-m-d", strtotime($_POST['service_date']));
 				$insertArr['service_time'] 		= $_POST['service_time'];
-				$insertArr['service_date'] 		= $_POST['service_date'];
 
 				$insertArr['manpower_deployment'] 		= $_POST['manpower_deployment'];
 				$insertArr['client_salutation'] 		= $_POST['client_salutation'];
@@ -68,9 +67,8 @@ switch($action){
 				$updateArr['lead_owner'] 	= $_POST['lead_owner'];
 				$updateArr['job_status']	= $_POST['job_status'];
 				$updateArr['lead_stage']    = $_POST['lead_stage'];
-				$updateArr['service_date'] 		= $_POST['service_date'];
+				$updateArr['service_date'] 		=  date("Y-m-d", strtotime($_POST['service_date']));
 				$updateArr['service_time'] 		= $_POST['service_time'];
-				$updateArr['service_date'] 		= $_POST['service_date'];
 
 				$updateArr['manpower_deployment'] 		= $_POST['manpower_deployment'];
 				$updateArr['client_salutation'] 		= $_POST['client_salutation'];
