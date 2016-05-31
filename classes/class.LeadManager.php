@@ -1,5 +1,5 @@
 <?php
-class Leadmanager {
+class LeadManager {
 	protected $finalData = array();
 	private $db;
 	private $tableName;

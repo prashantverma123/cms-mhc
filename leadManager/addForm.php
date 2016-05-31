@@ -110,7 +110,7 @@ if($leadmanager_id > 0){
 	 				</div>
 	 			 </div>
 				</div>
-
+				 
 				<div>
 					<div class="row-fluid" style="background-color:#6d6d6d;margin-bottom:15px;">
 					<h3 style="padding-left:10px">Client Details</h3>
@@ -287,12 +287,15 @@ if($leadmanager_id > 0){
 	 				</div>
 	 			 </div>
 				</div>
+
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
 	 				 <label class="control-label">Service Inquiry1 Booked <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter service inquiry1 booked" value="<?php echo isset($data)?$data['service_inquiry1_booked']:''; ?>" id="service_inquiry1_booked" name="service_inquiry1_booked" class="m-wrap span12">
+	 						<!-- <input type="text" placeholder="Please Enter service inquiry1 booked" value="<?php //echo isset($data)?$data['service_inquiry1_booked']:''; ?>" id="service_inquiry1_booked" name="service_inquiry1_booked" class="m-wrap span12"> -->
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry11" name="service_inquiry1_booked" value="yes" <?php if($data['service_inquiry1_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry12" name="service_inquiry1_booked" value="no" <?php if($data['service_inquiry1_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
 	 						<span class="help-block" id="service_inquiry1_booked_error"> </span>
 	 				 </div>
 	 				</div>
@@ -317,7 +320,8 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Service Inquiry2 Booked <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter service inquiry2 booked" value="<?php echo isset($data)?$data['service_inquiry2_booked']:''; ?>" id="service_inquiry2_booked" name="service_inquiry2_booked" class="m-wrap span12">
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry11" name="service_inquiry2_booked" value="yes" <?php if($data['service_inquiry2_booked']=='yes'): echo "checked"; else: ""; endif; ?>/>Yes</label>
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry12" name="service_inquiry2_booked" value="no" <?php if($data['service_inquiry2_booked']=='no'): echo "checked"; else: ""; endif; ?>/>No</label>
 	 						<span class="help-block" id="service_inquiry2_booked_error"> </span>
 	 				 </div>
 	 				</div>
@@ -342,12 +346,26 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Service Inquiry3 Booked <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter service inquiry3 booked" value="<?php echo isset($data)?$data['service_inquiry3_booked']:''; ?>" id="service_inquiry3_booked" name="service_inquiry3_booked" class="m-wrap span12">
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry11" name="service_inquiry3_booked" value="yes" <?php if($data['service_inquiry3_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry12" name="service_inquiry3_booked" value="no" <?php if($data['service_inquiry3_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
 	 						<span class="help-block" id="service_inquiry3_booked_error"> </span>
 	 				 </div>
 	 				</div>
 	 			 </div>
 				</div>
+				<div class="row-fluid">
+				  <div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Variant Type <span class="required">*</span></label>
+						<div class="controls">
+							<select tabindex="1" class="large m-wrap" id="varianttype" name="varianttype">
+						   <?php  echo $modelObj->optionsGenerator('variantMaster', 'varianttype', 'id',$data['varianttype']," where status='0'"); ?>
+							</select>
+						</div>
+					 </div>
+				  </div>
+
+			   </div>
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
@@ -418,18 +436,22 @@ if($leadmanager_id > 0){
 	  </div>
 	</div>
 <script>
-<?php if($leadmanager_id != '' && $flag != 'new'){ ?>
-$(document).ready(function() {
-  change_tab(1);
-});
-<?php }else if($flag=='new'){ ?>
-$(document).ready(function() {
-  change_tab('new');
-  $('#service_date').datepicker({
+$(document).ready(function(){
+	$('#service_date').datepicker({
   	format:'yyyy/mm/dd'
   });
 
    $('#service_time').timepicker();
+});
+<?php if($leadmanager_id != '' && $flag != 'new'){ ?>
+$(document).ready(function() {
+  change_tab(1);
+ 
+});
+<?php }else if($flag=='new'){ ?>
+$(document).ready(function() {
+  change_tab('new');
+  
    
 });
 <?php } ?>
@@ -446,13 +468,10 @@ function saveData(frm_id, action){
 	    		client_firstname:"required",
 	    		client_lastname:"required",
 	    		client_mobile_no:{
-	    			required:true,
-	    			
+	    			required:true
 	    		}
-	    	}
-    	});
-    	$.validator.setDefaults({
-			submitHandler: function() {
+	    	},
+	    	submitHandler: function() {
 				
 	        $('.error').hide();
 	        var flag=0;
@@ -460,7 +479,7 @@ function saveData(frm_id, action){
 			if(leadmanager_id=="")
 	        {
 	            //$('#product_id_error').show();
-	            $('#leadmanager_idleadmanager_id').attr('placeholder' ,'Please Enter Categry Id');
+	            $('#leadmanager_id').attr('placeholder' ,'Please Enter Categry Id');
 	            $('#leadmanager_id').addClass('alert-error');
 	            $('#leadmanager_id').focus();
 				$('html, body').animate({
@@ -471,7 +490,7 @@ function saveData(frm_id, action){
 
 	        if(flag==0){
 	            var datastring=$('#'+frm_id).serialize();
-							// alert('Jai Mata Di............' + datastring);
+							 //alert('Jai Mata Di............' + datastring);
 	            $.ajax({
 	                type: "POST",
 	                url: "<?php print SITEPATH;?>/leadManager/category2db.php",
@@ -487,7 +506,8 @@ function saveData(frm_id, action){
 
         	return false;
 			}
-		});
+    	});
+    	
 
     }
 
@@ -495,6 +515,7 @@ function saveData(frm_id, action){
 
     	var jObj=eval("("+success+")");
         var res_action=jObj.action; //alert('AAs');
+        //alert(success);
         var res_product_id=jObj.leadmanager_id; //alert('AA'+res_product_id);
 		$('#record_modified').show();
 			 setTimeout(function () {
