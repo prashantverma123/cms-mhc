@@ -131,7 +131,6 @@ class Leadmanager {
 	}
 
 	public function insertTable($values) {
-		print_r($values);exit;
 		return $this -> db -> insertDataIntoTable($values, $this -> tableName);
 	}// eof insertTable
 
