@@ -68,13 +68,45 @@ if($pricelist_id > 0){
 				  <div class="span6 ">
 					 <div class="control-group">
 						<label class="control-label">Category</label>
-							<div class="controls">
+							<!-- <div class="controls">
 							   <input type="text" id="category_type" name="category_type" value="<?php echo isset($data)?$data['category_type']:''; ?>" class="m-wrap span5">
-							</div>
+							</div> -->
+							<select tabindex="1" class="large m-wrap" id="category_type" name="category_type">
+							 <?php echo $modelObj->optionsGenerator('category', 'name', 'id',$data['id'], " where status='0'"); ?>
+							</select>
 					 </div>
 				  </div>
 				  <!--/span-->
 			   </div>
+
+ 				 <div class="row-fluid">
+ 					 <div class="span6 ">
+ 						<div class="control-group">
+ 						 <label class="control-label">Variant</label>
+ 						 <div class="controls">
+ 							 <!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
+ 							 <span class="help-block" id="efburl_error"> </span> -->
+ 						 <select tabindex="1" class="large m-wrap" id="city" name="city">
+ 							<?php echo $modelObj->optionsGenerator('variantMaster', 'varianttype', 'id',$data['id'], " where status='0'"); ?>
+ 						 </select>
+ 						 </div>
+ 						</div>
+ 					 </div>
+
+					 <div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">City</label>
+						<div class="controls">
+							<!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
+							<span class="help-block" id="efburl_error"> </span> -->
+						<select tabindex="1" class="large m-wrap" id="city" name="city">
+						 <?php echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id'], " where status='0'"); ?>
+						</select>
+						</div>
+					 </div>
+					</div>
+ 				 </div>
+
 
 				 <div class="row-fluid">
 				  <!--/span-->
@@ -88,21 +120,6 @@ if($pricelist_id > 0){
 				  </div>
 				  <!--/span-->
 			   </div>
-
-				 <div class="row-fluid">
-					 <div class="span6 ">
-						<div class="control-group">
-						 <label class="control-label">City</label>
-						 <div class="controls">
-							 <!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
-							 <span class="help-block" id="efburl_error"> </span> -->
-						 <select tabindex="1" class="large m-wrap" id="city" name="city">
-							<?php echo $modelObj->optionsGenerator('variantMaster', 'varianttype', 'id',$data['id'], " where status='0'"); ?>
-						 </select>
-						 </div>
-						</div>
-					 </div>
-				 </div>
 
 
 				<div class="row-fluid">
@@ -130,18 +147,7 @@ if($pricelist_id > 0){
 					 </div>
 				  </div>
 				  <!--/span-->
-				  <div class="span6 ">
-					 <div class="control-group">
-						<label class="control-label">City</label>
-						<div class="controls">
-							<!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
- 						<span class="help-block" id="efburl_error"> </span> -->
-						<select tabindex="1" class="large m-wrap" id="city" name="city">
-						 <?php echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id'], " where status='0'"); ?>
-						</select>
-						</div>
-					 </div>
-				  </div>
+
 				  <!--/span-->
 			   </div>
 
