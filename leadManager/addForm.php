@@ -24,7 +24,7 @@ if($leadmanager_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Lead Source <!--<span class="required">*</span>--></label>
+						<label class="control-label">Lead Source <span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
 						   <?php  echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $data['lead_source']," where status='0'"); ?>
@@ -35,7 +35,7 @@ if($leadmanager_id > 0){
 
 					<div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Lead Owner<!--<span class="required">*</span>--></label>
+						<label class="control-label">Lead Owner<span class="required">*</span></label>
 						<div class="controls">
 							<!-- <select tabindex="1" class="large m-wrap" id="category_id" name="category_id">
 						   <?php  echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $selected_value=""," where status='0'"); ?>
@@ -66,7 +66,7 @@ if($leadmanager_id > 0){
 			    <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Lead Stage <!--<span class="required">*</span>--></label>
+						<label class="control-label">Lead Stage <span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="lead_stage" name="lead_stage">
 						   <?php  echo $modelObj->optionsGenerator('leadstage', 'name', 'id',$data['lead_stage']," where status='0'"); ?>
@@ -80,7 +80,7 @@ if($leadmanager_id > 0){
 				  <div class="row-fluid">
 						<div class="span6 ">
 						<div class="control-group">
-						 <label class="control-label">Service Date  <!--<span class="required">*</span>--></label>
+						 <label class="control-label">Service Date <span class="required">*</span></label>
 						 <div class="controls">
 								<input type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service_date']:''; ?>" id="service_date" name="service_date" class="m-wrap span12 datepicker">
 								<span class="help-block" id="cost_error"> </span>
@@ -89,9 +89,10 @@ if($leadmanager_id > 0){
 					 </div>
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">Service Time  <!--<span class="required">*</span>--></label>
-	 				 <div class="controls">
+	 				 <label class="control-label">Service Time  <span class="required">*</span></label>
+	 				 <div class="controls bootstrap-timepicker timepicker">
 	 						<input type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service_time']:''; ?>" id="service_time" name="service_time" class="m-wrap span12">
+	 						<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
 	 						<span class="help-block" id="service_time_error"> </span>
 	 				 </div>
 	 				</div>
@@ -101,7 +102,7 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label"> 	Manpower Deployment  <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label"> 	Manpower Deployment  <span class="required">*</span></label>
 	 				 <div class="controls">
 	 						<input type="text" placeholder="Please Enter Manpower Deployment" value="<?php echo isset($data)?$data['manpower_deployment']:''; ?>" id="manpower_deployment" name="manpower_deployment" class="m-wrap span12">
 	 						<span class="help-block" id="manpower_deployment_error"> </span>
@@ -109,7 +110,7 @@ if($leadmanager_id > 0){
 	 				</div>
 	 			 </div>
 				</div>
-
+				 
 				<div>
 					<div class="row-fluid" style="background-color:#6d6d6d;margin-bottom:15px;">
 					<h3 style="padding-left:10px">Client Details</h3>
@@ -126,7 +127,7 @@ if($leadmanager_id > 0){
 	 			 </div>
 				 <div class="span4 ">
 				 <div class="control-group">
-					<label class="control-label">Firstname <!--<span class="required">*</span>--></label>
+					<label class="control-label">Firstname <span class="required">*</span></label>
 					<div class="controls">
 						 <input type="text" placeholder="Please Enter Firstname" value="<?php echo isset($data)?$data['client_firstname']:''; ?>" id="client_firstname" name="client_firstname" class="m-wrap span12">
 						 <span class="help-block" id="client_firstname_error"> </span>
@@ -134,9 +135,10 @@ if($leadmanager_id > 0){
 				 </div>
 				</div>
 
+
 				<div class="span4 ">
 				<div class="control-group">
-				 <label class="control-label">Lastname <!--<span class="required">*</span>--></label>
+				 <label class="control-label">Lastname <span class="required">*</span></label>
 				 <div class="controls">
 						<input type="text" placeholder="Please Enter Lastname" value="<?php echo isset($data)?$data['client_lastname']:''; ?>" id="client_lastname" name="client_lastname" class="m-wrap span12">
 						<span class="help-block" id="client_lastname_error"> </span>
@@ -149,7 +151,7 @@ if($leadmanager_id > 0){
 			  <div class="row-fluid">
 					<div class="span4 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">Mobile No <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Mobile No <span class="required">*</span></label>
 	 				 <div class="controls">
 	 						<input type="text" placeholder="Please Enter Mobile No" value="<?php echo isset($data)?$data['client_mobile_no']:''; ?>" id="client_mobile_no" name="client_mobile_no" class="m-wrap span12">
 	 						<span class="help-block" id="client_mobile_no_error"> </span>
@@ -182,6 +184,7 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
+
 	 				 <label class="control-label">Address <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
 						  <textarea rows="3" name="address" id="address" class="m-wrap span12"><?php echo isset($data)?trim($data['address']):''; ?></textarea>
@@ -206,7 +209,8 @@ if($leadmanager_id > 0){
 				 </div>
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">Location <!--<span class="required">*</span>--></label>
+
+	 				 <label class="control-label">location <span class="required">*</span></label>
 	 				 <div class="controls">
 	 						<input type="text" placeholder="Please Enter Location" value="<?php echo isset($data)?$data['location']:''; ?>" id="location" name="location" class="m-wrap span12">
 	 						<span class="help-block" id="location_error"> </span>
@@ -217,7 +221,7 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span4 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">City <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">City <span class="required">*</span></label>
 	 				 <div class="controls">
 	 						<!-- <input type="text" placeholder="Please Enter city" value="<?php echo isset($data)?$data['city']:''; ?>" id="city" name="city" class="m-wrap span12"> -->
 
@@ -229,15 +233,18 @@ if($leadmanager_id > 0){
 	 				</div>
 	 			 </div>
 
-				 <div class="span4 ">
-				 <div class="control-group">
-					<label class="control-label">State <!--<span class="required">*</span>--></label>
-					<div class="controls">
-						 <input type="text" placeholder="Please Enter state" value="<?php echo isset($data)?$data['state']:''; ?>" id="state" name="state" class="m-wrap span12">
-						 <span class="help-block" id="state_error"> </span>
-					</div>
-				 </div>
-				</div>
+
+				<div class="row-fluid">
+					<div class="span6 ">
+	 				<div class="control-group">
+	 				 <label class="control-label">State <span class="required">*</span></label>
+	 				 <div class="controls">
+	 						<input type="text" placeholder="Please Enter state" value="<?php echo isset($data)?$data['state']:''; ?>" id="state" name="state" class="m-wrap span12">
+	 						<span class="help-block" id="state_error"> </span>
+	 				 </div>
+	 				</div>
+	 			 </div>
+
 
 				<div class="span4 ">
 				<div class="control-group">
@@ -280,12 +287,15 @@ if($leadmanager_id > 0){
 	 				</div>
 	 			 </div>
 				</div>
+
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">service inquiry1 booked <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Service Inquiry1 Booked <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter service inquiry1 booked" value="<?php echo isset($data)?$data['service_inquiry1_booked']:''; ?>" id="service_inquiry1_booked" name="service_inquiry1_booked" class="m-wrap span12">
+	 						<!-- <input type="text" placeholder="Please Enter service inquiry1 booked" value="<?php //echo isset($data)?$data['service_inquiry1_booked']:''; ?>" id="service_inquiry1_booked" name="service_inquiry1_booked" class="m-wrap span12"> -->
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry11" name="service_inquiry1_booked" value="yes" <?php if($data['service_inquiry1_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry12" name="service_inquiry1_booked" value="no" <?php if($data['service_inquiry1_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
 	 						<span class="help-block" id="service_inquiry1_booked_error"> </span>
 	 				 </div>
 	 				</div>
@@ -294,7 +304,7 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">service inquiry2 <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Service Inquiry2 <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
 	 						<!-- <input type="text" placeholder="Please Enter service inquiry2" value="<?php echo isset($data)?$data['service_inquiry2']:''; ?>" id="service_inquiry2" name="service_inquiry2" class="m-wrap span12"> -->
 							<select tabindex="1" class="large m-wrap" id="service_inquiry2" name="service_inquiry2">
@@ -308,9 +318,10 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">service inquiry2 booked <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Service Inquiry2 Booked <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter service inquiry2 booked" value="<?php echo isset($data)?$data['service_inquiry2_booked']:''; ?>" id="service_inquiry2_booked" name="service_inquiry2_booked" class="m-wrap span12">
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry11" name="service_inquiry2_booked" value="yes" <?php if($data['service_inquiry2_booked']=='yes'): echo "checked"; else: ""; endif; ?>/>Yes</label>
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry12" name="service_inquiry2_booked" value="no" <?php if($data['service_inquiry2_booked']=='no'): echo "checked"; else: ""; endif; ?>/>No</label>
 	 						<span class="help-block" id="service_inquiry2_booked_error"> </span>
 	 				 </div>
 	 				</div>
@@ -319,7 +330,7 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">service inquiry3 <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Service Inquiry3 <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
 	 						<!-- <input type="text" placeholder="Please Enter service inquiry3" value="<?php echo isset($data)?$data['service_inquiry3']:''; ?>" id="service_inquiry3" name="service_inquiry3" class="m-wrap span12"> -->
 							<select tabindex="1" class="large m-wrap" id="service_inquiry3" name="service_inquiry3">
@@ -333,20 +344,34 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">service inquiry3 booked <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Service Inquiry3 Booked <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter service inquiry3 booked" value="<?php echo isset($data)?$data['service_inquiry3_booked']:''; ?>" id="service_inquiry3_booked" name="service_inquiry3_booked" class="m-wrap span12">
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry11" name="service_inquiry3_booked" value="yes" <?php if($data['service_inquiry3_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
+	 						<label class="checkbox-inline"><input type="radio" id="inquiry12" name="service_inquiry3_booked" value="no" <?php if($data['service_inquiry3_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
 	 						<span class="help-block" id="service_inquiry3_booked_error"> </span>
 	 				 </div>
 	 				</div>
 	 			 </div>
 				</div>
 				<div class="row-fluid">
+				  <div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Variant Type <span class="required">*</span></label>
+						<div class="controls">
+							<select tabindex="1" class="large m-wrap" id="varianttype" name="varianttype">
+						   <?php  echo $modelObj->optionsGenerator('variantMaster', 'varianttype', 'id',$data['varianttype']," where status='0'"); ?>
+							</select>
+						</div>
+					 </div>
+				  </div>
+
+			   </div>
+				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">promo code <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Promo Code <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter promo code" value="<?php echo isset($data)?$data['promo_code']:''; ?>" id="promo_code" name="promo_code" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter Promo Code" value="<?php echo isset($data)?$data['promo_code']:''; ?>" id="promo_code" name="promo_code" class="m-wrap span12">
 	 						<span class="help-block" id="promo_code_error"> </span>
 	 				 </div>
 	 				</div>
@@ -355,9 +380,9 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">discount <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Discount <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter discount" value="<?php echo isset($data)?$data['discount']:''; ?>" id="discount" name="discount" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter Discount" value="<?php echo isset($data)?$data['discount']:''; ?>" id="discount" name="discount" class="m-wrap span12">
 	 						<span class="help-block" id="discount_error"> </span>
 	 				 </div>
 	 				</div>
@@ -366,9 +391,9 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">price <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Price <span class="required">*</span></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter price" value="<?php echo isset($data)?$data['price']:''; ?>" id="price" name="price" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter Price" value="<?php echo isset($data)?$data['price']:''; ?>" id="price" name="price" class="m-wrap span12">
 	 						<span class="help-block" id="price_error"> </span>
 	 				 </div>
 	 				</div>
@@ -377,9 +402,9 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">commission <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Commission <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter commission" value="<?php echo isset($data)?$data['commission']:''; ?>" id="commission" name="commission" class="m-wrap span12">
+	 						<input type="text" placeholder="Please Enter Commission" value="<?php echo isset($data)?$data['commission']:''; ?>" id="commission" name="commission" class="m-wrap span12">
 	 						<span class="help-block" id="commission_error"> </span>
 	 				 </div>
 	 				</div>
@@ -388,7 +413,7 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">taxed cost <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Taxed Cost <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
 	 						<input type="text" placeholder="Please Enter taxed cost" value="<?php echo isset($data)?$data['taxed_cost']:''; ?>" id="taxed_cost" name="taxed_cost" class="m-wrap span12">
 	 						<span class="help-block" id="taxed_cost_error"> </span>
@@ -411,59 +436,86 @@ if($leadmanager_id > 0){
 	  </div>
 	</div>
 <script>
+$(document).ready(function(){
+	$('#service_date').datepicker({
+  	format:'yyyy/mm/dd'
+  });
+
+   $('#service_time').timepicker();
+});
 <?php if($leadmanager_id != '' && $flag != 'new'){ ?>
 $(document).ready(function() {
   change_tab(1);
+ 
 });
 <?php }else if($flag=='new'){ ?>
 $(document).ready(function() {
   change_tab('new');
-  $('#service_date').datepicker({
-  	format:'yyyy/mm/dd'
-  });
-
+  
+   
 });
 <?php } ?>
 function saveData(frm_id, action){
         // alert('Jai Mata Di............' + frm_id);
-        $('.error').hide();
-        var flag=0;
-        var leadmanager_id = $('#leadmanager_id').val();
-		if(leadmanager_id=="")
-            {
-                //$('#product_id_error').show();
-                $('#leadmanager_idleadmanager_id').attr('placeholder' ,'Please Enter Categry Id');
-                $('#leadmanager_id').addClass('alert-error');
-                $('#leadmanager_id').focus();
+        $('#frm_lead_manager').validate({
+	    	rules:{
+	    		lead_source:"required",
+	    		service_date: "required",
+	    		lead_stage:"required",
+	    		service_time:"required",
+	    		lead_owner:"required",
+	    		manpower_deployment:"required",
+	    		client_firstname:"required",
+	    		client_lastname:"required",
+	    		client_mobile_no:{
+	    			required:true
+	    		}
+	    	},
+	    	submitHandler: function() {
+				
+	        $('.error').hide();
+	        var flag=0;
+	        var leadmanager_id = $('#leadmanager_id').val();
+			if(leadmanager_id=="")
+	        {
+	            //$('#product_id_error').show();
+	            $('#leadmanager_id').attr('placeholder' ,'Please Enter Categry Id');
+	            $('#leadmanager_id').addClass('alert-error');
+	            $('#leadmanager_id').focus();
 				$('html, body').animate({
 					 scrollTop: $("#li_pat1").offset().top
 				 }, 700);
-                flag=1;
-            }
+	            flag=1;
+	        }
 
-        if(flag==0){
-            var datastring=$('#'+frm_id).serialize();
-						// alert('Jai Mata Di............' + datastring);
-            $.ajax({
-                type: "POST",
-                url: "<?php print SITEPATH;?>/leadManager/category2db.php",
-                data: datastring,
-                success: getData,
-                error:function(){
-                    alert("failure");
-                    //$("#result").html('there is error while submit');
-                }
+	        if(flag==0){
+	            var datastring=$('#'+frm_id).serialize();
+							 //alert('Jai Mata Di............' + datastring);
+	            $.ajax({
+	                type: "POST",
+	                url: "<?php print SITEPATH;?>/leadManager/category2db.php",
+	                data: datastring,
+	                success: getData,
+	                error:function(){
+	                    alert("failure");
+	                    //$("#result").html('there is error while submit');
+	                }
 
-            });
-        }
+	            });
+	        }
 
-        return false;
+        	return false;
+			}
+    	});
+    	
+
     }
 
     function getData(success){ //alert('Jmd................');
 
     	var jObj=eval("("+success+")");
         var res_action=jObj.action; //alert('AAs');
+        //alert(success);
         var res_product_id=jObj.leadmanager_id; //alert('AA'+res_product_id);
 		$('#record_modified').show();
 			 setTimeout(function () {
@@ -473,6 +525,7 @@ function saveData(frm_id, action){
 		window.location.href = "<?php SITEPATH;?>/cms/leadManager/display.php?leadmanager_id="+res_product_id+"&flag=t";
 		<?php } ?>
     }
+
 </script>
 <link type="text/css" href="<?php print JSFILEPATH;?>/jquery-ui-1.8.11.custom/css/ui-lightness/jquery-ui-1.8.11.custom.css" rel="stylesheet" />
 <link rel="start" href="<?php print JSFILEPATH;?>/jquery-ui-1.8.11.custom/development-bundle/themes/base/jquery.ui.all.css" />

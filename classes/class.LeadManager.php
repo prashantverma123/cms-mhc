@@ -1,5 +1,5 @@
 <?php
-class Leadmanager {
+class LeadManager {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
@@ -131,7 +131,6 @@ class Leadmanager {
 	}
 
 	public function insertTable($values) {
-		print_r($values);exit;
 		return $this -> db -> insertDataIntoTable($values, $this -> tableName);
 	}// eof insertTable
 

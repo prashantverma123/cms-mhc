@@ -16,7 +16,7 @@ switch($action){
 			if($leadmanager_id == '' ){ //add new record
 				$insertArr['lead_source'] 	= $_POST['lead_source'];
 				$insertArr['lead_owner'] 	= $_POST['lead_owner'];
-				$insertArr['job_status']	= $_POST['job_status'];
+				$insertArr['job_status']	= 'pending';
 				$insertArr['lead_stage']    = $_POST['lead_stage'];
 				$insertArr['service_date'] 		=  date("Y-m-d", strtotime($_POST['service_date']));
 				$insertArr['service_time'] 		= $_POST['service_time'];
@@ -48,6 +48,7 @@ switch($action){
 				$insertArr['price'] 	= $_POST['price'];
 				$insertArr['commission'] 	= $_POST['commission'];
 				$insertArr['taxed_cost'] 	= $_POST['taxed_cost'];
+				$insertArr['varianttype'] = $_POST['varianttype'];
 
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
 				$insertArr['author_name']			= "Prashant";
@@ -60,7 +61,7 @@ switch($action){
 				$arrReturn['result'] = 'success';
 				$arrReturn['action'] = 'saveEventName';
 				$arrReturn['call']   = 'add';
-				$arrReturn['leadManager_id'] = encryptdata($returnVal);
+				$arrReturn['leadmanager_id'] = encryptdata($returnVal);
 
 			}else if($leadmanager_id > 0){ // edit the record
 				$updateArr['lead_source'] 	= $_POST['lead_source'];
@@ -97,6 +98,7 @@ switch($action){
 				$updateArr['price'] 	= $_POST['price'];
 				$updateArr['commission'] 	= $_POST['commission'];
 				$updateArr['taxed_cost'] 	= $_POST['taxed_cost'];
+				$updateArr['varianttype'] = $_POST['varianttype'];
 
 				$whereArr = array('id' => $leadmanager_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);

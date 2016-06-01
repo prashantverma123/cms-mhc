@@ -1,4 +1,4 @@
 <?php
 $moduleName 	= 'leadmanager';
-$modelObj = new Leadmanager();
+$modelObj = new LeadManager();
 ?>
