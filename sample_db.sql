@@ -446,3 +446,7 @@ ALTER TABLE `cms_users` DROP `org_twitter`;
 ALTER TABLE `cms_users` DROP `org_url`;
 ALTER TABLE `cms_users` DROP `org_logo`;
 ALTER TABLE `cms_users` DROP `org_description`;
+
+ALTER TABLE `leadmanager` CHANGE `manpower_deployment` `teamLeader_deployment`INT NOT NULL;
+
+ALTER TABLE `leadmanager` ADD `supervisor_deployment` INT NOT NULL AFTER`teamLeader_deployment`, ADD `janitor_deployment` INT NOT NULL AFTER`supervisor_deployment`;

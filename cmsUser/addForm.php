@@ -162,8 +162,8 @@ function saveData(frm_id, action){
 
         var jObj=eval("("+success+")");
         var res_action=jObj.action; //alert('AAs');
-        var res_cmsuser_id=jObj.cmsuser_id; 
-				debugger;
+        var res_cmsuser_id=jObj.cmsuser_id;
+				//debugger;
 		$('#record_modified').show();
 			 setTimeout(function () {
 				document.getElementById('record_modified').style.display='none';
