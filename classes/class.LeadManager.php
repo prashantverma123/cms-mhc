@@ -33,12 +33,12 @@ class LeadManager {
 			if($search){
 				$main_sql .= ' and ';
 				$fields = explode(',',$search);
-				
+
 				$j = 1;
 				foreach ($fields as $field) {
 					$main_sql .= $field." like '%".$searchData['filter']."%'";
 					if($j < count($fields)){
-						$main_sql .= " OR "; 
+						$main_sql .= " OR ";
 					}
 					$j++;
 				}
@@ -175,10 +175,10 @@ class LeadManager {
 		 		$pagination = "<div class='pagination'><ul><li class='".$class."'><a href='".$prev."'>Prev</a></li>";
 				for($c= 0; $c<=$pagecount;$c++):
 					$pagination .= "<li><a href='".SITEPATH."/".$this -> folderName."/display.php?p=".($c+1)."'>" .($c+1)."</a></li>";
-				endfor; 
+				endfor;
 				$pagination .= '<li class="'.$class1.'"><a href="'.$next.'">Next</a></li>';
 				$pagination .="</ul></div>";
-		 } 
+		 }
 		 return $pagination;
 	}
 
@@ -196,6 +196,19 @@ class LeadManager {
         return $options_str;
     }
 
+		public function optionsGeneratorByIndex($endIndex) {
+	        $options_str = "";
+
+	        $options_str = "<option value=''>Please Select</option>";
+					for ($i=1; $i <=$endIndex ; $i++) {
+						$options_str.='<option value="' . $i . '"';
+						if ($selected_value != "" && $selected_value ==$i)
+								$options_str.=' selected ';
+						$options_str.='>' . $i . '</option>';
+					}
+
+	        return $options_str;
+	    }
 
     function insertIntoOrder($id){
     	if(intval($id)){
@@ -203,7 +216,7 @@ class LeadManager {
 			$keyValueArray['leadmanager.id'] = intval($id);
 			$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
 			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.name as lead_source",'','',$joinArray,true);
-			
+
 			foreach ($dataArr as $k=>$value) {
 				$values['name'] = $value['client_firstname'];
 				$values['lead_source'] = $value['lead_source'];
@@ -229,7 +242,7 @@ class LeadManager {
 			}
 			return $this -> db -> insertDataIntoTable($values, 'orders');
     	}
-    	
+
     }
 }
 ?>

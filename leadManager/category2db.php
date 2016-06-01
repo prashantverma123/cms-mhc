@@ -21,7 +21,9 @@ switch($action){
 				$insertArr['service_date'] 		=  date("Y-m-d", strtotime($_POST['service_date']));
 				$insertArr['service_time'] 		= $_POST['service_time'];
 
-				$insertArr['manpower_deployment'] 		= $_POST['manpower_deployment'];
+				$insertArr['teamLeader_deployment'] 		= $_POST['teamLeader_deployment'];
+				$insertArr['supervisor_deployment'] 		= $_POST['supervisor_deployment'];
+				$insertArr['janitor_deployment'] 		= $_POST['janitor_deployment'];
 				$insertArr['client_salutation'] 		= $_POST['client_salutation'];
 				$insertArr['client_firstname'] 		= $_POST['client_firstname'];
 				$insertArr['client_lastname'] 		= $_POST['client_lastname'];
@@ -38,7 +40,7 @@ switch($action){
 				$insertArr['additional_note'] 	= $_POST['additional_note'];
 				$insertArr['service_inquiry1'] 	= $_POST['service_inquiry1'];
 				$insertArr['service_inquiry1_booked'] 	= $_POST['service_inquiry1_booked'];
-				
+
 				$insertArr['service_inquiry2'] 	= $_POST['service_inquiry2'];
 				$insertArr['service_inquiry2_booked'] 	= $_POST['service_inquiry2_booked'];
 				$insertArr['service_inquiry3'] 	= $_POST['service_inquiry3'];
@@ -71,7 +73,9 @@ switch($action){
 				$updateArr['service_date'] 		=  date("Y-m-d", strtotime($_POST['service_date']));
 				$updateArr['service_time'] 		= $_POST['service_time'];
 
-				$updateArr['manpower_deployment'] 		= $_POST['manpower_deployment'];
+				$updateArr['teamLeader_deployment'] 		= $_POST['teamLeader_deployment'];
+				$updateArr['supervisor_deployment'] 		= $_POST['supervisor_deployment'];
+				$updateArr['janitor_deployment'] 		= $_POST['janitor_deployment'];
 				$updateArr['client_salutation'] 		= $_POST['client_salutation'];
 				$updateArr['client_firstname'] 		= $_POST['client_firstname'];
 				$updateArr['client_lastname'] 		= $_POST['client_lastname'];
@@ -88,7 +92,7 @@ switch($action){
 				$updateArr['additional_note'] 	= $_POST['additional_note'];
 				$updateArr['service_inquiry1'] 	= $_POST['service_inquiry1'];
 				$updateArr['service_inquiry1_booked'] 	= $_POST['service_inquiry1_booked'];
-				
+
 				$updateArr['service_inquiry2'] 	= $_POST['service_inquiry2'];
 				$updateArr['service_inquiry2_booked'] 	= $_POST['service_inquiry2_booked'];
 				$updateArr['service_inquiry3'] 	= $_POST['service_inquiry3'];

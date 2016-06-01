@@ -17,12 +17,11 @@ switch($action){
 				$insertArr['name'] 	= $_POST['name'];
 				$insertArr['email'] 		= $_POST['email'];
 				$insertArr['username'] 		= $_POST['username'];
-				$insertArr['password'] 		= $_POST['password'];
-				$insertArr['role'] 			= 	$_POST['role'];
-				/*$insertArr['author_id']		= $_SESSION['tmobi']['UserId'];
-				$insertArr['author_name']	= "Prashant";*/
-				$insertArr['insert_date']	= date('Y-m-d H:i:s');
-				$insertArr['update_date']	= date('Y-m-d H:i:s');
+
+				$insertArr['password'] 			= $_POST['password'];
+				$insertArr['role'] 			= $_POST['role'];
+				$insertArr['insert_date']		= date('Y-m-d H:i:s');
+				$insertArr['update_date']		= date('Y-m-d H:i:s');
 				$insertArr['status']= 0;
 				$insertArr['ip']= getIP();
 				$returnVal = $modelObj->insertTable($insertArr);
@@ -37,8 +36,12 @@ switch($action){
 				$updateArr['username'] 	= $_POST['username'];
 				$updateArr['password'] 		= $_POST['password'];
 				$updateArr['role'] 		= $_POST['role'];
-				$insertArr['update_date']	= date('Y-m-d H:i:s');
-				$insertArr['ip']= getIP();
+
+				$updateArr['update_date']	= date('Y-m-d H:i:s');
+				$updateArr['ip']= getIP();
+
+
+
 				$whereArr = array('id' => $cmsuser_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 				$arrReturn['result'] = 'success';

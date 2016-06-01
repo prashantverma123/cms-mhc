@@ -193,15 +193,17 @@ function saveData(frm_id, action){
     }
 
     function getData(success){
-			//console.log(success);
+
+
         var jObj=eval("("+success+")");
         var res_action=jObj.action; //alert('AAs');
-        var res_cmsuser_id=jObj.cmsuser_id; //alert('AA'+res_cmsuser_id);
-				debugger;
+        var res_cmsuser_id=jObj.cmsuser_id;
+				//debugger;
 		$('#record_modified').show();
 			 setTimeout(function () {
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
+			console.log($cmsuser_id);
 		<?php if($cmsuser_id =='' || $cmsuser_id == 0){ ?>
 		window.location.href = "<?php SITEPATH;?>/cms/cmsUser/display.php?cmsuser_id="+res_cmsuser_id+"&flag=t";
 		<?php } ?>

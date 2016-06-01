@@ -102,15 +102,40 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label"> 	Manpower Deployment  <span class="required">*</span></label>
+	 				 <label class="control-label"> 	Team Leader <span class="required">*</span></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter Manpower Deployment" value="<?php echo isset($data)?$data['manpower_deployment']:''; ?>" id="manpower_deployment" name="manpower_deployment" class="m-wrap span12">
-	 						<span class="help-block" id="manpower_deployment_error"> </span>
+						 <select tabindex="1" class="medium m-wrap" id="teamLeader_deployment" name="teamLeader_deployment">
+							<?php  echo $modelObj->optionsGeneratorByIndex(5); ?>
+						 </select>
+
+	 						<span class="help-block" id="teamLeader_deployment_error"> </span>
 	 				 </div>
 	 				</div>
 	 			 </div>
+				 <div class="span6 ">
+				 <div class="control-group">
+					<label class="control-label"> Supervisor  <span class="required">*</span></label>
+					<div class="controls">
+						<select tabindex="1" class="medium m-wrap" id="supervisor_deployment" name="supervisor_deployment">
+						<?php  echo $modelObj->optionsGeneratorByIndex(5); ?>
+					 </select>
+						 <span class="help-block" id="supervisor_deployment_error"> </span>
+					</div>
+				 </div>
 				</div>
-				 
+				<div class="span6 ">
+				<div class="control-group">
+				 <label class="control-label"> 	Janitor/Technician <span class="required">*</span></label>
+				 <div class="controls">
+					 <select tabindex="1" class="medium m-wrap" id="janitor_deployment" name="janitor_deployment">
+						<?php  echo $modelObj->optionsGeneratorByIndex(10); ?>
+					 </select>
+						<span class="help-block" id="janitor_deployment_error"> </span>
+				 </div>
+				</div>
+			 </div>
+				</div>
+
 				<div>
 					<div class="row-fluid" style="background-color:#6d6d6d;margin-bottom:15px;">
 					<h3 style="padding-left:10px">Client Details</h3>
@@ -446,13 +471,13 @@ $(document).ready(function(){
 <?php if($leadmanager_id != '' && $flag != 'new'){ ?>
 $(document).ready(function() {
   change_tab(1);
- 
+
 });
 <?php }else if($flag=='new'){ ?>
 $(document).ready(function() {
   change_tab('new');
-  
-   
+
+
 });
 <?php } ?>
 function saveData(frm_id, action){
@@ -472,7 +497,7 @@ function saveData(frm_id, action){
 	    		}
 	    	},
 	    	submitHandler: function() {
-				
+
 	        $('.error').hide();
 	        var flag=0;
 	        var leadmanager_id = $('#leadmanager_id').val();
@@ -507,7 +532,7 @@ function saveData(frm_id, action){
         	return false;
 			}
     	});
-    	
+
 
     }
 
