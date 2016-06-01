@@ -24,7 +24,7 @@ if($employee_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Name <!--<span class="required">*</span>--></label>
+						<label class="control-label">Name <span class="required">*</span></label>
 						<div class="controls">
 						   <input type="text" placeholder="Please Enter Name" value="<?php echo isset($data)?$data['name']:''; ?>" id="name" name="name" class="m-wrap span12">
 						   <span class="help-block" id="name_error"> </span>
@@ -39,7 +39,7 @@ if($employee_id > 0){
 			   <div class="row-fluid">
 					 <div class="span6 ">
  					 <div class="control-group">
- 						<label class="control-label">Email Id <!--<span class="required">*</span>--></label>
+ 						<label class="control-label">Email Id <span class="required">*</span></label>
  						<div class="controls">
  						   <input type="text" placeholder="Please Enter Email Id" value="<?php echo isset($data)?$data['email']:''; ?>" id="email" name="email" class="m-wrap span12">
  						   <span class="help-block" id="email_error"> </span>
@@ -56,7 +56,7 @@ if($employee_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">Contact No <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Contact No <span class="required">*</span></label>
 	 				 <div class="controls">
 	 						<input type="text" placeholder="Please Enter Contact No" value="<?php echo isset($data)?$data['mobile_no']:''; ?>" id="mobile_no" name="mobile_no" class="m-wrap span12">
 	 						<span class="help-block" id="mobile_no_error"> </span>
@@ -72,7 +72,7 @@ if($employee_id > 0){
 
 					 <div class="span6 ">
  					<div class="control-group">
- 					 <label class="control-label">City <!--<span class="required">*</span>--></label>
+ 					 <label class="control-label">City <span class="required">*</span></label>
  					 <div class="controls">
  							<input type="text" placeholder="Please Enter City" value="<?php echo isset($data)?$data['city']:''; ?>" id="city" name="city" class="m-wrap span12">
  							<span class="help-block" id="city_error"> </span>
@@ -88,7 +88,7 @@ if($employee_id > 0){
 
 					 <div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">Designation  <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Designation  <span class="required">*</span></label>
 	 				 <div class="controls">
 
 							<select tabindex="1" class="large m-wrap" id="designation" name="designation">
@@ -111,7 +111,7 @@ if($employee_id > 0){
 
 					<div class="span6 ">
 				 <div class="control-group">
-					<label class="control-label">Gender <!--<span class="required">*</span>--></label>
+					<label class="control-label">Gender <span class="required">*</span></label>
 					<div class="controls">
 						<select tabindex="1" class="large m-wrap" id="gender" name="gender">
 						<option value="" >Select the Gender</option>
@@ -163,7 +163,28 @@ $(document).ready(function() {
 });
 <?php } ?>
 function saveData(frm_id, action){
-        alert('Jai Mata Di............' + frm_id);
+        //alert('Jai Mata Di............' + frm_id);
+     $('#frm_employee_data').validate({
+		rules:{
+			name:"required",
+			email:{
+				email:true,
+				required:true
+			},
+			mobile_no:{
+				required:true
+			},
+			city:{
+				required:true
+			},
+			designation:{
+				required:true
+			},
+			gender:{
+				required:true
+			}
+		},
+		submitHandler: function() {
         $('.error').hide();
         var flag=0;
         var employee_id = $('#employee_id').val();
@@ -178,12 +199,12 @@ function saveData(frm_id, action){
 				 }, 700);
                 flag=1;
             }
-							console.log("flagvalue.............");
-	console.log(flag);
+			//console.log("flagvalue.............");
+			//console.log(flag);
         if(flag==0){
             var datastring=$('#'+frm_id).serialize();
-						console.log(datastring);
-						alert('Jai Mata Di............' + datastring);
+						//console.log(datastring);
+						//alert('Jai Mata Di............' + datastring);
             $.ajax({
                 type: "POST",
                 url: "<?php print SITEPATH;?>/employee/category2db.php",
@@ -198,6 +219,8 @@ function saveData(frm_id, action){
         }
 
         return false;
+    }
+	});
     }
 
     function getData(success){ alert('Jmd................');

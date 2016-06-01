@@ -24,7 +24,7 @@ if($source_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Source <!--<span class="required">*</span>--></label>
+						<label class="control-label">Source <span class="required">*</span></label>
 						<div class="controls">
 						   <input type="text" placeholder="Please Enter Lead Source Name" value="<?php echo isset($data)?$data['name']:''; ?>" id="source_name" name="source_name" class="m-wrap span12">
 						   <span class="help-block" id="source_name_error"> </span>
@@ -38,7 +38,7 @@ if($source_id > 0){
 			   <div class="row-fluid">
 					 <div class="span6 ">
  					 <div class="control-group">
- 						<label class="control-label">Source Url <!--<span class="required">*</span>--></label>
+ 						<label class="control-label">Source Url <span class="required">*</span></label>
  						<div class="controls">
  						   <input type="text" placeholder="Please Enter Lead source Url" value="<?php echo isset($data)?$data['source_url']:''; ?>" id="source_url" name="source_url" class="m-wrap span12">
  						   <span class="help-block" id="source_url_error"> </span>
@@ -122,6 +122,18 @@ $(document).ready(function() {
 <?php } ?>
 function saveData(frm_id, action){
         //alert('Jai Mata Di............' + frm_id);
+         $('#frm_lead_source').validate({
+		rules:{
+			source_name:"required",
+			source_url:{
+				required:true,
+				url:true
+			},
+			commission_type:{
+				number:true	
+			}
+		},
+		submitHandler: function() {
         $('.error').hide();
         var flag=0;
         var source_name = $('#source_name').val();
@@ -151,8 +163,10 @@ function saveData(frm_id, action){
 
             });
         }
-
+    	
         return false;
+    	}
+	});
     }
 
     function getData(success){ //alert('Jmd................');

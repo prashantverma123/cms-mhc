@@ -24,7 +24,7 @@ if($lead_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Name <!--<span class="required">*</span>--></label>
+						<label class="control-label">Name <span class="required">*</span></label>
 						<div class="controls">
 						   <input type="text" placeholder="Please Enter Lead Stage" value="<?php echo isset($data)?$data['name']:''; ?>" id="lead_stage" name="lead_stage" class="m-wrap span12">
 						   <span class="help-block" id="lead_stage_error"> </span>
@@ -44,7 +44,7 @@ if($lead_id > 0){
 				  <!--/span-->
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Lead Order</label>
+						<label class="control-label">Lead Order<span class="required">*</span></label>
 						<div class="controls">
 							 <input type="text" placeholder="Please Enter Lead Order" value="<?php echo isset($data)?$data['lead_order']:''; ?>" id="lead_order" name="lead_order" class="m-wrap span12">
 							 <span class="help-block" id="lead_order_error"> </span>
@@ -80,6 +80,15 @@ $(document).ready(function() {
 <?php } ?>
 function saveData(frm_id, action){
         //alert('Jai Mata Di............' + frm_id);
+        $('#frm_lead_stage').validate({
+		rules:{
+			lead_stage:"required",
+			lead_order:{
+				required:true,
+				number:true
+			}
+		},
+		submitHandler: function() {
         $('.error').hide();
         var flag=0;
         var lead_stage = $('#lead_stage').val();
@@ -111,6 +120,9 @@ function saveData(frm_id, action){
         }
 
         return false;
+    	}
+    });
+
     }
 
     function getData(success){ //alert('Jmd................');

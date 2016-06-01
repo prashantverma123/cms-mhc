@@ -24,7 +24,7 @@ if($cmsuser_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Name <!--<span class="required">*</span>--></label>
+						<label class="control-label">Name <span class="required">*</span></label>
 						<div class="controls">
 						   <input type="text" placeholder="Please Enter Name" value="<?php echo isset($data)?$data['name']:''; ?>" id="name" name="name" class="m-wrap span12">
 						   <span class="help-block" id="cmsuser_name_error"> </span>
@@ -42,7 +42,7 @@ if($cmsuser_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Email</label>
+						<label class="control-label">Email<span class="required">*</span></label>
 							<div class="controls">
 								<input type="text" placeholder="Please Enter Email" value="<?php echo isset($data)?$data['email']:''; ?>" id="email" name="email" class="m-wrap span12">
  						   <span class="help-block" id="cmsuser_email_error"> </span>
@@ -55,7 +55,7 @@ if($cmsuser_id > 0){
 				<div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Username</label>
+						<label class="control-label">Username<span class="required">*</span></label>
 						<div class="controls">
 							<input type="text" placeholder="Please Enter Username" value="<?php echo isset($data)?$data['username']:''; ?>" id="username" name="username" class="m-wrap span12">
 						 <span class="help-block" id="cmsuser_username_error"> </span>
@@ -63,22 +63,35 @@ if($cmsuser_id > 0){
 					 </div>
 				  </div>
 				  <!--/span-->
-				  <div class="span6 ">
-					 <div class="control-group">
-						<label class="control-label">Password</label>
-						<div class="controls">
-							<input type="text" placeholder="Please Enter Password" value="<?php echo isset($data)?$data['password']:''; ?>" id="password" name="password" class="m-wrap span12">
-						 <span class="help-block" id="cmsuser_password_error"> </span>
-						</div>
-					 </div>
-				  </div>
+				 
 				  <!--/span-->
 			   </div>
-
+			   <div class="row-fluid">
+			   		<div class="span6 ">
+						 <div class="control-group">
+							<label class="control-label">Password<span class="required">*</span></label>
+							<div class="controls">
+								<input type="password" placeholder="Please Enter Password" value="<?php echo isset($data)?$data['password']:''; ?>" id="password" name="password" class="m-wrap span12">
+							 <span class="help-block" id="cmsuser_password_error"> </span>
+							</div>
+						 </div>
+				 	</div>
+				 	<?php if($cmsuser_id==''): ?>
+				 	<div class="span6 ">
+						 <div class="control-group">
+							<label class="control-label">Confirm Password<span class="required">*</span></label>
+							<div class="controls">
+								<input type="password" placeholder="Please Enter Password" value="" id="confirm_password" name="confirm_password" class="m-wrap span12">
+							 <span class="help-block" id="cmsuser_confirm_password_error"> </span>
+							</div>
+						 </div>
+				 	</div>
+				 <?php endif; ?>
+			   </div>
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Role</label>
+						<label class="control-label">Role<span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="role" name="role">
 							<option value="" >Assign the role</option>
@@ -121,11 +134,31 @@ $(document).ready(function() {
 <?php } ?>
 function saveData(frm_id, action){
         //alert('Jai Mata Di............' + frm_id);
-        $('.error').hide();
-        var flag=0;
-        var cmsuser_name = $('#name').val();
-		if(cmsuser_name=="")
-            {
+	 $('#frm_about_cmsuser').validate({
+		rules:{
+			name:"required",
+			email:{
+				email:true,
+				required:true
+			},
+			username:"required",
+			password:{
+				required:true,
+				minlength: 6
+			},
+			confirm_password:{
+				required:true,	
+				minlength: 6,
+				equalTo: "#password"
+			},
+			role:"required"
+		},
+		submitHandler: function() {
+	        $('.error').hide();
+	        var flag=0;
+	        var cmsuser_name = $('#name').val();
+			if(cmsuser_name=="")
+        	{
                 //$('#category_name_error').show();
                 $('#name').attr('placeholder' ,'Please Enter Name');
                 $('#name').addClass('alert-error');
@@ -136,33 +169,34 @@ function saveData(frm_id, action){
                 flag=1;
             }
 
-        if(flag==0){
-            var datastring=$('#'+frm_id).serialize();
-						console.log(datastring);
-            $.ajax({
-                type: "POST",
-                url: "<?php print SITEPATH;?>/cmsUser/category2db.php",
-                data: datastring,
-                success: function(data){
-									getData(data);
+	        if(flag==0){
+	            var datastring=$('#'+frm_id).serialize();
+				//console.log(datastring);
+	            $.ajax({
+	                type: "POST",
+	                url: "<?php print SITEPATH;?>/cmsUser/category2db.php",
+	                data: datastring,
+	                success: function(data){
+	                	console.log(data);
+						getData(data);
+					},
+	                error:function(){
+	                    alert("failure");
+	                    //$("#result").html('there is error while submit');
+	                }
 
-								},
-                error:function(){
-                    alert("failure");
-                    //$("#result").html('there is error while submit');
-                }
-
-            });
-        }
-
-        return false;
+	            });
+	        }
+	        return false;
+	    }
+		});
     }
 
     function getData(success){
-			console.log(success);
+			//console.log(success);
         var jObj=eval("("+success+")");
         var res_action=jObj.action; //alert('AAs');
-        var res_cmsuser_id=jObj.cmsuser_id; alert('AA'+res_cmsuser_id);
+        var res_cmsuser_id=jObj.cmsuser_id; //alert('AA'+res_cmsuser_id);
 				debugger;
 		$('#record_modified').show();
 			 setTimeout(function () {

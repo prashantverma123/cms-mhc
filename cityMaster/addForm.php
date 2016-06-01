@@ -24,7 +24,7 @@ if($city_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Name <!--<span class="required">*</span>--></label>
+						<label class="control-label">Name <span class="required">*</span></label>
 						<div class="controls">
 						   <input type="text" placeholder="Please Enter City Name" value="<?php echo isset($data)?$data['name']:''; ?>" id="city_name" name="city_name" class="m-wrap span12">
 						   <span class="help-block" id="city_name_error"> </span>
@@ -44,7 +44,7 @@ if($city_id > 0){
 				  <!--/span-->
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">City Tier</label>
+						<label class="control-label">City Tier<span class="required">*</span></label>
 						<div class="controls">
 							 <input type="text" placeholder="Please Enter City Tier" value="<?php echo isset($data)?$data['city_tier']:''; ?>" id="city_tier" name="city_tier" class="m-wrap span12">
 							 <span class="help-block" id="city_name_error"> </span>
@@ -80,42 +80,52 @@ $(document).ready(function() {
 <?php } ?>
 function saveData(frm_id, action){
         //alert('Jai Mata Di............' + frm_id);
+    $('#frm_city_master').validate({
+		rules:{
+			city_name:"required",
+			city_tier:{
+				required:true,
+				number:true
+			}
+		},
+		submitHandler: function() {
         $('.error').hide();
         var flag=0;
         var city_name = $('#city_name').val();
 				//alert('Jai Mata Di............' + city_name);
 		if(city_name=="")
-            {
-                //$('#category_name_error').show();
-                $('#city_name').attr('placeholder' ,'Please Enter City Name');
-                $('#city_name').addClass('alert-error');
-                $('#city_name').focus();
-				$('html, body').animate({
-					 scrollTop: $("#li_pat1").offset().top
-				 }, 700);
-                flag=1;
-            }
+        {
+            //$('#category_name_error').show();
+            $('#city_name').attr('placeholder' ,'Please Enter City Name');
+            $('#city_name').addClass('alert-error');
+            $('#city_name').focus();
+			$('html, body').animate({
+				 scrollTop: $("#li_pat1").offset().top
+			 }, 700);
+            flag=1;
+        }
 
         if(flag==0){
-				//	alert('Jai Mata Di............' + flag);
+			//	alert('Jai Mata Di............' + flag);
+		
             var datastring=$('#'+frm_id).serialize();
             $.ajax({
                 type: "POST",
                 url: "<?php print SITEPATH;?>/cityMaster/category2db.php",
                 data: datastring,
                 success: function(data)
-				         {
-				            getData(data);
-				         },
+		        {
+		            getData(data);
+		        },
                 error:function(){
                     alert("failure");
                     //$("#result").html('there is error while submit');
                 }
-
             });
         }
-
-        return false;
+	        return false;
+	    }
+    	});
     }
 
     function getData(success){
