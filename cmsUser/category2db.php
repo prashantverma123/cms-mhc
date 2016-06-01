@@ -19,8 +19,6 @@ switch($action){
 				$insertArr['username'] 		= $_POST['username'];
 				$insertArr['password'] 			= $_POST['password'];
 				$insertArr['role'] 			= $_POST['role'];
-				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
-				$insertArr['author_name']			= "Prashant";
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
 				$insertArr['update_date']		= date('Y-m-d H:i:s');
 				$insertArr['status']= 0;
@@ -38,7 +36,7 @@ switch($action){
 				$updateArr['username'] 	= $_POST['username'];
 				$updateArr['password'] 		= $_POST['password'];
 				$updateArr['role'] 		= $_POST['role'];
-		
+
 				$whereArr = array('id' => $cmsuser_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 				$arrReturn['result'] = 'success';

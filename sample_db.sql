@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `cms_users` (
   `email` varchar(50) DEFAULT NULL,
   `role` varchar(50) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
   `status` tinyint(1) DEFAULT NULL,
-  `org_name` varchar(200) DEFAULT NULL,
+    `org_name` varchar(200) DEFAULT NULL,
   `org_twitter` varchar(200) DEFAULT NULL,
   `org_url` varchar(200) DEFAULT NULL,
   `org_email` varchar(200) DEFAULT NULL,
@@ -378,26 +378,26 @@ ALTER TABLE `orders` ADD CONSTRAINT `fk_leadsource_orders` FOREIGN KEY (`lead_so
 
 ALTER TABLE `pricelist` ADD INDEX(`category_type`);
 
-ALTER TABLE `pricelist` ADD INDEX(`lead_source`); 
+ALTER TABLE `pricelist` ADD INDEX(`lead_source`);
 
-ALTER TABLE `pricelist` ADD INDEX(`city`); 
+ALTER TABLE `pricelist` ADD INDEX(`city`);
 
-ALTER TABLE `pricelist` CHANGE `category_type` `category_type` INT NOT NULL; 
-ALTER TABLE `pricelist` CHANGE `lead_source` `lead_source` INT NOT NULL; 
+ALTER TABLE `pricelist` CHANGE `category_type` `category_type` INT NOT NULL;
+ALTER TABLE `pricelist` CHANGE `lead_source` `lead_source` INT NOT NULL;
 ALTER TABLE `pricelist` CHANGE `city` `city` INT NOT NULL;
 
-ALTER TABLE `pricelist` CHANGE `varianttype` `varianttype` INT NULL DEFAULT NULL; 
+ALTER TABLE `pricelist` CHANGE `varianttype` `varianttype` INT NULL DEFAULT NULL;
 
 ALTER TABLE `pricelist` ADD INDEX(`varianttype`);
 
 
 ALTER TABLE `pricelist` ADD CONSTRAINT `fk_leadsource_pricelist` FOREIGN KEY (`lead_source`) REFERENCES `sample_db`.`leadsource`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION; ALTER TABLE `pricelist` ADD CONSTRAINT `fk_category_pricelist` FOREIGN KEY (`category_type`) REFERENCES `sample_db`.`category`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION; ALTER TABLE `pricelist` ADD CONSTRAINT `fk_city_pricelist` FOREIGN KEY (`city`) REFERENCES `sample_db`.`city`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION; ALTER TABLE `pricelist` ADD CONSTRAINT `fk_varianttype_pricelist` FOREIGN KEY (`varianttype`) REFERENCES `sample_db`.`variantmaster`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `product` ADD INDEX(`category_id`); 
+ALTER TABLE `product` ADD INDEX(`category_id`);
 
 ALTER TABLE `product` ADD INDEX(`city_id`);
 
-ALTER TABLE `product` ADD INDEX(`lead_source_id`); 
+ALTER TABLE `product` ADD INDEX(`lead_source_id`);
 
 ALTER TABLE `product` ADD  CONSTRAINT `fk_leadsourceid_product` FOREIGN KEY (`lead_source_id`) REFERENCES `sample_db`.`leadsource`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
@@ -415,16 +415,16 @@ ALTER TABLE `category` ADD  CONSTRAINT `fk_cmsuserid_category` FOREIGN KEY (`aut
 ALTER TABLE `city` ADD INDEX(`author_id`);
 ALTER TABLE `city` ADD CONSTRAINT `fk_cmsuserid_city` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `employee` ADD INDEX(`author_id`); 
+ALTER TABLE `employee` ADD INDEX(`author_id`);
 ALTER TABLE `employee` ADD CONSTRAINT `fk_cmsuserid_employee` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 ALTER TABLE `leadmanager` ADD INDEX(`author_id`);
 ALTER TABLE `leadmanager` ADD CONSTRAINT `fk_cmsuserid_leadmanager` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `leadsource` ADD INDEX(`author_id`); 
+ALTER TABLE `leadsource` ADD INDEX(`author_id`);
 ALTER TABLE `leadsource` ADD CONSTRAINT `fk_cmsuserid_leadsource` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `leadstage` ADD INDEX(`author_id`); 
+ALTER TABLE `leadstage` ADD INDEX(`author_id`);
 ALTER TABLE `leadstage` ADD CONSTRAINT `fk_cmsuserid_leadstage` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`leadstage`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 ALTER TABLE `pricelist` ADD INDEX(`author_id`);
@@ -435,3 +435,14 @@ ALTER TABLE `orders` ADD CONSTRAINT `fk_cmsuserid_orders` FOREIGN KEY (`author_i
 
 ALTER TABLE `variantmaster` ADD INDEX(`author_id`);
 ALTER TABLE `variantmaster` ADD CONSTRAINT `fk_cmsuserid` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+
+ALTER TABLE `cms_users` CHANGE `org_email` `ip` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `cms_users` CHANGE `org_phone` `insert_date` DATETIME NULL DEFAULT NULL;
+
+ALTER TABLE `cms_users` DROP `org_name`;
+ALTER TABLE `cms_users` DROP `org_twitter`;
+ALTER TABLE `cms_users` DROP `org_url`;
+ALTER TABLE `cms_users` DROP `org_logo`;
+ALTER TABLE `cms_users` DROP `org_description`;
