@@ -26,25 +26,9 @@ if($order_id > 0){
 					 <div class="control-group">
 						<label class="control-label">Lead Source <!--<span class="required">*</span>--></label>
 						<div class="controls">
-						<!--  <select tabindex="1" class="large m-wrap lead_source" id="lead_source" name="lead_source">
-							<option value="1" >Select Lead Source</option>
-							<?php
-						/*	$arVal = $modelObj->getLeadSource();
-							echo '<pre>'; print_r($$arVal); echo '</pre>';
-							foreach($arVal as $key){
-							 if(isset($data) && $data['id'] == $key["id"]){
-								 $sel = 'selected="selected"';
-							 }else{
-								 $sel ='';
-							 }
-							 echo '<option value="'.$key["id"].'" '.$sel.'>'.$key["name"].'</option>';
-							}*/
-							?>
-						 </select> -->
-
-						 <select tabindex="1" class="large m-wrap lead_source" id="lead_source" name="lead_source">
-								<?php echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['id'], " where status='0'"); ?>
-						</select>
+							<select tabindex="1" class="large m-wrap lead_source" id="lead_source" name="lead_source">
+									<?php echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['id'], " where status='0'"); ?>
+							</select>
 						</div>
 					 </div>
 				  </div>
@@ -149,23 +133,9 @@ if($order_id > 0){
 					 <div class="control-group">
 						<label class="control-label">City</label>
 						<div class="controls">
-							<!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
- 						<span class="help-block" id="efburl_error"> </span> -->
+							
 						<select tabindex="1" class="large m-wrap" id="city" name="city">
-						 <option value="0" >Select City</option>
-						 <!-- <?php  $arVal = $modelObj->getLeadSource();?> -->
-						 <?php
-						 $arVal = $modelObj->getCityList();
-						 //echo '<pre>'; print_r($$arVal); echo '</pre>';
-						 foreach($arVal as $key){
-							if(isset($data) && $data['id'] == $key["id"]){
-								$sel = 'selected="selected"';
-							}else{
-								$sel ='';
-							}
-							echo '<option value="'.$key["id"].'" '.$sel.'>'.$key["name"].'</option>';
-						 }
-						 ?>
+								<?php echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id'], " where status='0'"); ?>
 						</select>
 						</div>
 					 </div>

@@ -354,3 +354,84 @@ CREATE TABLE IF NOT EXISTS `leadManager` (
   `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+
+ALTER TABLE `leadmanager` ADD INDEX(`lead_source`);
+
+ALTER TABLE `leadmanager` CHANGE `lead_stage` `lead_stage` INT NOT NULL;
+
+ALTER TABLE `leadmanager` ADD INDEX(`lead_stage`);
+
+ALTER TABLE `leadmanager` ADD INDEX(`varianttype`);
+
+ALTER TABLE `leadmanager` ADD CONSTRAINT `fk_leadsource_leadmanager` FOREIGN KEY (`lead_source`) REFERENCES `sample_db`.`leadsource`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `leadmanager` ADD CONSTRAINT `fk_leadstage_leadmanager` FOREIGN KEY (`lead_stage`) REFERENCES `sample_db`.`leadstage`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION; ALTER TABLE `leadmanager` ADD CONSTRAINT `fk_varianttype_leadmanager` FOREIGN KEY (`varianttype`) REFERENCES `sample_db`.`variantmaster`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `orders` CHANGE `lead_source` `lead_source` INT NOT NULL;
+
+ALTER TABLE `orders` ADD INDEX(`lead_source`);
+
+ALTER TABLE `orders` CHANGE `pincode` `pincode` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+
+ALTER TABLE `orders` ADD CONSTRAINT `fk_leadsource_orders` FOREIGN KEY (`lead_source`) REFERENCES `sample_db`.`leadsource`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `pricelist` ADD INDEX(`category_type`);
+
+ALTER TABLE `pricelist` ADD INDEX(`lead_source`); 
+
+ALTER TABLE `pricelist` ADD INDEX(`city`); 
+
+ALTER TABLE `pricelist` CHANGE `category_type` `category_type` INT NOT NULL; 
+ALTER TABLE `pricelist` CHANGE `lead_source` `lead_source` INT NOT NULL; 
+ALTER TABLE `pricelist` CHANGE `city` `city` INT NOT NULL;
+
+ALTER TABLE `pricelist` CHANGE `varianttype` `varianttype` INT NULL DEFAULT NULL; 
+
+ALTER TABLE `pricelist` ADD INDEX(`varianttype`);
+
+
+ALTER TABLE `pricelist` ADD CONSTRAINT `fk_leadsource_pricelist` FOREIGN KEY (`lead_source`) REFERENCES `sample_db`.`leadsource`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION; ALTER TABLE `pricelist` ADD CONSTRAINT `fk_category_pricelist` FOREIGN KEY (`category_type`) REFERENCES `sample_db`.`category`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION; ALTER TABLE `pricelist` ADD CONSTRAINT `fk_city_pricelist` FOREIGN KEY (`city`) REFERENCES `sample_db`.`city`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION; ALTER TABLE `pricelist` ADD CONSTRAINT `fk_varianttype_pricelist` FOREIGN KEY (`varianttype`) REFERENCES `sample_db`.`variantmaster`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `product` ADD INDEX(`category_id`); 
+
+ALTER TABLE `product` ADD INDEX(`city_id`);
+
+ALTER TABLE `product` ADD INDEX(`lead_source_id`); 
+
+ALTER TABLE `product` ADD  CONSTRAINT `fk_leadsourceid_product` FOREIGN KEY (`lead_source_id`) REFERENCES `sample_db`.`leadsource`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `product` ADD CONSTRAINT `fk_categoryid_product` FOREIGN KEY (`category_id`) REFERENCES `sample_db`.`category`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION; ALTER TABLE `product` ADD CONSTRAINT `fk_city_product` FOREIGN KEY (`city_id`) REFERENCES `sample_db`.`city`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `employee` CHANGE `city` `city` INT NOT NULL;
+
+ALTER TABLE `employee` ADD INDEX(`city`);
+
+ALTER TABLE `employee` ADD CONSTRAINT `fk_city_employee` FOREIGN KEY (`city`) REFERENCES `sample_db`.`city`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `category` ADD INDEX(`author_id`);
+ALTER TABLE `category` ADD  CONSTRAINT `fk_cmsuserid_category` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `city` ADD INDEX(`author_id`);
+ALTER TABLE `city` ADD CONSTRAINT `fk_cmsuserid_city` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `employee` ADD INDEX(`author_id`); 
+ALTER TABLE `employee` ADD CONSTRAINT `fk_cmsuserid_employee` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `leadmanager` ADD INDEX(`author_id`);
+ALTER TABLE `leadmanager` ADD CONSTRAINT `fk_cmsuserid_leadmanager` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `leadsource` ADD INDEX(`author_id`); 
+ALTER TABLE `leadsource` ADD CONSTRAINT `fk_cmsuserid_leadsource` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `leadstage` ADD INDEX(`author_id`); 
+ALTER TABLE `leadstage` ADD CONSTRAINT `fk_cmsuserid_leadstage` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`leadstage`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `pricelist` ADD INDEX(`author_id`);
+ALTER TABLE `pricelist` ADD CONSTRAINT `fk_cmsuserid_pricelist` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`pricelist`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `orders` ADD INDEX(`author_id`);
+ALTER TABLE `orders` ADD CONSTRAINT `fk_cmsuserid_orders` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `variantmaster` ADD INDEX(`author_id`);
+ALTER TABLE `variantmaster` ADD CONSTRAINT `fk_cmsuserid` FOREIGN KEY (`author_id`) REFERENCES `sample_db`.`cms_users`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;

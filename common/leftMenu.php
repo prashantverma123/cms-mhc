@@ -221,8 +221,8 @@
 </li>
 <?php break; ?>
 <?php case "customer_care": ?>
-<li class="active ">
-					<a href="javascript:;">
+		<li class="active ">
+			<a href="javascript:;">
 			<i class="icon-table"></i>
 			<span class="title">Lead Source</span>
 
@@ -240,7 +240,27 @@
 							<a href="<?php print SITEPATH.'/leadSource/display.php?flag=new';?>"><img src="../img/add.png" style="padding-right:10px;"/> Add New Source </a>
 					</li>
 				</ul>
-			</li>
+		</li>
+		<li class="active ">
+				<a href="javascript:;">
+		<i class="icon-table"></i>
+		<span class="title">Lead Manager</span>
+
+							<span class="selected"></span>
+
+							<span class="arrow open"></span>
+							</a>
+
+			<ul class="sub-menu">
+				<li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
+					<a href="<?php print SITEPATH.'/leadManager/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/>Lead Manager</a>
+				</li>
+				<li class="<?php if($flag == 'new'){ echo 'active'; } ?>" id="li_new" >
+
+						<a href="<?php print SITEPATH.'/leadManager/display.php?flag=new';?>"><img src="../img/add.png" style="padding-right:10px;"/> Add New Lead Manager </a>
+				</li>
+			</ul>
+		</li>
 <?php break; ?>
 <?php } ?>
         		<li class=""></li>

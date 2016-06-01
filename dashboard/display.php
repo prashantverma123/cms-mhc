@@ -89,6 +89,7 @@ $titlename 		= 'Dashboard';
                            <h4 style="text-align:center;">Lead Source</h4>
                            <p style="text-align:center;"><?php echo $modelObj->get_statistics('leadsource'); ?></p>
                          </div>
+                         <?php if($_SESSION['tmobi']['role'] == 'admin'): ?>
                          <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;color: #3c763d;background-color: #dff0d8;border-color: #d6e9c6;">
                            <h4 style="text-align:center;">City</h4>
                           <p style="text-align:center;"><?php echo $modelObj->get_statistics('city'); ?></p>
@@ -105,7 +106,7 @@ $titlename 		= 'Dashboard';
                            <h4 style="text-align:center;">Category</h4>
                           <p style="text-align:center;"><?php echo $modelObj->get_statistics('category'); ?></p>
                          </div>
-
+                       <?php endif; ?>
                        </div>
                        </div>
 

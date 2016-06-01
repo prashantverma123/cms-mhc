@@ -54,7 +54,7 @@ $userId = $session->get('UserId');
 			  <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
 				<!-- <td><input type="checkbox" class="checkboxes" value="1" /></td>-->
 				 <td><?php print $key['name'];?></td>
-				 <td class="hidden-480"><?php print $key['lead_source'];?></td>
+				 <td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				 <td class="hidden-480"><?php print $key['service'];?></td>
 				 <td class="hidden-480"><?php print $key['mobile_no'];?></td>
 				 <td class="hidden-480"><?php print $key['email_id'];?></td>
@@ -62,7 +62,9 @@ $userId = $session->get('UserId');
 				<td class="hidden-480"><?php print $key['commission'];?></td>
 				<td class="hidden-480"><?php print $key['taxed_cost'];?></td>
 				<td class="hidden-480"><?php print $key['insert_date'];?></td>
-				<td class="hidden-480"><?php print $key['insert_date'];?></td>
+				<td class="hidden-480">
+					<?php if($key['status'] == '0'): echo "Active"; else: "Inactive"; endif; ?>
+				</td>
 				 <td>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/order/display.php?order_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_order(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
