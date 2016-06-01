@@ -19,6 +19,7 @@ switch($action){
 				$insertArr['lead_source'] 			= $_POST['lead_source'];
 				$insertArr['city'] 			= $_POST['city'];
 				$insertArr['price'] 			= $_POST['price'];
+				$insertArr['varianttype'] 			= $_POST['varianttype'];
 				$insertArr['commission'] 		= $_POST['commission'];
 				$insertArr['taxed_cost'] 		= $_POST['taxed_cost'];
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
@@ -39,6 +40,7 @@ switch($action){
 				$updateArr['category_type'] 		= $_POST['category_type'];
 				$updateArr['lead_source'] 	= $_POST['lead_source'];
 				$updateArr['city'] 		= $_POST['city'];
+				$updateArr['varianttype'] 		= $_POST['varianttype'];
 				$updateArr['price'] 		= $_POST['price'];
 				$updateArr['commission'] 		= $_POST['commission'];
 				$updateArr['taxed_cost']	 	= $_POST['taxed_cost'];
