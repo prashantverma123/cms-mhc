@@ -24,23 +24,9 @@ if($pricelist_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Lead Source <!--<span class="required">*</span>--></label>
+						<label class="control-label">Lead Source <span class="required">*</span></label>
 						<div class="controls">
 						 <select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
-							<!-- <option value="0" >Select Lead Source</option>
-							<?php
-							$arVal = $modelObj->getLeadSource();
-							echo '<pre>'; print_r($$arVal); echo '</pre>';
-							foreach($arVal as $key){
-							 if(isset($data) && $data['id'] == $key["id"]){
-								 $sel = 'selected="selected"';
-							 }else{
-								 $sel ='';
-							 }
-							 echo '<option value="'.$key["id"].'" '.$sel.'>'.$key["name"].'</option>';
-							}
-							?>
-						 </select> -->
 						 <?php echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['id'], " where status='0'"); ?>
 						</select>
 						</div>
@@ -57,7 +43,7 @@ if($pricelist_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-					   <label class="control-label"> Name</label>
+					   <label class="control-label"> Name <span class="required">*</span></label>
 						 <div class="controls">
 								<input type="text" placeholder="Please Enter Service Name" value="<?php echo isset($data)?$data['name']:''; ?>" id="name" name="name" class="m-wrap span12">
 								<span class="help-block" id="service_name_error"> </span>
@@ -67,7 +53,7 @@ if($pricelist_id > 0){
 				  <!--/span-->
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Category</label>
+						<label class="control-label">Category <span class="required">*</span></label>
 							<!-- <div class="controls">
 							   <input type="text" id="category_type" name="category_type" value="<?php echo isset($data)?$data['category_type']:''; ?>" class="m-wrap span5">
 							</div> -->
@@ -82,11 +68,11 @@ if($pricelist_id > 0){
  				 <div class="row-fluid">
  					 <div class="span6 ">
  						<div class="control-group">
- 						 <label class="control-label">Variant</label>
+ 						 <label class="control-label">Variant <span class="required">*</span></label>
  						 <div class="controls">
  							 <!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
  							 <span class="help-block" id="efburl_error"> </span> -->
- 						 <select tabindex="1" class="large m-wrap" id="city" name="city">
+ 						 <select tabindex="1" class="large m-wrap" id="varianttype" name="varianttype">
  							<?php echo $modelObj->optionsGenerator('variantMaster', 'varianttype', 'id',$data['id'], " where status='0'"); ?>
  						 </select>
  						 </div>
@@ -95,7 +81,7 @@ if($pricelist_id > 0){
 
 					 <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">City</label>
+						<label class="control-label">City <span class="required">*</span></label>
 						<div class="controls">
 							<!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span> -->
@@ -112,7 +98,7 @@ if($pricelist_id > 0){
 				  <!--/span-->
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Price</label>
+						<label class="control-label">Price <span class="required">*</span></label>
 							<div class="controls">
 							   <input type="text" id="price" name="price" value="<?php echo isset($data)?$data['price']:''; ?>" class="m-wrap span7">
 							</div>
@@ -177,6 +163,18 @@ $(document).ready(function() {
 <?php } ?>
 function saveData(frm_id, action){
         //alert('Jai Mata Di............' + frm_id);
+				$('#frm_about_pricelist').validate({
+				rules:{
+					name:"required",
+					lead_source: "required",
+					city:"required",
+					varianttype:"required",
+					price:"required",
+					category_type:"required",
+
+				},
+
+				submitHandler: function() {
         $('.error').hide();
         var flag=0;
         var service_name = $('#name').val();
@@ -210,6 +208,8 @@ function saveData(frm_id, action){
         }
 
         return false;
+			}
+			});
     }
 
     function getData(success){ //alert('Jmd................');

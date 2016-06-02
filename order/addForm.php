@@ -80,7 +80,7 @@ if($order_id > 0){
 				  <!--/span-->
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Email Id<span class="required">*</span></label>
+						<label class="control-label">Email Id</label>
 							<div class="controls">
 							   <input type="email" id="email_id" name="email_id" value="<?php echo isset($data)?$data['email_id']:''; ?>" class="m-wrap span7">
 								 <div id="email_error"class=" alert alert-danger" style="display:none" >
@@ -108,7 +108,7 @@ if($order_id > 0){
 				  <!--/span-->
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Landmark<span class="required">*</span></label>
+						<label class="control-label">Landmark</label>
 						<div class="controls">
 						   <input type="text" id="landmark" name="landmark" value="<?php echo isset($data)?$data['landmark']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span>
@@ -121,7 +121,7 @@ if($order_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Location <span class="required">*</span></label>
+						<label class="control-label">Location</label>
 						<div class="controls">
 							<input type="text" id="location" name="location" value="<?php echo isset($data)?$data['location']:''; ?>" class="m-wrap span12">
  						<span class="help-block" id="efburl_error"> </span>
@@ -133,7 +133,7 @@ if($order_id > 0){
 					 <div class="control-group">
 						<label class="control-label">City<span class="required">*</span></label>
 						<div class="controls">
-							
+
 						<select tabindex="1" class="large m-wrap" id="city" name="city">
 								<?php echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id'], " where status='0'"); ?>
 						</select>
@@ -145,7 +145,7 @@ if($order_id > 0){
 				 <div class="row-fluid">
 				 <div class="span6 ">
 					<div class="control-group">
-					 <label class="control-label">State <span class="required">*</span></label>
+					 <label class="control-label">State </label>
 					 <div class="controls">
 						 <input type="text" id="state" name="state" value="<?php echo isset($data)?$data['state']:''; ?>" class="m-wrap span12">
 						 <span class="help-block" id="efburl_error"> </span>
@@ -155,7 +155,7 @@ if($order_id > 0){
 				 <!--/span-->
 				 <div class="span6 ">
 					<div class="control-group">
-					 <label class="control-label">Pin Code<span class="required">*</span></label>
+					 <label class="control-label">Pin Code</label>
 					 <div class="controls">
 						 <input type="text" id="pincode" name="pincode" value="<?php echo isset($data)?$data['pincode']:''; ?>" class="m-wrap span12">
 						 <span class="help-block" id="efburl_error"> </span>
@@ -198,7 +198,7 @@ if($order_id > 0){
 				 <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Commission<span class="required">*</span></label>
+						<label class="control-label">Commission</label>
 						<div class="controls">
 							<input type="text" id="commission" name="commission" value="<?php
 							$arVal = $modelObj->getPrice();
@@ -211,7 +211,7 @@ if($order_id > 0){
 				  </div>
 					<div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Inclusive of Tax<span class="required">*</span></label>
+						<label class="control-label">Inclusive of Tax</label>
 						<div class="controls">
 							<input type="text" id="taxed_cost" name="taxed_cost" value="<?php echo isset($data)?$data['taxed_cost']=$data['price']+$data['price']*0.145 + $data['price']*0.1 :''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span>
@@ -302,6 +302,25 @@ $(document).ready(function() {
 
 function saveData(frm_id, action){
         //alert('Jai Mata Di............' + frm_id);
+
+
+				$('#frm_about_order').validate({
+	    	rules:{
+	    		lead_source:"required",
+	    		city: "required",
+	    		service:"required",
+	    		price:"required",
+	    		name:"required",
+	    		address:"required",
+	    		mobile_no:{
+	    			required:true
+	    		},
+					email_id:{
+						email:true
+					}
+	    	},
+	    	submitHandler: function() {
+
 				var data = $('#frm_about_order').serializeArray().reduce(function(obj, item) {
 							    obj[item.name] = item.value;
 							    return obj;
@@ -357,6 +376,8 @@ function saveData(frm_id, action){
         }
 
         return false;
+			}
+		});
     }
 
     function getData(success){ alert('Jmd................');
