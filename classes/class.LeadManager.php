@@ -244,5 +244,19 @@ class LeadManager {
     	}
 
     }
+
+    function getPriceList($city,$inqs,$lead_source){
+    	$keyValueArray['city'] = $city;
+    	$keyValueArray['lead_source'] = $lead_source;
+    	$total = 0;
+    	foreach ($inqs as $inq) {
+    		if($inq != ''){
+    			$keyValueArray['id'] = $inq;
+    			$dataArr = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "price", '', '', false);	
+    			$total =$total+$dataArr[0]['price'];
+    		}
+    	}
+    	return $total;
+    }
 }
 ?>

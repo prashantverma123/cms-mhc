@@ -124,5 +124,14 @@ switch($action){
 			$returnVal = $modelObj->insertIntoOrder($id);
 			$arrReturn['result'] = 'success';
 		break;
+		case "getPrice":
+			$city = $_POST['city'];
+			$inq[] = $_POST['inq1'];
+			$inq[] = $_POST['inq2'];
+			$inq[] = $_POST['inq3'];
+ 			$source = $_POST['lead_source'];
+			$returnVal = $modelObj->getPriceList($city,$inq,$source);
+			$arrReturn['result'] = $returnVal;
+		break;
 }
 echo json_encode($arrReturn);
