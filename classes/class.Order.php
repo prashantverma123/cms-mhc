@@ -5,10 +5,10 @@ class Order {
 	private $tableName;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
-		$this -> tableName = 'orders';
+		$this -> tableName = 'order';
 		$this -> folderName = "order";
 		$this -> db = Database::Instance();
-		checkRole('orders');
+		checkRole('order');
 	}
 
 

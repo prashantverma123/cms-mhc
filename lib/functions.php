@@ -415,7 +415,15 @@ function replacespecialcharsurl($str){
 	*
 	**/
 	function checkRole($class){
-		switch($class):
+		$tablename='acl';
+		$module=$class;
+		$db =  Database::Instance();
+		$dataArr = $db->getDataFromTable(array('module'=>$module),$tablename,'role');
+		
+		foreach ($dataArr as $role) {
+			$roles[] = $role['role'];
+		}
+		/*switch($class):
 			case "category" :
 				$access = 'admin';
 			break;
@@ -446,9 +454,9 @@ function replacespecialcharsurl($str){
 			case "product" :
 				$access = 'admin';
 			break;
-		endswitch;
+		endswitch;*/
 
-		$roles = explode(',',$access);
+		//$roles = explode(',',$access);
 		$condition ='';
 		$i = 1;
 		//print_r(count($roles));exit;
@@ -472,6 +480,18 @@ function replacespecialcharsurl($str){
 			header('location: '.SITEPATH.'/dashboard/display.php');
 			//redirect(SITEPATH.'dashboard/display.php');
 		}
+	}
+
+	/**
+	* getModuleByRole
+	* get modules against role
+	*@param string
+	*/
+	function getModuleByRole($role){
+		$tablename = 'acl';
+		$db =  Database::Instance();
+		$dataArr = $db->getDataFromTable(array('role'=>$role,'module!'=>'dashboard'),$tablename,'module','','',false);
+		return $dataArr;
 	}
 
 

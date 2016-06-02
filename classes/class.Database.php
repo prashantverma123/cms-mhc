@@ -214,7 +214,7 @@ public function query($sql, $debug=0, $ismongo=''){
     $posts = array();
     $countTableData=count($keyValueArray);
 
-    $sql = "SELECT $fields FROM $table";
+    $sql = "SELECT $fields FROM `$table`";
     $i=0;
     //echo $sql;
     foreach($keyValueArray as $key=>$val){
