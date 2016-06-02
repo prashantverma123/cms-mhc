@@ -5,7 +5,7 @@ class CmsUser {
 	private $tableName;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
-		$this -> tableName = 'cms_users';
+		$this -> tableName = 'cmsuser';
 		$this -> folderName = "cmsUser";
 		$this -> db = Database::Instance();
 		checkRole('CmsUser');

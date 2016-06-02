@@ -66,30 +66,20 @@ $titlename 		= 'Dashboard';
                </div>
             </div>
             <!-- END PAGE HEADER-->
+            <?php $modules = getModuleByRole($_SESSION['tmobi']['role']); ?>
             <!-- BEGIN PAGE CONTENT-->
             <div class="row-fluid">
                <div class="span12">
                   <div class="tabbable tabbable-custom boxless">
-
-                     <!-- <div class="tab-content">
-                        <h4>Lead Source</h4>
-                        <?php echo $modelObj->get_statistics('leadsource'); ?>
-                         <h4>Category</h4>
-                        <?php echo $modelObj->get_statistics('category'); ?>
-                         <h4>City</h4>
-                        <?php echo $modelObj->get_statistics('city'); ?>
-                         <h4>Order</h4>
-                        <?php echo $modelObj->get_statistics('orders'); ?>
-                        <h4>Employees</h4>
-                       <?php echo $modelObj->get_statistics('employee'); ?>
-                      </div> -->
                         <div class="tab-content">
                           <div class="header-stats-container" style="width:100%;height:100px;" >
-                         <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;color: #a94442;background-color: #f2dede;border-color: #ebccd1;">
-                           <h4 style="text-align:center;">Lead Source</h4>
-                           <p style="text-align:center;"><?php echo $modelObj->get_statistics('leadsource'); ?></p>
+                         <?php foreach ($modules as $module): ?>
+                         <div class="boxContainer statistics <?php echo $module['module']; ?>">
+                           <h4 style="text-align:center;"><?php echo $module['module']; ?></h4>
+                           <p style="text-align:center;"><?php echo $modelObj->get_statistics($module['module']); ?></p>
                          </div>
-                         <?php if($_SESSION['tmobi']['role'] == 'admin'): ?>
+                        <?php endforeach; ?>
+                         <?php /*if($_SESSION['tmobi']['role'] == 'admin'): ?>
                          <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;color: #3c763d;background-color: #dff0d8;border-color: #d6e9c6;">
                            <h4 style="text-align:center;">City</h4>
                           <p style="text-align:center;"><?php echo $modelObj->get_statistics('city'); ?></p>
@@ -106,7 +96,7 @@ $titlename 		= 'Dashboard';
                            <h4 style="text-align:center;">Category</h4>
                           <p style="text-align:center;"><?php echo $modelObj->get_statistics('category'); ?></p>
                          </div>
-                       <?php endif; ?>
+                       <?php endif;*/ ?>
                        </div>
                        </div>
 

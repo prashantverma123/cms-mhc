@@ -5050,4 +5050,12 @@ Bootstrap Datepickers Restyle(in v1.2.4)
   font-family: 'Open Sans' !important;
   font-weight: 400 !important;
 }
-
+.statistics{border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;}
+.leadsource{color: #a94442;background-color: #f2dede;border-color: #ebccd1;}
+.city{color: #3c763d;background-color: #dff0d8;border-color: #d6e9c6;}
+.order{color: #31708f;background-color: #d9edf7;border-color: #bce8f1;}
+.employee{color: #8a6d3b;background-color: #fcf8e3;border-color: #faebcc;}
+.category{background-color: #acf8e3;border-color: #aaebcc;}
+.leadmanager{color: #270339;background-color: #e6ccff;border-color: #b366ff;}
+.cmsuser{color: #001a66;background-color: #ccd9ff;border-color: #99b3ff;}
+.leadstage{color: #cc7a00;background-color: #fff5e6;border-color: #ffe0b3;}
