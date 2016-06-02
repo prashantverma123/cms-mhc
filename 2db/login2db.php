@@ -15,8 +15,8 @@ switch($action) {
 	case 'login':
 			$email = addslashes($_POST['username']);
 			$passWord = addslashes($_POST['password']);
-			$keyValueArray['sqlclause'] = " email = '$email' AND password ='$passWord' AND status=1 ";
-			$dataArr = $db->getDataFromTable($keyValueArray, 'cms_users', " * ", " name asc",'',false);
+			$keyValueArray['sqlclause'] = " email = '$email' OR username='$email' AND password ='$passWord' AND status=1 ";
+			$dataArr = $db->getDataFromTable($keyValueArray, 'cmsuser', " * ", " name asc",'',false);
 			// echo "<script type='text/javascript'>alert('$dataArr');</script>";
 
 			if(count($dataArr) > 0){
@@ -42,7 +42,7 @@ switch($action) {
 			//$db = Database:: getConnection();
 			$email = addslashes($_POST['email']);
 			$keyValueArray['sqlclause'] = " email = '$email' AND status=1 ";
-			$dataArr = $db->getDataFromTable($keyValueArray, 'cms_users', " * ", "",'',false);
+			$dataArr = $db->getDataFromTable($keyValueArray, 'cmsuser', " * ", "",'',false);
 			if(count($dataArr) > 0){
 				$name = $dataArr[0]['name'];
 						//write  mail function.
@@ -75,7 +75,7 @@ switch($action) {
 						sendHTMLMail($email, $subject, $body, $fromEmail);
 				echo '1';
 			}
-		   /* $chkLogin = "SELECT * FROM cms_users WHERE email = '$email' AND status=1";
+		   /* $chkLogin = "SELECT * FROM cmsuser WHERE email = '$email' AND status=1";
 			$db->query($chkLogin, 1);
 			if ($db->getRowCount()) {
 				$row = $db->fetch();
@@ -96,7 +96,7 @@ switch($action) {
 			$email 	  = addslashes($_POST['email']);
 			$passWord = addslashes($_POST['password']);
 			$keyValueArray['sqlclause'] = " email = '".$email."' AND password ='".$passWord."' AND status=1 ";
-			$dataArr = $db->getDataFromTable($keyValueArray, 'cms_users', " * ", "",'',false);
+			$dataArr = $db->getDataFromTable($keyValueArray, 'cmsuser', " * ", "",'',false);
 			if(count($dataArr) > 0){
 				echo '0';
 			}else{
@@ -105,7 +105,7 @@ switch($action) {
 				$arrInsert['email']= $email;
 				$arrInsert['password']= $passWord;
 				$arrInsert['status']= '1';
-				$ret = $db->insertDataIntoTable($arrInsert, 'cms_users');
+				$ret = $db->insertDataIntoTable($arrInsert, 'cmsuser');
 				if($ret > 0){
 					echo '1';
 				}else{

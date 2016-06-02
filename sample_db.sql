@@ -450,3 +450,10 @@ ALTER TABLE `cms_users` DROP `org_description`;
 ALTER TABLE `leadmanager` CHANGE `manpower_deployment` `teamLeader_deployment`INT NOT NULL;
 
 ALTER TABLE `leadmanager` ADD `supervisor_deployment` INT NOT NULL AFTER`teamLeader_deployment`, ADD `janitor_deployment` INT NOT NULL AFTER`supervisor_deployment`;
+ALTER TABLE `order` CHANGE `city` `city` INT NOT NULL;
+ALTER TABLE `order` ADD INDEX(`city`);
+ALTER TABLE `order` ADD  CONSTRAINT `fk_order_city` FOREIGN KEY (`city`) REFERENCES `sample_db`.`city`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `cmsuser` CHANGE `city` `city` INT(11) NOT NULL;
+ALTER TABLE `cmsuser` ADD INDEX(`city`); 
+ALTER TABLE `cmsuser` ADD CONSTRAINT `fk_cmsuser_city` FOREIGN KEY (`city`) REFERENCES `sample_db`.`city`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
