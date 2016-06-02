@@ -441,7 +441,7 @@ function replacespecialcharsurl($str){
 				$access = 'admin';
 			break;
 			case "pricelist" :
-				$access = 'admin';
+				$access = 'admin,customer_care';
 			break;
 			case "product" :
 				$access = 'admin';

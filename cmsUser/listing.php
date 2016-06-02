@@ -20,7 +20,7 @@ $userId = $session->get('UserId');
 				 <th>Name</th>
 				 <th class="hidden-480">Email</th>
 				 <th class="hidden-480">Username</th>
-				 <th class="hidden-480">Password</th>
+				 <th class="hidden-480">City</th>
 				 <th class="hidden-480">Role</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
@@ -51,7 +51,7 @@ $userId = $session->get('UserId');
 				 <td><?php print $key['name'];?></td>
 				  <td class="hidden-480"><?php print $key['email'];?></td>
 				 <td class="hidden-480"><?php print $key['username'];?></td>
-				 <td class="hidden-480"><?php print $key['password'];?></td>
+				 <td class="hidden-480"><?php print $key['city'];?></td>
 				  <td class="hidden-480"><?php print $key['role'];?></td>
 				 <td>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/cmsUser/display.php?cmsuser_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;

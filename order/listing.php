@@ -40,8 +40,9 @@ $userId = $session->get('UserId');
 		   		$searchData['filter'] = $_GET['filter'];
 		   		$sort = $_GET['sort'];
 		   }
+			 $filterData = array('city' =>$_SESSION['tmobi']['city']);
 		   $recperpage=PER_PAGE_ROWS;
-			$result_data = $modelObj->getListingData('lead_source,name', $page,$recperpage,$searchData,$sort);
+			$result_data = $modelObj->getListingData('lead_source,name,city', $page,$recperpage,$searchData,$filterData,$sort);
 
 
 			foreach ($result_data['rows'] as $key){

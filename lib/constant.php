@@ -15,6 +15,9 @@ define('IMAGEPATH', SITEPATH . '/img');
 define('COMMONFILEPATH', DOCUMENTROOT . '/common');
 define('SALTKEY','TMINUS_EVE_IDS');
 define('PER_PAGE_ROWS',10); //(pagination) to show number of rows on a page
+
+$user_city = "";
+
 $dbdetails = array(
 		'tmobi'	=> array(
 		'host'		=> 'localhost',

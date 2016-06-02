@@ -38,7 +38,8 @@ $userId = $session->get('UserId');
 		   		$sort = $_GET['sort'];
 		   }
 		   $recperpage=PER_PAGE_ROWS;
-			$result_data = $modelObj->getListingData('name,category_type,lead_source', $page,$recperpage,$searchData,$sort);
+			 $filterData = array('city' =>$_SESSION['tmobi']['city']);
+			$result_data = $modelObj->getListingData('name,category_type,lead_source', $page,$recperpage,$searchData,$filterData,$sort);
 
 
 			foreach ($result_data['rows'] as $key){

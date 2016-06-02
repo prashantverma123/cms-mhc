@@ -13,7 +13,7 @@ class Employee {
 
 
 	/**************************** END OF CONSTRUCTOR **************************/
-	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(), $status = '',$sort='') {
+	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(),$filterData= array(), $status = '',$sort='') {
 		$offset = $offset*$recperpage;
 		$keyValueArray = array();
 		if ($status == '-1') {
@@ -22,6 +22,15 @@ class Employee {
 			$keyValueArray['notequal'] = "status != -1";
 		}
 	    $main_sql = '1=1';
+
+			if (count($filterData)>0) {
+					$main_sql .= ' and ';
+				foreach ($filterData as $key => $value) {
+
+					$main_sql .= $key." like '%".$value."%'";
+				}
+
+			}
 		if(count($searchData)>0){
 			/*if(array_key_exists('name',$searchData)) {
 					$main_sql .= ' and name like \''.$searchData['event_name'].'%\'';
@@ -29,12 +38,12 @@ class Employee {
 			if($search){
 				$main_sql .= ' and ';
 				$fields = explode(',',$search);
-				
+
 				$j = 1;
 				foreach ($fields as $field) {
 					$main_sql .= $field." like '%".$searchData['filter']."%'";
 					if($j < count($fields)){
-						$main_sql .= " OR "; 
+						$main_sql .= " OR ";
 					}
 					$j++;
 				}
@@ -151,9 +160,9 @@ class Employee {
 			$insertArr['employee_id'] = $emp_id;
 			$insertArr['attendance'] = $attendance;
 			$insertArr['date'] = date('Y-m-d h:i:s');
- 			return $this -> db -> insertDataIntoTable($insertArr, $this -> tableName1);	
+ 			return $this -> db -> insertDataIntoTable($insertArr, $this -> tableName1);
 		}
-		
+
 	}
 	/**
 	* pagination
@@ -184,10 +193,10 @@ class Employee {
 		 		$pagination = "<div class='pagination'><ul><li class='".$class."'><a href='".$prev."'>Prev</a></li>";
 				for($c= 0; $c<=$pagecount;$c++):
 					$pagination .= "<li><a href='".SITEPATH."/".$this -> tableName."/display.php?p=".($c+1)."'>" .($c+1)."</a></li>";
-				endfor; 
+				endfor;
 				$pagination .= '<li class="'.$class1.'"><a href="'.$next.'">Next</a></li>';
 				$pagination .="</ul></div>";
-		 } 
+		 }
 		 return $pagination;
 	}
 }

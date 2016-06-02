@@ -32,7 +32,8 @@ $userId = $session->get('UserId');
 		   		$sort = $_GET['sort'];
 		   }
 		   $recperpage=PER_PAGE_ROWS;
-			$result_data = $modelObj->getListingData('lead_source', $page,$recperpage,$searchData,$sort);
+			 $filterData = array('city' =>$_SESSION['tmobi']['city']);
+			$result_data = $modelObj->getListingData('lead_source', $page,$recperpage,$searchData,$filterData,$sort);
 
 			foreach ($result_data['rows'] as $key){
 				// if($key['parent_id'] == 0){
@@ -51,7 +52,7 @@ $userId = $session->get('UserId');
 				<td class="hidden-480"><?php print $key['service_date'];?></td>
 				<td class="hidden-480"><?php print $key['service_time'];?></td>
 				 <td id="confirmed<?php echo $key['id']; ?>">
-				 	<?php if($key['job_status']=='confirmed'): 
+				 	<?php if($key['job_status']=='confirmed'):
 				 	echo "Confirmed";
 				 else: ?>
 				 	<select name="job_status<?php echo $key['id']; ?>" id="job_status<?php echo $key['id']; ?>" tabindex="1" class="small m-wrap" onchange="update_status('<?php echo $key['id']; ?>');">

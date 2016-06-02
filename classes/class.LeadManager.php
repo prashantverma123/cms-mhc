@@ -13,7 +13,7 @@ class LeadManager {
 
 
 	/**************************** END OF CONSTRUCTOR **************************/
-	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(), $status = '',$sort='') {
+	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(),$filterData= array(), $status = '',$sort='') {
 		$offset = $offset * $recperpage;
 		$keyValueArray = array();
 		if ($status == '-1') {
@@ -22,6 +22,15 @@ class LeadManager {
 			$keyValueArray['notequal'] = $this -> tableName.".status != -1";
 		}
 	    $main_sql = '1=1';
+
+			if (count($filterData)>0) {
+					$main_sql .= ' and ';
+				foreach ($filterData as $key => $value) {
+
+					$main_sql .= $key." like '%".$value."%'";
+				}
+
+			}
 		if(count($searchData)>0){
 			/*if(array_key_exists('name',$searchData)) {
 					$main_sql .= ' and name like \''.$searchData['event_name'].'%\'';

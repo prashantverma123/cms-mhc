@@ -17,8 +17,8 @@ switch($action){
 				$insertArr['name'] 	= $_POST['name'];
 				$insertArr['email'] 		= $_POST['email'];
 				$insertArr['username'] 		= $_POST['username'];
-
 				$insertArr['password'] 			= $_POST['password'];
+				$insertArr['city'] 			= $_POST['city'];
 				$insertArr['role'] 			= $_POST['role'];
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
 				$insertArr['update_date']		= date('Y-m-d H:i:s');
@@ -35,6 +35,7 @@ switch($action){
 				$updateArr['email'] 		= $_POST['email'];
 				$updateArr['username'] 	= $_POST['username'];
 				$updateArr['password'] 		= $_POST['password'];
+				$updateArr['city'] 		= $_POST['city'];
 				$updateArr['role'] 		= $_POST['role'];
 
 				$updateArr['update_date']	= date('Y-m-d H:i:s');

@@ -63,7 +63,7 @@ if($cmsuser_id > 0){
 					 </div>
 				  </div>
 				  <!--/span-->
-				 
+
 				  <!--/span-->
 			   </div>
 			   <div class="row-fluid">
@@ -89,7 +89,17 @@ if($cmsuser_id > 0){
 				 <?php endif; ?>
 			   </div>
 			   <div class="row-fluid">
-				  <div class="span6 ">
+					 <div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">City<span class="required">*</span></label>
+						<div class="controls">
+							<select tabindex="1" class="large m-wrap" id="city" name="city">
+						   <?php  echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id']," where status='0'"); ?>
+							</select>
+						</div>
+					 </div>
+					</div>
+					 <div class="span6 ">
 					 <div class="control-group">
 						<label class="control-label">Role<span class="required">*</span></label>
 						<div class="controls">
@@ -101,11 +111,13 @@ if($cmsuser_id > 0){
 							</select>
 						</div>
 					 </div>
-				  </div>
+					  </div>
+
+					</div>
 				  <!--/span-->
 
 				  <!--/span-->
-			   </div>
+
 
 
 
@@ -147,7 +159,7 @@ function saveData(frm_id, action){
 				minlength: 6
 			},
 			confirm_password:{
-				required:true,	
+				required:true,
 				minlength: 6,
 				equalTo: "#password"
 			},
