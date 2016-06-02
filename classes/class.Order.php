@@ -17,9 +17,9 @@ class Order {
 		$offset = $offset * $recperpage;
 		$keyValueArray = array();
 		if ($status == '-1') {
-			$keyValueArray['orders.status'] = -1;
+			$keyValueArray['`'.$this -> tableName.'`.status'] = -1;
 		} else {
-			$keyValueArray['notequal'] = "orders.status != -1";
+			$keyValueArray['notequal'] = '`'.$this -> tableName."`.status != -1";
 		}
 	    $main_sql = '1=1';
 		if(count($searchData)>0){
@@ -56,12 +56,12 @@ class Order {
 		$keyValueArray['sqlclause'] = $main_sql;
 		$limit = $offset . "," . $recperpage;
 		if($sort != '') {
-			$sort = 'orders.insert_date '.$sort;
+			$sort = '`'.$this -> tableName.'`.insert_date '.$sort;
 		}else{
-			$sort = 'orders.insert_date DESC';
+			$sort =  '`'.$this -> tableName.'`.insert_date DESC';
 		}
-		$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=orders.lead_source');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " orders.*,leadsource.name as leadsource_name", $sort, $limit,$joinArray, false);
+		$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=order.lead_source');
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,leadsource.name as leadsource_name", $sort, $limit,$joinArray, false);
 		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
 
 		if (count($dataArr) > 0) {
