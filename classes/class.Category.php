@@ -3,6 +3,7 @@ class Category {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
+	private $logs;
 	public $className;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
@@ -10,14 +11,15 @@ class Category {
 		$this -> className = 'category';
 		$this -> folderName = "category";
 		$this -> db = Database::Instance();
+		$this -> logs = new Logging();
 		checkRole('category');
 	}
 
 
 	/**************************** END OF CONSTRUCTOR **************************/
 	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(), $status = '',$sort='') {
-		
-		$offset = $offset*$recperpage;	
+
+		$offset = $offset*$recperpage;
 		$keyValueArray = array();
 		if ($status == '-1') {
 			$keyValueArray['status'] = -1;
@@ -32,12 +34,12 @@ class Category {
 		if($search){
 				$main_sql .= ' and ';
 			$fields = explode(',',$search);
-			
+
 			$j = 1;
 			foreach ($fields as $field) {
 				$main_sql .= $field." like '%".$searchData['filter']."%'";
 				if($j < count($fields)){
-					$main_sql .= " OR "; 
+					$main_sql .= " OR ";
 				}
 				$j++;
 			}
@@ -56,7 +58,7 @@ class Category {
 		}else if ($search == 'integer') {
 			$keyValueArray['sqlclause'] = "substring(name,1,1) between '0' AND '9'";
 		}
-		
+
 		$keyValueArray['sqlclause'] = $main_sql;
 		$limit = $offset . "," . $recperpage;
 		if($sort != '') {
@@ -77,6 +79,7 @@ class Category {
 		$result['rows'] = $this -> finalData;
 		$result['count'] = count($countAll);
 		//echo '<pre>'; print_r($this -> finalData);
+		$this->logs->writelogs($this->folderName,"database returned: ". count($countAll));
 		return $result;
 	}// eof getDefault
 
@@ -123,15 +126,20 @@ class Category {
 				$json = json_encode($dataArr);
 			}
 		}
+		$this->logs->writelogs($this->folderName,"Edited data: ".$json);
 		return $json;
 	}
 
 	public function insertTable($values) {
-		return $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$response =  $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$this->logs->writelogs($this->folderName,"Insertion: ".json_encode($response));
+		return $response;
 	}// eof insertTable
 
 	public function updateTable($values, $whereArr) {
-		return $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
+		return $response;
 	}// eof updatetable
 
 	public function toggleTableStatus($val, $status) {
@@ -139,6 +147,7 @@ class Category {
 		if (intval($val) > 0) {
 			$rowCount = $this -> db -> updateDataIntoTable(array("status" => $status), array("id" => intval($val)), $this -> tableName);
 		}
+		$this->logs->writelogs($this->folderName,"ToggleTableStatus: ".$rowCount);
 		return $rowCount;
 	}// eof toggleStatus
 
@@ -171,10 +180,10 @@ class Category {
 		 		$pagination = "<div class='pagination'><ul><li class='".$class."'><a href='".$prev."'>Prev</a></li>";
 				for($c= 0; $c<=$pagecount;$c++):
 					$pagination .= "<li><a href='".SITEPATH."/".$this -> folderName."/display.php?p=".($c+1)."'>" .($c+1)."</a></li>";
-				endfor; 
+				endfor;
 				$pagination .= '<li class="'.$class1.'"><a href="'.$next.'">Next</a></li>';
 				$pagination .="</ul></div>";
-		 } 
+		 }
 		 return $pagination;
 	}
 }

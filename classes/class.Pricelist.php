@@ -3,13 +3,16 @@ class Pricelist {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
+	private $logs;
 	public $className;
+
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'pricelist';
 		$this -> folderName = "pricelist";
 		$this -> className = "pricelist";
 		$this -> db = Database::Instance();
+		$this -> logs = new Logging();
 		checkRole('pricelist');
 	}
 
@@ -87,6 +90,7 @@ class Pricelist {
 		$result['rows'] = $this -> finalData;
 		$result['count'] = count($countAll);
 		//echo '<pre>'; print_r($this -> finalData);
+		$this->logs->writelogs($this->folderName,"database returned: ". count($countAll));
 		return $result;
 	}// eof getDefault
 
@@ -160,15 +164,20 @@ class Pricelist {
 				$json = json_encode($dataArr);
 			}
 		}
+		$this->logs->writelogs($this->folderName,"Edited data: ".$json);
 		return $json;
 	}
 
 	public function insertTable($values) {
-		return $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$response =  $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$this->logs->writelogs($this->folderName,"Insertion: ".json_encode($response));
+		return $response;
 	}// eof insertTable
 
 	public function updateTable($values, $whereArr) {
-		return $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
+		return $response;
 	}// eof updatetable
 
 	public function toggleTableStatus($val, $status) {
@@ -176,6 +185,7 @@ class Pricelist {
 		if (intval($val) > 0) {
 			$rowCount = $this -> db -> updateDataIntoTable(array("status" => $status), array("id" => intval($val)), $this -> tableName);
 		}
+		$this->logs->writelogs($this->folderName,"ToggleTableStatus: ".$rowCount);
 		return $rowCount;
 	}// eof toggleStatus
 
