@@ -74,7 +74,9 @@ if($employee_id > 0){
  					<div class="control-group">
  					 <label class="control-label">City <span class="required">*</span></label>
  					 <div class="controls">
- 							<input type="text" placeholder="Please Enter City" value="<?php echo isset($data)?$data['city']:''; ?>" id="city" name="city" class="m-wrap span12">
+ 							<select tabindex="1" class="large m-wrap" id="city" name="city">
+						   <?php  echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city']," where status='0'"); ?>
+							</select>
  							<span class="help-block" id="city_error"> </span>
 
  					 </div>
@@ -118,6 +120,7 @@ if($employee_id > 0){
 						<option value="M" >Male</option>
 						<option value="F" >Female</option>
 						</select>
+						
 					</div>
 				 </div>
 				</div>

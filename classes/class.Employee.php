@@ -19,9 +19,9 @@ class Employee {
 		$offset = $offset*$recperpage;
 		$keyValueArray = array();
 		if ($status == '-1') {
-			$keyValueArray['status'] = -1;
+			$keyValueArray['employee.status'] = -1;
 		} else {
-			$keyValueArray['notequal'] = "status != -1";
+			$keyValueArray['notequal'] = "employee.status != -1";
 		}
 	    $main_sql = '1=1';
 
@@ -67,13 +67,14 @@ class Employee {
 		$keyValueArray['sqlclause'] = $main_sql;
 		$limit = $offset . "," . $recperpage;
 		if($sort != '') {
-			$sort = 'name '.$sort;
+			$sort = 'employee.name '.$sort;
 		}else{
-			$sort = 'name ASC';
+			$sort = 'employee.name ASC';
 		}
 		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", $limit, true);
 		$joinArray[] = array('type'=>'left','table'=>'attendance','condition'=>'attendance.employee_id=employee.id AND DATE(attendance.date)=CURRENT_DATE');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " employee.*,attendance.attendance ", $sort, $limit,$joinArray, false);
+		$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=employee.city');
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " employee.*,attendance.attendance,city.name as cityName ", $sort, $limit,$joinArray, false);
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;
@@ -96,6 +97,19 @@ class Employee {
 		return $dataArr;
 	}
 
+	public function optionsGenerator($table, $display_field, $value_field, $selected_value="", $conditions="") {
+        $options_str = "";
+       $stmt = "select distinct " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " order by " . $display_field;
+        $this -> db ->query($stmt);
+        $options_str = "<option value=''>Please Select</option>";
+        while ($result = $this-> db ->fetch()) {
+            $options_str.='<option value="' . $result['value'] . '"';
+            if ($selected_value != "" && $selected_value == $result['value'])
+                $options_str.=' selected ';
+            $options_str.='>' . $result['display'] . '</option>';
+        }
+        return $options_str;
+    }
 	public function getPagination($search, $searchData, $status) {
 		// $status=1 for display listing status=-1 for trashcan
 		$keyValueArray = array();
