@@ -63,8 +63,11 @@ $userId = $session->get('UserId');
 				 <?php endif; ?>
 				</td>
 				<td>
+					<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/leadManager/display.php?leadmanager_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
+					<?php endif; if(in_array('delete',$actionArr)): ?>
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_leadmanager(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
+			  		<?php endif; ?>
 			  </tr>
 		<?php } ?>
 		   </tbody>

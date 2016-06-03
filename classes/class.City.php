@@ -3,9 +3,11 @@ class City {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
+	public $className;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'city';
+		$this -> className = 'city';
 		$this -> folderName = "cityMaster";
 		$this -> db = Database::Instance();
 		checkRole('city');

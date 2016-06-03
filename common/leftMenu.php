@@ -1,6 +1,8 @@
 <div class="page-sidebar nav-collapse collapse">
     <!-- BEGIN SIDEBAR MENU -->
-    <?php $modules = getModuleByRole($_SESSION['tmobi']['role']); ?>
+    <?php $modules = getModuleByRole($_SESSION['tmobi']['role']); 
+    $actions = getActionByRoleAndModule($_SESSION['tmobi']['role'],$modelObj -> className);  
+$actionArr = explode(',', $actions);?>
     <ul>
 		<li>
 			<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
@@ -22,11 +24,7 @@
       </a>
       <ul class="sub-menu">
 		<?php foreach ($modules as $module): ?>
-
       <?php if ($module["module"]!="leadmanager" && $module["module"]!="order"):?>
-
-
-
 				<li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
 					<a href="<?php print SITEPATH.'/'.$module["module"].'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst($module['module']); ?></a>
 				</li>

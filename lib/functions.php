@@ -494,6 +494,16 @@ function replacespecialcharsurl($str){
 		return $dataArr;
 	}
 
-
+	/**
+	* getModuleByRole
+	* get modules against role
+	*@param string
+	*/
+	function getActionByRoleAndModule($role,$module){
+		$tablename = 'acl';
+		$db =  Database::Instance();
+		$dataArr = $db->getDataFromTable(array('role'=>$role,'module'=>$module),$tablename,'action','','',false);
+		return $dataArr[0]['action'];
+	}
 
 ?>

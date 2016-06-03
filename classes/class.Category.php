@@ -4,9 +4,11 @@ class Category {
 	private $db;
 	private $tableName;
 	private $logs;
+	public $className;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'category';
+		$this -> className = 'category';
 		$this -> folderName = "category";
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();

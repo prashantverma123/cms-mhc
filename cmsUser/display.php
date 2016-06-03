@@ -35,6 +35,7 @@ $titlename 		= 'Add CMS User';
       <?php include_once(COMMONFILEPATH.'/leftMenu.php'); ?>
       <!-- END SIDEBAR -->
       <!-- BEGIN PAGE -->
+
       <div class="page-content">
          <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
          <div id="portlet-config" class="modal hide">
@@ -72,7 +73,9 @@ $titlename 		= 'Add CMS User';
                   <div class="tabbable tabbable-custom boxless">
                      <ul class="nav nav-tabs">
                         <li class="<?php if($cmsuser_id == '' || $cmsuser_id =='0'){ echo 'active'; } ?>"  id="li_pat0"><a data-toggle="tab" href="#tab_1" onClick="change_tab(0);">CMS User Listing</a></li>
+                      <?php if(in_array('add',$actionArr)): ?>
                         <li class="<?php if($cmsuser_id > 0){ echo 'active'; } ?>"  id="li_pat1"><a data-toggle="tab" href="#tab_2"  onclick="change_tab(1);">Add/Edit CMS User</a></li>
+                      <?php endif; ?>
                      </ul>
                      <div class="tab-content">
                         <div id="tab_1" class="tab-pane <?php if($cmsuser_id == '' || $cmsuser_id =='0'){ echo 'active'; } ?>">

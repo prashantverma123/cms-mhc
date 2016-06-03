@@ -47,8 +47,12 @@ $userId = $session->get('UserId');
 				 <td><?php print $key['name'];?></td>
 				 <td class="hidden-480"><?php print $key['city_tier'];?></td>
 				 <td>
-					<span class="label label-success"><a href="<?php print SITEPATH.'/cityMaster/display.php?city_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
+				 	<?php if(in_array('edit',$actionArr)): ?>
+					<span class="label label-success"><a href="<?php print SITEPATH.'/city/display.php?city_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
+					<?php endif; if(in_array('delete',$actionArr)): ?>
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_city(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
+			  		<?php endif; ?>
+			  	</td>
 			  </tr>
 		<?php } ?>
 		   </tbody>
@@ -61,7 +65,7 @@ $userId = $session->get('UserId');
 		if(d_id !=''){
 			$.ajax({
 				type: "POST",
-				url: "<?php print SITEPATH.'/cityMaster/category2db.php';?>",
+				url: "<?php print SITEPATH.'/city/category2db.php';?>",
 				data: 'action=delete_city&city_id='+d_id,
 				success: function(res){
 					$('#row_id_'+d_id).hide('slow');

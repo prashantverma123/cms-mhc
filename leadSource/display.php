@@ -72,7 +72,9 @@ $titlename 		= 'Add Lead Source Info';
                   <div class="tabbable tabbable-custom boxless">
                      <ul class="nav nav-tabs">
                         <li class="<?php if($source_id == '' || $source_id =='0'){ echo 'active'; } ?>"  id="li_pat0"><a data-toggle="tab" href="#tab_1" onClick="change_tab(0);">Lead Source Listing</a></li>
+                        <?php if(in_array('add',$actionArr)): ?>
                         <li class="<?php if($source_id > 0){ echo 'active'; } ?>"  id="li_pat1"><a data-toggle="tab" href="#tab_2"  onclick="change_tab(1);">Add/Edit Lead Source</a></li>
+                        <?php endif; ?>
                      </ul>
                      <div class="tab-content">
                         <div id="tab_1" class="tab-pane <?php if($source_id == '' || $source_id =='0'){ echo 'active'; } ?>">

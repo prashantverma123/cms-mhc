@@ -4,10 +4,13 @@ class LeadManager {
 	private $db;
 	private $tableName;
 	private $logs;
+	public $className;
+
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'leadmanager';
 		$this -> folderName  = "leadManager";
+		$this -> className = "leadManager";
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();
 		checkRole('leadmanager');

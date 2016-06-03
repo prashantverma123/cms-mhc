@@ -111,7 +111,7 @@ function saveData(frm_id, action){
             var datastring=$('#'+frm_id).serialize();
             $.ajax({
                 type: "POST",
-                url: "<?php print SITEPATH;?>/cityMaster/category2db.php",
+                url: "<?php print SITEPATH;?>/city/category2db.php",
                 data: datastring,
                 success: function(data)
 		        {
@@ -140,7 +140,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($city_id =='' || $city_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/cms/cityMaster/display.php?city_id="+res_city_id+"&flag=t";
+		window.location.href = "<?php SITEPATH;?>/cms/city/display.php?city_id="+res_city_id+"&flag=t";
 		<?php } ?>
     }
 </script>

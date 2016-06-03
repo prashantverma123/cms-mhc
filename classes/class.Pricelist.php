@@ -4,10 +4,13 @@ class Pricelist {
 	private $db;
 	private $tableName;
 	private $logs;
+	public $className;
+
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'pricelist';
 		$this -> folderName = "pricelist";
+		$this -> className = "pricelist";
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();
 		checkRole('pricelist');

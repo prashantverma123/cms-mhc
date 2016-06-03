@@ -4,11 +4,13 @@ class CmsUser {
 	private $db;
 	private $tableName;
 	private $logs;
+	public $className;
 
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'cmsuser';
 		$this -> folderName = "cmsUser";
+		$this -> className = "cmsuser";
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();
 		checkRole('CmsUser');

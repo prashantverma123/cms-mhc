@@ -59,8 +59,12 @@ $userId = $session->get('UserId');
 				 <td class="hidden-480"><?php print $key['commission'];?></td>
 				 <td class="hidden-480"><?php print $key['taxed_cost'];?></td>
 				 <td>
+				 	<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/pricelist/display.php?pricelist_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
+					<?php endif; if(in_array('delete',$actionArr)): ?>
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_pricelist(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
+			  		<?php endif; ?>
+			  	</td>
 			  </tr>
 		<?php } ?>
 		   </tbody>
