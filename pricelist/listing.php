@@ -52,9 +52,9 @@ $userId = $session->get('UserId');
 			  <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
 				<!-- <td><input type="checkbox" class="checkboxes" value="1" /></td>-->
 				 <td><?php print $key['name'];?></td>
-				 <td class="hidden-480"><?php print $key['lead_source'];?></td>
-				 <td class="hidden-480"><?php print $key['category_type'];?></td>
-				 <td class="hidden-480"><?php print $key['city'];?></td>
+				 <td class="hidden-480"><?php print $key['leadsourceName'];?></td>
+				 <td class="hidden-480"><?php print $key['categoryName'];?></td>
+				 <td class="hidden-480"><?php print $key['cityName'];?></td>
 				 <td class="hidden-480"><?php print $key['price'];?></td>
 				 <td class="hidden-480"><?php print $key['commission'];?></td>
 				 <td class="hidden-480"><?php print $key['taxed_cost'];?></td>
