@@ -12,6 +12,7 @@ $userId = $session->get('UserId');
 				 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
 				 <th class="hidden-480">Lead Source</th>
 				 <th class="hidden-480">Lead Owner</th>
+				  <th class="hidden-480">Lead Stage</th>
 				 <th class="hidden-480">Client Name</th>
 				  <th class="hidden-480">Client Mobile No</th>
 				 <th class="hidden-480">Service Date</th>
@@ -47,6 +48,7 @@ $userId = $session->get('UserId');
 				<!-- <td><?php print $key['category_id'];?></td> -->
 				<td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				<td class="hidden-480"><?php print $key['lead_owner'];?></td>
+				<td class="hidden-480"><?php print $key['lead_stage'];?></td>
 				<td class="hidden-480"><?php print $key['client_firstname'];?></td>
 				<td class="hidden-480"><?php print $key['client_mobile_no'];?></td>
 				<td class="hidden-480"><?php print $key['service_date'];?></td>

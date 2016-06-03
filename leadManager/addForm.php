@@ -271,7 +271,7 @@ if($leadmanager_id > 0){
 				<h3 style="padding-left:10px">Service Details</h3>
 			</div>
 
-			
+
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
@@ -357,7 +357,8 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Additional Note <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter additional note" value="<?php echo isset($data)?$data['additional_note']:''; ?>" id="additional_note" name="additional_note" class="m-wrap span12">
+						 <textarea rows="3" name="additional_note" id="additional_note" class="m-wrap span12"><?php echo isset($data)?trim($data['additional_note']):''; ?></textarea>
+	 						<!-- <input type="text" placeholder="Please Enter additional note" value="<?php echo isset($data)?$data['additional_note']:''; ?>" id="additional_note" name="additional_note" class="m-wrap span12"> -->
 	 						<span class="help-block" id="additional_note_error"> </span>
 	 				 </div>
 	 				</div>
