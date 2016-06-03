@@ -93,15 +93,8 @@ if($employee_id > 0){
 	 				 <label class="control-label">Designation  <span class="required">*</span></label>
 	 				 <div class="controls">
 
-							<select tabindex="1" class="large m-wrap" id="designation" name="designation">
-							<option value="" >Select the Designation</option>
-							<option value="Janitor" >Janitor</option>
-							<option value="Supervisor" >Supervisor</option>
-							<option value="Team Leader" >Team Leader</option>
-							<option value="Pest Control Technician" >Pest Control Technician</option>
-							<option value="AC Servicing Technician" >AC Servicing Technician</option>
-							<option value="Inspection Officer" >Inspection Officer</option>
-
+						<select tabindex="1" class="large m-wrap" id="designation" name="designation">
+						<?php  echo $modelObj->optionsGenerator('designation', 'name', 'id',$data['designation']," where status='0'"); ?>	
 						</select>
 	 				 </div>
 	 				</div>
@@ -117,8 +110,8 @@ if($employee_id > 0){
 					<div class="controls">
 						<select tabindex="1" class="large m-wrap" id="gender" name="gender">
 						<option value="" >Select the Gender</option>
-						<option value="M" >Male</option>
-						<option value="F" >Female</option>
+						<option value="M" <?php if($data['gender']=='M'): echo "selected"; else: "";endif; ?> >Male</option>
+						<option value="F" <?php if($data['gender']=='F'): echo "selected"; else: "";endif; ?> >Female</option>
 						</select>
 						
 					</div>

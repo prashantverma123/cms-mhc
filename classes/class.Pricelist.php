@@ -19,9 +19,9 @@ class Pricelist {
 		$offset = $offset * $recperpage;
 		$keyValueArray = array();
 		if ($status == '-1') {
-			$keyValueArray['status'] = -1;
+			$keyValueArray[$this -> tableName.'.status'] = -1;
 		} else {
-			$keyValueArray['notequal'] = "status != -1";
+			$keyValueArray['notequal'] = $this -> tableName.".status != -1";
 		}
 	    $main_sql = '1=1';
 
@@ -61,7 +61,7 @@ class Pricelist {
 			}
 		}
 		if ($search == 'byname') {
-			$keyValueArray['sqlclause'] = "name like '$searchData%'";
+			$keyValueArray['sqlclause'] = $this -> tableName.".name like '$searchData%'";
 		}else if ($search == 'integer') {
 			$keyValueArray['sqlclause'] = "substring(name,1,1) between '0' AND '9'";
 		}
@@ -69,12 +69,13 @@ class Pricelist {
 		$keyValueArray['sqlclause'] = $main_sql;
 		$limit = $offset . "," . $recperpage;
 		if($sort != '') {
-			$sort = 'name '.$sort;
+			$sort = $this -> tableName.'.name '.$sort;
 		}else{
-			$sort = 'name ASC';
+			$sort = $this -> tableName.'.name ASC';
 		}
-		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
-
+		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
+		$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=pricelist.city');
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " pricelist.*,city.name as cityName ", $sort, $limit,$joinArray, false);
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;
