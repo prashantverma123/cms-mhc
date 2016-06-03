@@ -66,10 +66,11 @@ $userId = $session->get('UserId');
 				</td>
 				<td>
 					<?php if(in_array('edit',$actionArr)): ?>
-					<span class="label label-success"><a href="<?php print SITEPATH.'/leadManager/display.php?leadmanager_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
+					<span class="label label-success"><a href="<?php print SITEPATH.'/'.$modelObj->folderName.'/display.php?leadmanager_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<?php endif; if(in_array('delete',$actionArr)): ?>
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_leadmanager(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
 			  		<?php endif; ?>
+			  	</td>
 			  </tr>
 		<?php } ?>
 		   </tbody>
@@ -82,7 +83,7 @@ $userId = $session->get('UserId');
 		if(d_id !=''){
 			$.ajax({
 				type: "POST",
-				url: "<?php print SITEPATH.'/leadManager/category2db.php';?>",
+				url: "<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
 				data: 'action=delete_leadmanager&leadmanager_id='+d_id,
 				success: function(res){
 					$('#row_id_'+d_id).hide('slow');
@@ -101,14 +102,14 @@ $userId = $session->get('UserId');
 			var status = $('#job_status'+id).val();
 			$.ajax({
 				type: "POST",
-				url: "<?php print SITEPATH.'/leadManager/category2db.php';?>",
+				url: "<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
 				data: 'action=update_leadmanager_status&leadmanager_id='+id+'&status='+status,
 				success: function(res){
 					//if(res.result == 'success'){
 						if(status == "confirmed"){
 							$.ajax({
 								type: "POST",
-								url: "<?php print SITEPATH.'/leadManager/category2db.php';?>",
+								url: "<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
 								data: 'action=saveIntoOrder&leadmanager_id='+id,
 								success: function(r){
 									$('#confirmed'+id).html('Confirmed');

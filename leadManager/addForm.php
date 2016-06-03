@@ -508,7 +508,7 @@ function saveData(frm_id, action){
 							 //alert('Jai Mata Di............' + datastring);
 	            $.ajax({
 	                type: "POST",
-	                url: "<?php print SITEPATH;?>/leadManager/category2db.php",
+	                url: "<?php print SITEPATH;?>/<?php echo $modelObj->folderName; ?>/category2db.php",
 	                data: datastring,
 	                success: getData,
 	                error:function(){
@@ -534,7 +534,7 @@ function saveData(frm_id, action){
     	if(inq1!='' && city!='' && source!=''){
     		$.ajax({
     			 type: "POST",
-                url: "<?php print SITEPATH;?>/leadManager/category2db.php",
+                url: "<?php print SITEPATH;?>/<?php echo $modelObj->folderName; ?>/category2db.php",
                 data: {city:city,inq1:inq1,inq2:inq2,inq3:inq3,lead_source:source,action:'getPrice'},
                 success:function(res){
                 	var obj = eval("("+res+")");
@@ -559,7 +559,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($leadmanager_id =='' || $leadmanager_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/cms/leadManager/display.php?leadmanager_id="+res_product_id+"&flag=t";
+		window.location.href = "<?php SITEPATH;?>/<?php echo $modelObj->folderName; ?>/display.php?leadmanager_id="+res_product_id+"&flag=t";
 		<?php } ?>
     }
 

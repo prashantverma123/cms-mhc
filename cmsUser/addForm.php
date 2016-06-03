@@ -94,7 +94,7 @@ if($cmsuser_id > 0){
 						<label class="control-label">City<span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="city" name="city">
-						   <?php  echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id']," where status='0'"); ?>
+						   <?php  echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city']," where status='0'"); ?>
 							</select>
 						</div>
 					 </div>
@@ -186,10 +186,10 @@ function saveData(frm_id, action){
 				//console.log(datastring);
 	            $.ajax({
 	                type: "POST",
-	                url: "<?php print SITEPATH;?>/cmsUser/category2db.php",
+	                url: "<?php print SITEPATH;?>/<?php echo $modelObj->folderName; ?>/category2db.php",
 	                data: datastring,
 	                success: function(data){
-	                	console.log(data);
+	                	//console.log(data);
 						getData(data);
 					},
 	                error:function(){
@@ -215,9 +215,9 @@ function saveData(frm_id, action){
 			 setTimeout(function () {
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
-			console.log($cmsuser_id);
+			//console.log($cmsuser_id);
 		<?php if($cmsuser_id =='' || $cmsuser_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/cms/cmsUser/display.php?cmsuser_id="+res_cmsuser_id+"&flag=t";
+		window.location.href = "<?php SITEPATH;?>/cms/<?php echo $modelObj->folderName; ?>/display.php?cmsuser_id="+res_cmsuser_id+"&flag=t";
 		<?php } ?>
     }
 </script>

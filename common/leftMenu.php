@@ -44,7 +44,7 @@ $actionArr = explode(',', $actions);?>
         </a>
         <ul class="sub-menu">
           <li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
-  					<a href="<?php print SITEPATH.'/'."leadManager".'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst("leadmanager"); ?></a>
+  					<a href="<?php print SITEPATH.'/'."leadmanager".'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst("leadmanager"); ?></a>
   				</li>
         </ul>
           </li>

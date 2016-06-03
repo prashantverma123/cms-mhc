@@ -55,7 +55,7 @@ $userId = $session->get('UserId');
 				  <td class="hidden-480"><?php print $key['role'];?></td>
 				 <td>
 				 	<?php if(in_array('edit',$actionArr)): ?>
-					<span class="label label-success"><a href="<?php print SITEPATH.'/cmsUser/display.php?cmsuser_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
+					<span class="label label-success"><a href="<?php print SITEPATH.'/'.$modelObj->folderName.'/display.php?cmsuser_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<?php endif; 
 					if(in_array('delete',$actionArr)): ?>
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_cmsuser(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
@@ -74,7 +74,7 @@ $userId = $session->get('UserId');
 		if(d_id !=''){
 			$.ajax({
 				type: "POST",
-				url: "<?php print SITEPATH.'/cmsUser/category2db.php';?>",
+				url: "<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
 				data: 'action=delete_cmsuser&cmsuser_id='+d_id,
 				success: function(res){
 					$('#row_id_'+d_id).hide('slow');

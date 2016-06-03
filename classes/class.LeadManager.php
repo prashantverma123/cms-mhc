@@ -9,7 +9,7 @@ class LeadManager {
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'leadmanager';
-		$this -> folderName  = "leadManager";
+		$this -> folderName  = "leadmanager";
 		$this -> className = "leadManager";
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();
@@ -209,12 +209,14 @@ class LeadManager {
        $stmt = "select distinct " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " order by " . $display_field;
         $this -> db ->query($stmt);
         $options_str = "<option value=''>Please Select</option>";
+        if($result):
         while ($result = $this-> db ->fetch()) {
             $options_str.='<option value="' . $result['value'] . '"';
             if ($selected_value != "" && $selected_value == $result['value'])
                 $options_str.=' selected ';
             $options_str.='>' . $result['display'] . '</option>';
         }
+        endif;
         return $options_str;
     }
 

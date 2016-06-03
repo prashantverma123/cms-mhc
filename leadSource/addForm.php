@@ -153,7 +153,7 @@ function saveData(frm_id, action){
             var datastring=$('#'+frm_id).serialize();
             $.ajax({
                 type: "POST",
-                url: "<?php print SITEPATH;?>/leadSource/category2db.php",
+                url: "<?php print SITEPATH;?>/<?php echo $modelObj->folderName; ?>/category2db.php",
                 data: datastring,
                 success: getData,
                 error:function(){
@@ -178,7 +178,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($source_id =='' || $source_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/cms/leadSource/display.php?source_id="+res_source_id+"&flag=t";
+		window.location.href = "<?php SITEPATH;?>/<?php echo $modelObj->folderName; ?>/display.php?source_id="+res_source_id+"&flag=t";
 		<?php } ?>
     }
 </script>
