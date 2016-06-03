@@ -457,3 +457,7 @@ ALTER TABLE `order` ADD  CONSTRAINT `fk_order_city` FOREIGN KEY (`city`) REFEREN
 ALTER TABLE `cmsuser` CHANGE `city` `city` INT(11) NOT NULL;
 ALTER TABLE `cmsuser` ADD INDEX(`city`); 
 ALTER TABLE `cmsuser` ADD CONSTRAINT `fk_cmsuser_city` FOREIGN KEY (`city`) REFERENCES `sample_db`.`city`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `employee` CHANGE `designation` `designation` INT NOT NULL;
+ALTER TABLE `employee` ADD INDEX(`designation`);
+ALTER TABLE `employee` ADD CONSTRAINT `fk_designation_employee` FOREIGN KEY (`designation`) REFERENCES `sample_db`.`designation`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;

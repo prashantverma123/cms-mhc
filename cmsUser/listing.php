@@ -51,7 +51,7 @@ $userId = $session->get('UserId');
 				 <td><?php print $key['name'];?></td>
 				  <td class="hidden-480"><?php print $key['email'];?></td>
 				 <td class="hidden-480"><?php print $key['username'];?></td>
-				 <td class="hidden-480"><?php print $key['city'];?></td>
+				 <td class="hidden-480"><?php print $key['cityName'];?></td>
 				  <td class="hidden-480"><?php print $key['role'];?></td>
 				 <td>
 				 	<?php if(in_array('edit',$actionArr)): ?>

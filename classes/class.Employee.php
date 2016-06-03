@@ -79,7 +79,8 @@ class Employee {
 		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", $limit, true);
 		$joinArray[] = array('type'=>'left','table'=>'attendance','condition'=>'attendance.employee_id=employee.id AND DATE(attendance.date)=CURRENT_DATE');
 		$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=employee.city');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " employee.*,attendance.attendance,city.name as cityName ", $sort, $limit,$joinArray, false);
+		$joinArray[] = array('type'=>'left','table'=>'designation','condition'=>'designation.id=employee.designation');
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " employee.*,attendance.attendance,city.name as cityName,designation.name as designationName ", $sort, $limit,$joinArray, false);
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;
