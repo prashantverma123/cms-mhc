@@ -3,11 +3,14 @@ class CmsUser {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
+	private $logs;
+
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'cmsuser';
 		$this -> folderName = "cmsUser";
 		$this -> db = Database::Instance();
+		$this -> logs = new Logging();
 		checkRole('CmsUser');
 	}
 
@@ -63,6 +66,7 @@ class CmsUser {
 			$sort = 'name ASC';
 		}
 		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
+
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;
@@ -75,6 +79,7 @@ class CmsUser {
 		$result['rows'] = $this -> finalData;
 		$result['count'] = count($countAll);
 		//echo '<pre>'; print_r($this -> finalData);
+		$this->logs->writelogs($this->folderName,"database returned: ". count($countAll));
 		return $result;
 	}// eof getDefault
 
@@ -121,6 +126,7 @@ class CmsUser {
 				$json = json_encode($dataArr);
 			}
 		}
+		$this->logs->writelogs($this->folderName,"Edited data: ".$json);
 		return $json;
 	}
 	public function optionsGenerator($table, $display_field, $value_field, $selected_value="", $conditions="") {
@@ -138,11 +144,16 @@ class CmsUser {
     }
 
 	public function insertTable($values) {
-		return $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$response =  $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$this->logs->writelogs($this->folderName,"Insertion: ".$response);
+		return $response;
 	}// eof insertTable
 
 	public function updateTable($values, $whereArr) {
-		return $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$this->logs->writelogs($this->folderName,"Update: ".$response);
+		return $response;
+
 	}// eof updatetable
 
 	public function toggleTableStatus($val, $status) {
@@ -150,6 +161,7 @@ class CmsUser {
 		if (intval($val) > 0) {
 			$rowCount = $this -> db -> updateDataIntoTable(array("status" => $status), array("id" => intval($val)), $this -> tableName);
 		}
+		$this->logs->writelogs($this->folderName,"ToggleTableStatus: ".$rowCount);
 		return $rowCount;
 	}// eof toggleStatus
 

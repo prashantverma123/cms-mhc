@@ -3,11 +3,13 @@ class LeadManager {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
+	private $logs;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'leadmanager';
 		$this -> folderName  = "leadManager";
 		$this -> db = Database::Instance();
+		$this -> logs = new Logging();
 		checkRole('leadmanager');
 	}
 
@@ -86,6 +88,7 @@ class LeadManager {
 		$result['rows'] = $this -> finalData;
 		$result['count'] = count($countAll);
 		//echo '<pre>'; print_r($result);
+		$this->logs->writelogs($this->folderName,"database returned: ". count($countAll));
 		return $result;
 	}// eof getDefault
 
@@ -136,15 +139,21 @@ class LeadManager {
 				$json = json_encode($dataArr);
 			}
 		}
+		$this->logs->writelogs($this->folderName,"Edited data: ".$json);
 		return $json;
 	}
 
 	public function insertTable($values) {
-		return $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$response =  $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$this->logs->writelogs($this->folderName,"Insertion: ".json_encode($response));
+		return $response;
+
 	}// eof insertTable
 
 	public function updateTable($values, $whereArr) {
-		return $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
+		return $response;
 	}// eof updatetable
 
 	public function toggleTableStatus($val, $status) {
@@ -152,6 +161,7 @@ class LeadManager {
 		if (intval($val) > 0) {
 			$rowCount = $this -> db -> updateDataIntoTable(array("status" => $status), array("id" => intval($val)), $this -> tableName);
 		}
+			$this->logs->writelogs($this->folderName,"ToggleTableStatus: ".$rowCount);
 		return $rowCount;
 	}// eof toggleStatus
 
@@ -225,7 +235,7 @@ class LeadManager {
 			$keyValueArray['leadmanager.id'] = intval($id);
 			$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
 			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.name as lead_source",'','',$joinArray,true);
-
+			$this->logs->writelogs($this->folderName,"Lead Converted to Order: ".$id);
 			foreach ($dataArr as $k=>$value) {
 				$values['name'] = $value['client_firstname'];
 				$values['lead_source'] = $value['lead_source'];
@@ -261,7 +271,7 @@ class LeadManager {
     	foreach ($inqs as $inq) {
     		if($inq != ''){
     			$keyValueArray['id'] = $inq;
-    			$dataArr = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "price", '', '', false);	
+    			$dataArr = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "price", '', '', false);
     			$total =$total+$dataArr[0]['price'];
     		}
     	}
