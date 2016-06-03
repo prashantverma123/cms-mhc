@@ -3,10 +3,12 @@ class Order {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
+	public $className;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'order';
 		$this -> folderName = "order";
+		$this -> className = "order";
 		$this -> db = Database::Instance();
 		checkRole('order');
 	}

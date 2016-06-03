@@ -3,10 +3,12 @@ class Pricelist {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
+	public $className;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'pricelist';
 		$this -> folderName = "pricelist";
+		$this -> className = "pricelist";
 		$this -> db = Database::Instance();
 		checkRole('pricelist');
 	}

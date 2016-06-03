@@ -3,10 +3,12 @@ class LeadManager {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
+	public $className;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'leadmanager';
 		$this -> folderName  = "leadManager";
+		$this -> className = "leadManager";
 		$this -> db = Database::Instance();
 		checkRole('leadmanager');
 	}

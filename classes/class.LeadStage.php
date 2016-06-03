@@ -3,10 +3,12 @@ class LeadStage {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
+	public $className;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'leadstage';
 		$this -> folderName = "leadstage";
+		$this -> className = "leadStage";
 		$this -> db = Database::Instance();
 		checkRole('leadstage');
 	}

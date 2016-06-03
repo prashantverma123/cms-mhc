@@ -3,10 +3,12 @@ class CmsUser {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
+	public $className;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'cmsuser';
 		$this -> folderName = "cmsUser";
+		$this -> className = "cmsuser";
 		$this -> db = Database::Instance();
 		checkRole('CmsUser');
 	}

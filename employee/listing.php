@@ -61,8 +61,12 @@ $userId = $session->get('UserId');
 				 <td>
 				 	<!--a href="javascript:void(0);" onclick="attendance(<?php print $key['id'];?>)" class="" title="Edit" style="color:#FFFFFF"><img src="../img/attendance.png"/> </a-->
 				 	<span class="label"><input type="checkbox" name="attendance<?php echo $j; ?>" value="1" title="Attendance" onchange="attendance(<?php print $key['id'];?>,<?php echo $j; ?>)" <?php if($key['attendance']=='0'): echo "checked"; else: echo ""; endif; ?> /></span> &nbsp;
+					<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/employee/display.php?employee_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
+					<?php endif; 
+					if(in_array('delete',$actionArr)): ?>
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_employee(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
+			  		<?php endif; ?>
 			  </tr>
 		<?php } ?>
 		   </tbody>

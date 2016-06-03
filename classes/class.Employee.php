@@ -3,10 +3,12 @@ class Employee {
 	protected $finalData = array();
 	private $db;
 	private $tableName;
+	public $className;
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'employee';
 		$this -> tableName1 = 'attendance';
+		$this -> className = "employee";
 		$this -> db = Database::Instance();
 		checkRole('employee');
 	}
