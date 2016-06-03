@@ -48,7 +48,7 @@ $userId = $session->get('UserId');
 				<!-- <td><?php print $key['category_id'];?></td> -->
 				<td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				<td class="hidden-480"><?php print $key['lead_owner'];?></td>
-				<td class="hidden-480"><?php print $key['lead_stage'];?></td>
+				<td class="hidden-480"><?php print $key['leadstage_name'];?></td>
 				<td class="hidden-480"><?php print $key['client_firstname'];?></td>
 				<td class="hidden-480"><?php print $key['client_mobile_no'];?></td>
 				<td class="hidden-480"><?php print $key['service_date'];?></td>
