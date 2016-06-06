@@ -48,7 +48,11 @@ $userId = $session->get('UserId');
 				<!-- <td><?php print $key['category_id'];?></td> -->
 				<td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				<td class="hidden-480"><?php print $key['lead_owner'];?></td>
-				<td class="hidden-480"><?php print $key['leadstage_name'];?></td>
+				<td class="hidden-480">
+					<select class="small m-wrap" name="lead_stage" id="leadstage<?php print $key['id'];?>" onchange="changeLeadStage(<?php print $key['id'];?>)">
+					<?php echo $modelObj->optionsGenerator('leadstage', 'name', 'id', $key['leadstage_id'], "where  status='0'"); ?>
+					</select>
+				</td>
 				<td class="hidden-480"><?php print $key['client_firstname'];?></td>
 				<td class="hidden-480"><?php print $key['client_mobile_no'];?></td>
 				<td class="hidden-480"><?php print $key['service_date'];?></td>
@@ -96,6 +100,22 @@ $userId = $session->get('UserId');
 
 			});
 		}
+	}
+	function changeLeadStage(id){
+		var current= $('#leadstage'+id).val();
+		$.ajax({
+			type:"POST",
+			url:"<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
+			data: 'action=update_leadstage&leadmanager_id='+id+'&leadstage_id='+current,
+			success: function(res){
+				alert("lead stage updated");
+			},
+			//success: getData,
+			error:function(){
+				alert("failure");
+				//$("#result").html('there is error while submit');
+			}
+		})
 	}
 	function update_status(id){
 		if(id !=''){

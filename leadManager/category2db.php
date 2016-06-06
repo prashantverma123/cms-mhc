@@ -139,5 +139,11 @@ switch($action){
 		$returnVal = $modelObj->getPriceList($city,$inq,$varianttype);
 		$arrReturn['result'] = $returnVal;
 		break;
+		case "update_leadstage":
+		$updateArr['lead_stage'] 	= $_POST['leadstage_id'];
+		$whereArr = array('id' => $leadmanager_id );
+		$returnVal = $modelObj->updateTable($updateArr,$whereArr);
+		$arrReturn['result'] = 'success';
+		break;
 }
 echo json_encode($arrReturn);
