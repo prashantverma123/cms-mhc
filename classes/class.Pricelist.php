@@ -78,7 +78,9 @@ class Pricelist {
 		}
 		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
 		$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=pricelist.city');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " pricelist.*,city.name as cityName ", $sort, $limit,$joinArray, false);
+		$joinArray[] = array('type'=>'left','table'=>'category','condition'=>'category.id=pricelist.category_type');
+		$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=pricelist.lead_source');
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " pricelist.*,city.name as cityName,category.name as categoryName,leadsource.name as leadsourceName ", $sort, $limit,$joinArray, false);
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;

@@ -80,7 +80,7 @@ if($order_id > 0){
 				  <!--/span-->
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Email Id</label>
+						<label class="control-label">Email Id<span class="required">*</span></label>
 							<div class="controls">
 							   <input type="email" id="email_id" name="email_id" value="<?php echo isset($data)?$data['email_id']:''; ?>" class="m-wrap span7">
 								 <div id="email_error"class=" alert alert-danger" style="display:none" >
@@ -171,7 +171,7 @@ if($order_id > 0){
 						<div class="controls">
 							<!-- <input type="text" id="service" name="service" value="<?php echo isset($data)?$data['service']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span> -->
-							<select tabindex="1" class="large m-wrap" id="service" name="service">
+							<select tabindex="1" class="large m-wrap" id="service" name="service" multiple>
 							<?php echo $modelObj->optionsGenerator('pricelist', 'name', 'id',$data['service'], " where status='0'"); ?>
 							</select>
 						</div>
@@ -316,7 +316,7 @@ function saveData(frm_id, action){
 	    			required:true
 	    		},
 					email_id:{
-						email:true
+						required:true
 					}
 	    	},
 	    	submitHandler: function() {
@@ -380,7 +380,7 @@ function saveData(frm_id, action){
 		});
     }
 
-    function getData(success){ alert('Jmd................');
+    function getData(success){ //alert('Jmd................');
 				debugger;
         var jObj=eval("("+success+")");
         var res_action=jObj.action; //alert('AAs');

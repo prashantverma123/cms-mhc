@@ -9,7 +9,7 @@ class CmsUser {
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'cmsuser';
-		$this -> folderName = "cmsUser";
+		$this -> folderName = "cmsuser";
 		$this -> className = "cmsuser";
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();

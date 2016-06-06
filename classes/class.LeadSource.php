@@ -6,7 +6,7 @@ class LeadSource {
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'leadsource';
-		$this -> folderName = "leadSource";
+		$this -> folderName = "leadsource";
 		$this -> className = "leadSource";
 		$this -> db = Database::Instance();
 		checkRole('leadsource');
