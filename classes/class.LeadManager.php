@@ -267,18 +267,26 @@ class LeadManager {
 
     }
 
-    function getPriceList($city,$inqs,$lead_source){
-    	$keyValueArray['city'] = $city;
-    	$keyValueArray['lead_source'] = $lead_source;
-    	$total = 0;
-    	foreach ($inqs as $inq) {
-    		if($inq != ''){
-    			$keyValueArray['id'] = $inq;
-    			$dataArr = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "price", '', '', false);
-    			$total =$total+$dataArr[0]['price'];
-    		}
-    	}
-    	return $total;
-    }
+		function getPriceList($city,$inqs,$varianttype){
+		 $keyValueArray['city'] = $city;
+		 // $keyValueArray['varianttype'] = $varianttype;
+		 $total = 0;
+		 $indx = 0;
+		 // $this->logs->writelogs($this->folderName,"Prices f the services: ".json_encode($inqs) );
+		 foreach ($inqs as $inq) {
+
+			 if($inq != ""){
+				 $keyValueArray['name'] = $inq;
+				 $keyValueArray['varianttype'] = $varianttype[$indx];
+				 $dataArr = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "taxed_cost", '', '', false);
+				 $this->logs->writelogs($this->folderName,"Prices of the services: ".json_encode($dataArr) );
+				 $total =$total+$dataArr[0]['taxed_cost'];
+				 // $this->logs->writelogs($this->folderName,"Prices of the services: ".json_encode($dataArr) );
+			 }
+			 $indx = $indx +1;
+		 }
+		 // $this->logs->writelogs($this->folderName,"Prices f the services: ".json_encode($inqs) );
+		 return $total;
+	 }
 }
 ?>

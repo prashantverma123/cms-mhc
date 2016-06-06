@@ -544,20 +544,28 @@ function saveData(frm_id, action){
 
     }
     function showPrice(){
-    	var inq1 = $('#service_inquiry1').val();
-    	var inq2 = $('#service_inquiry2').val();
-    	var inq3 = $('#service_inquiry3').val();
+			var inq1 = $('#service_inquiry1 :selected').text();
+    	var inq2 = $('#service_inquiry2 :selected').text();
+    	var inq3 = $('#service_inquiry3 :selected').text();
     	var city = $('#city').val();
+    	var varianttype1 = $('#varianttype1').val();
+    	var varianttype2 = $('#varianttype2').val();
+    	var varianttype3 = $('#varianttype3').val();
+    	// console.log(varianttype);
     	var source = $('#lead_source').val();
-    	if(inq1!='' && city!='' && source!=''){
+    	if(inq1!='' && city!='' && varianttype1!=''){
     		$.ajax({
     			 type: "POST",
                 url: "<?php print SITEPATH;?>/<?php echo $modelObj->folderName; ?>/category2db.php",
-                data: {city:city,inq1:inq1,inq2:inq2,inq3:inq3,lead_source:source,action:'getPrice'},
+                data: {city:city,inq1:inq1,inq2:inq2,inq3:inq3,varianttype1:varianttype1,varianttype2:varianttype2,varianttype3:varianttype3,action:'getPrice'},
                 success:function(res){
                 	var obj = eval("("+res+")");
                 	console.log(obj);
-                	$('#price').val(obj.result);
+                	taxed_cost
+                	$('#taxed_cost').val(obj.result);
+                	var price = parseFloat(obj.result)- 0.15*parseFloat(obj.result);
+                	// debugger;
+                	$('#price').val(price);
                 },
                 error:function(){
                     alert("failure");
