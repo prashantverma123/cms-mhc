@@ -61,27 +61,7 @@ if($leadmanager_id > 0){
 
 			   </div>
 
-				  <div class="row-fluid">
-						<div class="span6 ">
-						<div class="control-group">
-						 <label class="control-label">Service Date <span class="required">*</span></label>
-						 <div class="controls">
-								<input type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service_date']:''; ?>" id="service_date" name="service_date" class="m-wrap span12 datepicker">
-								<span class="help-block" id="cost_error"> </span>
-						 </div>
-						</div>
-					 </div>
-					<div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label">Service Time  <span class="required">*</span></label>
-	 				 <div class="controls bootstrap-timepicker timepicker">
-	 						<input type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service_time']:''; ?>" id="service_time" name="service_time" class="m-wrap span12">
-	 						<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-	 						<span class="help-block" id="service_time_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
-				</div>
+
 
 				<div class="row-fluid">
 					<div class="span6 ">
@@ -285,7 +265,38 @@ if($leadmanager_id > 0){
 	 				 </div>
 	 				</div>
 	 			 </div>
+				 <div class="span6 ">
+				<div class="control-group">
+				 <label class="control-label">Variant Type 1 <span class="required">*</span></label>
+				 <div class="controls">
+					 <select tabindex="1" class="large m-wrap" id="varianttype1" name="varianttype1" onchange="showPrice();">
+						<?php  echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype1']," where status='0'"); ?>
+					 </select>
+				 </div>
 				</div>
+			 </div>
+				</div>
+				<div class="row-fluid">
+					<div class="span6 ">
+					<div class="control-group">
+					 <label class="control-label">Service1 Date <span class="required">*</span></label>
+					 <div class="controls">
+							<input type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service1_date']:''; ?>" id="service1_date" name="service1_date" class="m-wrap span12 datepicker">
+							<span class="help-block" id="cost1_error"> </span>
+					 </div>
+					</div>
+				 </div>
+				<div class="span6 ">
+				<div class="control-group">
+				 <label class="control-label">Service1 Time  <span class="required">*</span></label>
+				 <div class="controls bootstrap-timepicker timepicker">
+						<input type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service1_time']:''; ?>" id="service1_time" name="service1_time" class="m-wrap span12">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+						<span class="help-block" id="service1_time_error"> </span>
+				 </div>
+				</div>
+			 </div>
+			</div>
 
 				<div class="row-fluid">
 					<div class="span6 ">
@@ -313,7 +324,38 @@ if($leadmanager_id > 0){
 	 				 </div>
 	 				</div>
 	 			 </div>
+				 <div class="span6 ">
+				 <div class="control-group">
+					<label class="control-label">Variant Type 2 </label>
+					<div class="controls">
+						<select tabindex="1" class="large m-wrap" id="varianttype2" name="varianttype2" onchange="showPrice();">
+						 <?php  echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype2']," where status='0'"); ?>
+						</select>
+					</div>
+				 </div>
 				</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span6 ">
+					<div class="control-group">
+					 <label class="control-label">Service2 Date </label>
+					 <div class="controls">
+							<input type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service2_date']:''; ?>" id="service2_date" name="service2_date" class="m-wrap span12 datepicker">
+							<span class="help-block" id="cost2_error"> </span>
+					 </div>
+					</div>
+				 </div>
+				<div class="span6 ">
+				<div class="control-group">
+				 <label class="control-label">Service2 Time </label>
+				 <div class="controls bootstrap-timepicker timepicker">
+						<input type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service2_time']:''; ?>" id="service2_time" name="service2_time" class="m-wrap span12">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+						<span class="help-block" id="service2_time_error"> </span>
+				 </div>
+				</div>
+			 </div>
+			</div>
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
@@ -339,7 +381,38 @@ if($leadmanager_id > 0){
 	 				 </div>
 	 				</div>
 	 			 </div>
+				 <div class="span6 ">
+					<div class="control-group">
+					 <label class="control-label">Variant Type 3 </label>
+					 <div class="controls">
+						 <select tabindex="1" class="large m-wrap" id="varianttype3" name="varianttype3" onchange="showPrice();">
+							<?php  echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype3']," where status='0'"); ?>
+						 </select>
+					 </div>
+					</div>
+				 </div>
 				</div>
+				<div class="row-fluid">
+					<div class="span6 ">
+					<div class="control-group">
+					 <label class="control-label">Service3 Date </label>
+					 <div class="controls">
+							<input type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service3_date']:''; ?>" id="service3_date" name="service3_date" class="m-wrap span12 datepicker">
+							<span class="help-block" id="cost2_error"> </span>
+					 </div>
+					</div>
+				 </div>
+				<div class="span6 ">
+				<div class="control-group">
+				 <label class="control-label">Service3 Time </label>
+				 <div class="controls bootstrap-timepicker timepicker">
+						<input type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service3_time']:''; ?>" id="service3_time" name="service3_time" class="m-wrap span12">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+						<span class="help-block" id="service2_time_error"> </span>
+				 </div>
+				</div>
+			 </div>
+			</div>
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
@@ -364,19 +437,7 @@ if($leadmanager_id > 0){
 	 				</div>
 	 			 </div>
 				</div>
-				<div class="row-fluid">
-				  <div class="span6 ">
-					 <div class="control-group">
-						<label class="control-label">Variant Type <span class="required">*</span></label>
-						<div class="controls">
-							<select tabindex="1" class="large m-wrap" id="varianttype" name="varianttype" onchange="showPrice();">
-						   <?php  echo $modelObj->optionsGenerator('variantMaster', 'varianttype', 'id',$data['varianttype']," where status='0'"); ?>
-							</select>
-						</div>
-					 </div>
-				  </div>
 
-			   </div>
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
@@ -448,11 +509,22 @@ if($leadmanager_id > 0){
 	</div>
 <script>
 $(document).ready(function(){
-	$('#service_date').datepicker({
+	$('#service1_date').datepicker({
   	format:'yyyy/mm/dd'
   });
 
-   $('#service_time').timepicker();
+   $('#service1_time').timepicker();
+
+	 $('#service2_date').datepicker({
+		 format:'yyyy/mm/dd'
+		});
+		 $('#service2_time').timepicker();
+
+		 $('#service3_date').datepicker({
+			 format:'yyyy/mm/dd'
+			});
+
+			 $('#service3_time').timepicker();
 });
 <?php if($leadmanager_id != '' && $flag != 'new'){ ?>
 $(document).ready(function() {
