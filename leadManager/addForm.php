@@ -285,6 +285,16 @@ if($leadmanager_id > 0){
 	 				 </div>
 	 				</div>
 	 			 </div>
+				 <div class="span6 ">
+				 <div class="control-group">
+					<label class="control-label">Variant Type 1 <span class="required">*</span></label>
+					<div class="controls">
+						<select tabindex="1" class="large m-wrap" id="varianttype1" name="varianttype1" onchange="showPrice();">
+						 <?php  echo $modelObj->optionsGenerator('variantMaster', 'varianttype', 'id',$data['varianttype1']," where status='0'"); ?>
+						</select>
+					</div>
+				 </div>
+				</div>
 				</div>
 
 				<div class="row-fluid">
@@ -313,6 +323,16 @@ if($leadmanager_id > 0){
 	 				 </div>
 	 				</div>
 	 			 </div>
+				 <div class="span6 ">
+					<div class="control-group">
+					 <label class="control-label">Variant Type 2 <span class="required">*</span></label>
+					 <div class="controls">
+						 <select tabindex="1" class="large m-wrap" id="varianttype2" name="varianttype2" onchange="showPrice();">
+							<?php  echo $modelObj->optionsGenerator('variantMaster', 'varianttype', 'id',$data['varianttype2']," where status='0'"); ?>
+						 </select>
+					 </div>
+					</div>
+				 </div>
 				</div>
 				<div class="row-fluid">
 					<div class="span6 ">
@@ -339,6 +359,16 @@ if($leadmanager_id > 0){
 	 				 </div>
 	 				</div>
 	 			 </div>
+				 <div class="span6 ">
+					<div class="control-group">
+					 <label class="control-label">Variant Type 3 <span class="required">*</span></label>
+					 <div class="controls">
+						 <select tabindex="1" class="large m-wrap" id="varianttype3" name="varianttype3" onchange="showPrice();">
+							<?php  echo $modelObj->optionsGenerator('variantMaster', 'varianttype', 'id',$data['varianttype3']," where status='0'"); ?>
+						 </select>
+					 </div>
+					</div>
+				 </div>
 				</div>
 				<div class="row-fluid">
 					<div class="span6 ">
@@ -364,19 +394,7 @@ if($leadmanager_id > 0){
 	 				</div>
 	 			 </div>
 				</div>
-				<div class="row-fluid">
-				  <div class="span6 ">
-					 <div class="control-group">
-						<label class="control-label">Variant Type <span class="required">*</span></label>
-						<div class="controls">
-							<select tabindex="1" class="large m-wrap" id="varianttype" name="varianttype" onchange="showPrice();">
-						   <?php  echo $modelObj->optionsGenerator('variantMaster', 'varianttype', 'id',$data['varianttype']," where status='0'"); ?>
-							</select>
-						</div>
-					 </div>
-				  </div>
 
-			   </div>
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">

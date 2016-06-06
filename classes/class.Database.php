@@ -331,7 +331,7 @@ public function query($sql, $debug=0, $ismongo=''){
       if($limit!=""){
         $sql .=" limit ".$limit;
       }
-      
+
       if($debug){
         echo $sql;
       }

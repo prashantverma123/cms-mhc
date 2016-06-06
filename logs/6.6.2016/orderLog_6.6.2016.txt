@@ -1,0 +1,2 @@
+[06/Jun/2016:11:59:50] (display) [Sample admin] database returned: 0
+[06/Jun/2016:12:02:36] (display) [Sample admin] database returned: 0

@@ -50,7 +50,9 @@ switch($action){
 				$insertArr['price'] 	= $_POST['price'];
 				$insertArr['commission'] 	= $_POST['commission'];
 				$insertArr['taxed_cost'] 	= $_POST['taxed_cost'];
-				$insertArr['varianttype'] = $_POST['varianttype'];
+				$insertArr['varianttype1'] = $_POST['varianttype1'];
+				$insertArr['varianttype2'] = $_POST['varianttype2'];
+				$insertArr['varianttype3'] = $_POST['varianttype3'];
 
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
 				$insertArr['author_name']			= "Prashant";
@@ -102,7 +104,9 @@ switch($action){
 				$updateArr['price'] 	= $_POST['price'];
 				$updateArr['commission'] 	= $_POST['commission'];
 				$updateArr['taxed_cost'] 	= $_POST['taxed_cost'];
-				$updateArr['varianttype'] = $_POST['varianttype'];
+				$updateArr['varianttype1'] = $_POST['varianttype1'];
+				$updateArr['varianttype2'] = $_POST['varianttype2'];
+				$updateArr['varianttype3'] = $_POST['varianttype3'];
 
 				$whereArr = array('id' => $leadmanager_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);
