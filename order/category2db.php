@@ -68,5 +68,27 @@ switch($action){
 
 			}
 			break;
+			case "update_jobinfo":
+			if($_POST['job_info'] == 'job_start'):
+				$updateArr['job_start'] = date('Y-m-d h:i:s');
+			elseif($_POST['job_info'] == 'job_end'):
+				$updateArr['job_end'] = date('Y-m-d h:i:s');
+			endif;
+			$whereArr = array('id' => $order_id );
+			$returnVal = $modelObj->updateTable($updateArr,$whereArr);
+			$arrReturn['result'] = 'success';
+			$arrReturn['action'] = 'updateJobInfo';
+			$arrReturn['call'] = 'update';
+			$arrReturn['order_id'] = encryptdata($order_id);
+			break;
+			case "update_jobstatus":
+			$updateArr['job_status'] = $_POST['job_status'];
+			$whereArr = array('id' => $order_id );
+			$returnVal = $modelObj->updateTable($updateArr,$whereArr);
+			$arrReturn['result'] = 'success';
+			$arrReturn['action'] = 'updateJobInfo';
+			$arrReturn['call'] = 'update';
+			$arrReturn['order_id'] = encryptdata($order_id);
+			break;
 }
 echo json_encode($arrReturn);

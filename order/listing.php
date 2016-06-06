@@ -25,7 +25,7 @@ $userId = $session->get('UserId');
 				 <th class="hidden-480">Commission</th>
 				 <th class="hidden-480">Taxed Cost</th>
 				 <th class="hidden-480">Created On</th>
-				 <th class="hidden-480">Status</th>
+				 <th class="hidden-480">Job Updates</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
 		   </thead>
@@ -63,8 +63,18 @@ $userId = $session->get('UserId');
 				<td class="hidden-480"><?php print $key['commission'];?></td>
 				<td class="hidden-480"><?php print $key['taxed_cost'];?></td>
 				<td class="hidden-480"><?php print $key['insert_date'];?></td>
-				<td class="hidden-480">
-					<?php if($key['status'] == '0'): echo "Active"; else: "Inactive"; endif; ?>
+				<td class="hidden-480 jobinfo<?php print $key['id'];?>">
+					<?php if($key['job_start'] == '' || $key['job_start'] == '000-00-00'): ?>
+					<input type="checkbox" name="job_info<?php print $key['id'];?>" value="job_start" onchange="updateJobInfo(<?php print $key['id'];?>)">Start
+					<?php elseif($key['job_end'] == '' || $key['job_end'] == '000-00-00'): ?>
+					<input type="checkbox" name="job_info<?php print $key['id'];?>" value="job_end" onchange="updateJobInfo(<?php print $key['id'];?>)">End
+					<?php else: 
+						if($key['job_status'] == 'success'):
+					?>
+						<span>Success</span>
+					<?php else: ?>
+					<select class="small m-wrap" name="job_status" id="jobstatus<?php print $key['id'];?>" onchange="saveJobStatus(<?php print $key['id'];?>)"><option value="">Please Select</option><option value="success">Success</option><option value="complaint">Complaint</option></select>
+					<?php endif; endif; ?>
 				</td>
 				 <td>
 				 	<?php if(in_array('edit',$actionArr)): ?>
@@ -97,6 +107,55 @@ $userId = $session->get('UserId');
 				}
 
 			});
+		}
+	}
+	function updateJobInfo(id){
+		if(id!=''){
+			if($('input[type="checkbox"][name="job_info'+id+'"]:checked').length == 1){
+				var job_info = $('input[type="checkbox"][name="job_info'+id+'"]:checked').val();
+				if(job_info){
+					$.ajax({
+					type: "POST",
+					url: "<?php print SITEPATH.'/order/category2db.php';?>",
+					data: 'action=update_jobinfo&order_id='+id+'&job_info='+job_info,
+					success: function(res){
+						if(job_info == 'job_start'){
+						$('.jobinfo'+id).html('<div class="checker"><span><input type="checkbox" name="job_info'+id+'" value="job_end" onchange="updateJobInfo('+id+')"></span></div>End');
+						}
+						else if(job_info == 'job_end'){
+							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" class="small m-wrap"><option value="">Please Select</option><option value="success">Success</option><option value="complaint">Complaint</option></select>');
+						}
+					},
+					error:function(){
+						alert("failure");
+					}
+				});
+				}
+			}
+		}
+	}
+
+	function saveJobStatus(id){
+		if(id!=''){
+			var job_status = $('#jobstatus'+id).val();
+			if(job_status){
+				$.ajax({
+					type: "POST",
+					url: "<?php print SITEPATH.'/order/category2db.php';?>",
+					data: 'action=update_jobstatus&order_id='+id+'&job_status='+job_status,
+					success: function(res){
+						if(job_status == 'success'){
+							$('.jobinfo'+id).html('Success');
+						}
+						else{
+							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" class="small m-wrap"><option value="">Please Select</option><option value="success">Success</option><option selected="selected" value="complaint">Complaint</option></select>');
+						}
+					},
+					error:function(){
+						alert("failure");
+					}
+				});
+			}
 		}
 	}
 </script>
