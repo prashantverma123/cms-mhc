@@ -129,13 +129,15 @@ switch($action){
 			$arrReturn['result'] = 'success';
 		break;
 		case "getPrice":
-			$city = $_POST['city'];
-			$inq[] = $_POST['inq1'];
-			$inq[] = $_POST['inq2'];
-			$inq[] = $_POST['inq3'];
- 			$source = $_POST['lead_source'];
-			$returnVal = $modelObj->getPriceList($city,$inq,$source);
-			$arrReturn['result'] = $returnVal;
+		$city = $_POST['city'];
+		$inq[] = $_POST['inq1'];
+		$inq[] = $_POST['inq2'];
+		$inq[] = $_POST['inq3'];
+		$varianttype[] = $_POST['varianttype1'];
+		$varianttype[] = $_POST['varianttype2'];
+		$varianttype[] = $_POST['varianttype3'];
+		$returnVal = $modelObj->getPriceList($city,$inq,$varianttype);
+		$arrReturn['result'] = $returnVal;
 		break;
 }
 echo json_encode($arrReturn);
