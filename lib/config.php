@@ -13,12 +13,12 @@ define('APP_TITLE_SEPARATION', 'Events :: occasion Management');
 //------------------------------------------------------------------------------
 if (APPLICATION_ENV == 'production') {
     define('DOMAIN_HOST_IP', 'sponsor.indiatimes.co.in');
-    define('SITEPATH', "http://" . DOMAIN_HOST_IP . "/");
+    define('SITEPATH', "http://" . DOMAIN_HOST_IP . "/cms/");
     define('DOCUMENTROOT', $_SERVER['DOCUMENT_ROOT'] . "/");    
 } elseif (APPLICATION_ENV == 'staging') {
     //define('DOMAIN_HOST_IP', '223.165.31.104');
     define('DOMAIN_HOST_IP', 'staging.sponsor.indiatimes.co.in');
-    define('SITEPATH', "http://" . DOMAIN_HOST_IP . "/");
+    define('SITEPATH', "http://" . DOMAIN_HOST_IP . "/cms/");
     define('DOCUMENTROOT', $_SERVER['DOCUMENT_ROOT'] . "/");
 } else {
     
