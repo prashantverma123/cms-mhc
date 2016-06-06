@@ -263,7 +263,7 @@ class Order {
 
 	public function optionsGenerator($table, $display_field, $value_field, $selected_value="", $conditions="") {
         $options_str = "";
-       $stmt = "select distinct " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " order by " . $display_field;
+       $stmt = "select " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " group by ".$display_field." order by " . $display_field;
         $this -> db ->query($stmt);
         $options_str = "<option value=''>Please Select</option>";
         while ($result = $this-> db ->fetch()) {

@@ -128,7 +128,8 @@ function saveData(frm_id, action){
     function getData(success){ //alert('Jmd................');
         var jObj=eval("("+success+")");
         var res_action=jObj.action; //alert('AAs');
-        var res_lead_id=jObj.lead_id; //alert('AA'+res_lead_stage_id);
+        var res_lead_id=jObj.lead_id; 
+       //alert('AA'+res_lead_id);
 		$('#record_modified').show();
 			 setTimeout(function () {
 				document.getElementById('record_modified').style.display='none';

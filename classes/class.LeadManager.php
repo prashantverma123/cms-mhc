@@ -206,21 +206,19 @@ class LeadManager {
 
 	public function optionsGenerator($table, $display_field, $value_field, $selected_value="", $conditions="") {
         $options_str = "";
-       $stmt = "select distinct " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " order by " . $display_field;
+       $stmt = "select " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " group by ".$display_field." order by " . $display_field;
         $this -> db ->query($stmt);
         $options_str = "<option value=''>Please Select</option>";
-        if($result):
         while ($result = $this-> db ->fetch()) {
             $options_str.='<option value="' . $result['value'] . '"';
             if ($selected_value != "" && $selected_value == $result['value'])
                 $options_str.=' selected ';
             $options_str.='>' . $result['display'] . '</option>';
         }
-        endif;
         return $options_str;
     }
 
-		public function optionsGeneratorByIndex($endIndex) {
+	public function optionsGeneratorByIndex($endIndex) {
 	        $options_str = "";
 
 	        $options_str = "<option value=''>Please Select</option>";
