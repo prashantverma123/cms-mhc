@@ -14,10 +14,10 @@ $action = $_POST['action'];
 switch($action) {
 	case 'login':
 			$email = addslashes($_POST['username']);
-			$passWord = addslashes($_POST['password']);
+			$passWord = addslashes(md5($_POST['password']));
 			$keyValueArray['sqlclause'] = " email = '$email' OR username='$email' AND password ='$passWord' AND status=1 ";
 			$dataArr = $db->getDataFromTable($keyValueArray, 'cmsuser', " * ", " name asc",'',false);
-			// echo "<script type='text/javascript'>alert('$dataArr');</script>";
+			//echo "<script type='text/javascript'>alert('$dataArr');</script>";
 
 			if(count($dataArr) > 0){
 				foreach($dataArr as $key){
@@ -94,7 +94,7 @@ switch($action) {
 			//echo '<pre>'; print_r($_POST);
 			$username = addslashes($_POST['username']);
 			$email 	  = addslashes($_POST['email']);
-			$passWord = addslashes($_POST['password']);
+			$passWord = addslashes(md5($_POST['password']));
 			$keyValueArray['sqlclause'] = " email = '".$email."' AND password ='".$passWord."' AND status=1 ";
 			$dataArr = $db->getDataFromTable($keyValueArray, 'cmsuser', " * ", "",'',false);
 			if(count($dataArr) > 0){
