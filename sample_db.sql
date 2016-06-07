@@ -461,3 +461,5 @@ ALTER TABLE `cmsuser` ADD CONSTRAINT `fk_cmsuser_city` FOREIGN KEY (`city`) REFE
 ALTER TABLE `employee` CHANGE `designation` `designation` INT NOT NULL;
 ALTER TABLE `employee` ADD INDEX(`designation`);
 ALTER TABLE `employee` ADD CONSTRAINT `fk_designation_employee` FOREIGN KEY (`designation`) REFERENCES `sample_db`.`designation`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `cmsuser` CHANGE `password` `password` TEXT CHARACTER SET latin1 COLLATE latin1_general_ci NULL DEFAULT NULL;

@@ -67,6 +67,7 @@ if($cmsuser_id > 0){
 				  <!--/span-->
 			   </div>
 			   <div class="row-fluid">
+			   		<?php if($cmsuser_id==''): ?>
 			   		<div class="span6 ">
 						 <div class="control-group">
 							<label class="control-label">Password<span class="required">*</span></label>
@@ -76,7 +77,7 @@ if($cmsuser_id > 0){
 							</div>
 						 </div>
 				 	</div>
-				 	<?php if($cmsuser_id==''): ?>
+				 	
 				 	<div class="span6 ">
 						 <div class="control-group">
 							<label class="control-label">Confirm Password<span class="required">*</span></label>
@@ -104,10 +105,7 @@ if($cmsuser_id > 0){
 						<label class="control-label">Role<span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="role" name="role">
-							<option value="" >Assign the role</option>
-							<option value="admin" >Admin</option>
-							<option value="operation" >Operation</option>
-							<option value="customer_care" >Customer Care</option>
+							<?php  echo $modelObj->optionsGenerator('role', 'name', 'role',$data['role'],""); ?>
 							</select>
 						</div>
 					 </div>
@@ -151,7 +149,16 @@ function saveData(frm_id, action){
 			name:"required",
 			email:{
 				email:true,
-				required:true
+				required:true,
+				remote: {
+		        url: "<?php print SITEPATH;?>/<?php echo $modelObj->folderName; ?>/category2db.php?action=check_email&id=<?php echo $cmsuser_id; ?>",
+		        type: "post",
+		        data: {
+		          email: function() {
+		            return $( "#email" ).val();
+		          }
+		        }
+		      }
 			},
 			username:"required",
 			password:{
@@ -164,6 +171,11 @@ function saveData(frm_id, action){
 				equalTo: "#password"
 			},
 			role:"required"
+		},
+		messages:{
+			email:{
+				remote:"Email ID is already exist"
+			}
 		},
 		submitHandler: function() {
 	        $('.error').hide();
@@ -183,14 +195,16 @@ function saveData(frm_id, action){
 
 	        if(flag==0){
 	            var datastring=$('#'+frm_id).serialize();
-				//console.log(datastring);
 	            $.ajax({
 	                type: "POST",
 	                url: "<?php print SITEPATH;?>/<?php echo $modelObj->folderName; ?>/category2db.php",
 	                data: datastring,
 	                success: function(data){
-	                	//console.log(data);
-						getData(data);
+	                	if(data){
+							getData(data);
+						}else{
+							alert("Please try again!");
+						}
 					},
 	                error:function(){
 	                    alert("failure");
@@ -205,8 +219,6 @@ function saveData(frm_id, action){
     }
 
     function getData(success){
-
-
         var jObj=eval("("+success+")");
         var res_action=jObj.action; //alert('AAs');
         var res_cmsuser_id=jObj.cmsuser_id;

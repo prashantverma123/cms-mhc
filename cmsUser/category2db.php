@@ -3,6 +3,9 @@
 	include_once('../config.php');
 	include_once('variable.php');
 	$action   		= isset($_POST['action']) ? $_POST['action'] : '';
+	if(!$action){
+		$action   		= isset($_GET['action']) ? $_GET['action'] : '';
+	}
 	$cmsuser_id 	= isset($_POST['cmsuser_id']) ? $_POST['cmsuser_id'] : '';
 	$call 			= isset($_POST['call']) ? $_POST['call'] : '';
 switch($action){
@@ -17,7 +20,7 @@ switch($action){
 				$insertArr['name'] 	= $_POST['name'];
 				$insertArr['email'] 		= $_POST['email'];
 				$insertArr['username'] 		= $_POST['username'];
-				$insertArr['password'] 			= $_POST['password'];
+				$insertArr['password'] 			= md5($_POST['password']);
 				$insertArr['city'] 			= $_POST['city'];
 				$insertArr['role'] 			= $_POST['role'];
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
@@ -25,10 +28,14 @@ switch($action){
 				$insertArr['status']= 0;
 				$insertArr['ip']= getIP();
 				$returnVal = $modelObj->insertTable($insertArr);
-				$arrReturn['result'] = 'success';
-				$arrReturn['action'] = 'saveEventName';
-				$arrReturn['call']   = 'add';
-				$arrReturn['cmsuser_id'] = encryptdata($returnVal);
+				if($returnVal){
+					$arrReturn['result'] = 'success';
+					$arrReturn['action'] = 'saveEventName';
+					$arrReturn['call']   = 'add';
+					$arrReturn['cmsuser_id'] = encryptdata($returnVal);
+				}else{
+					return false;
+				}
 
 			}else if($cmsuser_id > 0){ // edit the record
 				$updateArr['name'] 			= $_POST['name'];
@@ -50,6 +57,18 @@ switch($action){
 				$arrReturn['call'] = 'update';
 				$arrReturn['cmsuser_id'] = encryptdata($cmsuser_id);
 
+			}
+			break;
+			case "check_email":
+			if($_GET['id'] == ''){
+				$returnVal = $modelObj->checkEmail($_POST['email']);
+				if($returnVal){
+					$arrReturn = false;
+				}else{
+					$arrReturn = true;
+				}
+			}else{
+				$arrReturn = true;
 			}
 			break;
 }
