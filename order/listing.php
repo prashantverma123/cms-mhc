@@ -73,7 +73,7 @@ $userId = $session->get('UserId');
 					?>
 						<span>Success</span>
 					<?php else: ?>
-					<select class="small m-wrap" name="job_status" id="jobstatus<?php print $key['id'];?>" onchange="saveJobStatus(<?php print $key['id'];?>)"><option value="">Please Select</option><option value="success">Success</option><option value="complaint">Complaint</option></select>
+					<select class="small m-wrap" name="job_status" id="jobstatus<?php print $key['id'];?>" onchange="saveJobStatus(<?php print $key['id'];?>)"><option value="">Please Select</option><option value="success">Success</option><option value="complaint" <?php if($key['job_status'] == 'complaint'): echo "selected"; else: ""; endif; ?>>Complaint</option></select>
 					<?php endif; endif; ?>
 				</td>
 				 <td>
