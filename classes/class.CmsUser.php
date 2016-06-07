@@ -204,5 +204,15 @@ class CmsUser {
 		 }
 		 return $pagination;
 	}
+
+	function checkEmail($email){
+		$keyValueArray['email'] = $email;
+		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " id ", " name ASC ", '', false);
+		if(count($dataArr) > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }
 ?>
