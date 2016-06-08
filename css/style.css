@@ -5064,3 +5064,4 @@ Bootstrap Datepickers Restyle(in v1.2.4)
     width: 50%;
     overflow-y: auto;
 }
+.complaint-head{padding: 15px;text-align: center;font-weight: bold;width:50%;}

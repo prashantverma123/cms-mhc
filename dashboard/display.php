@@ -80,11 +80,16 @@ $titlename 		= 'Dashboard';
                          </div>
                         <?php endforeach; ?>
                        </div> -->
-                      <div class="order-complaint">
+
+                      <div class="complaint">
+                        <div class="complaint-head"><h4>Order Complaints</h4></div>
+                         <div class="order-complaint">
                         <div class="portlet-body">
+
                           <div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
                               <table class="table table-striped table-bordered table-hover" id="">
                                <thead>
+
                                 <tr>
                                  <th class="hidden-480">Name</th>
                                  <th class="hidden-480">Email ID</th>
@@ -110,6 +115,7 @@ $titlename 		= 'Dashboard';
                             </table>
                               </div>
                            </div>
+                        </div>
                       </div>
                     </div>
 
