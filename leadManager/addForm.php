@@ -212,8 +212,6 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">City <span class="required">*</span></label>
 	 				 <div class="controls">
-	 						<!-- <input type="text" placeholder="Please Enter city" value="<?php echo isset($data)?$data['city']:''; ?>" id="city" name="city" class="m-wrap span12"> -->
-
 							<select tabindex="1" class="medium m-wrap" id="city" name="city">
 						   <?php  echo $modelObj->optionsGenerator('city', 'name', 'id', $data['city']," where status='0'"); ?>
 							</select>
@@ -276,7 +274,7 @@ if($leadmanager_id > 0){
 				</div>
 			 </div>
 				</div>
-				<div class="row-fluid">
+				<div class="row-fluid serviceDateTime1">
 					<div class="span6 ">
 					<div class="control-group">
 					 <label class="control-label">Service1 Date <span class="required">*</span></label>
@@ -335,7 +333,7 @@ if($leadmanager_id > 0){
 				 </div>
 				</div>
 				</div>
-				<div class="row-fluid">
+				<div class="row-fluid serviceDateTime2">
 					<div class="span6 ">
 					<div class="control-group">
 					 <label class="control-label">Service2 Date </label>
@@ -392,27 +390,27 @@ if($leadmanager_id > 0){
 					</div>
 				 </div>
 				</div>
-				<div class="row-fluid">
+				<div class="row-fluid serviceDateTime3">
 					<div class="span6 ">
 					<div class="control-group">
-					 <label class="control-label">Service3 Date </label>
-					 <div class="controls">
-							<input type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service3_date']:''; ?>" id="service3_date" name="service3_date" class="m-wrap span12 datepicker">
-							<span class="help-block" id="cost2_error"> </span>
-					 </div>
+						<label class="control-label">Service3 Date </label>
+						 <div class="controls">
+								<input type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service3_date']:''; ?>" id="service3_date" name="service3_date" class="m-wrap span12 datepicker">
+								<span class="help-block" id="cost2_error"> </span>
+						 </div>
+						</div>
+				 	</div>
+					<div class="span6 ">
+						<div class="control-group">
+							<label class="control-label">Service3 Time </label>
+						 	<div class="controls bootstrap-timepicker timepicker">
+								<input type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service3_time']:''; ?>" id="service3_time" name="service3_time" class="m-wrap span12">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+								<span class="help-block" id="service2_time_error"> </span>
+						 	</div>
+						</div>
 					</div>
-				 </div>
-				<div class="span6 ">
-				<div class="control-group">
-				 <label class="control-label">Service3 Time </label>
-				 <div class="controls bootstrap-timepicker timepicker">
-						<input type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service3_time']:''; ?>" id="service3_time" name="service3_time" class="m-wrap span12">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-						<span class="help-block" id="service2_time_error"> </span>
-				 </div>
 				</div>
-			 </div>
-			</div>
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
@@ -513,6 +511,26 @@ $(document).ready(function(){
   	format:'yyyy/mm/dd'
   });
 
+	if($('#lead_stage').val()!='closed'){
+		$('.serviceDateTime1').hide();
+		$('.serviceDateTime2').hide();
+		$('.serviceDateTime3').hide();
+	}else{
+		$('.serviceDateTime1').show();
+		$('.serviceDateTime2').show();
+		$('.serviceDateTime3').show();
+	}
+	$('#lead_stage').change(function(){
+		if($('#lead_stage').val()!='closed'){
+			$('.serviceDateTime1').hide();
+			$('.serviceDateTime2').hide();
+			$('.serviceDateTime3').hide();
+		}else{
+			$('.serviceDateTime1').show();
+			$('.serviceDateTime2').show();
+			$('.serviceDateTime3').show();
+		}
+	});
    $('#service1_time').timepicker();
 
 	 $('#service2_date').datepicker({
