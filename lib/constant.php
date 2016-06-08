@@ -15,6 +15,7 @@ define('IMAGEPATH', SITEPATH . '/img');
 define('COMMONFILEPATH', DOCUMENTROOT . '/common');
 define('SALTKEY','TMINUS_EVE_IDS');
 define('PER_PAGE_ROWS',10); //(pagination) to show number of rows on a page
+define('INVOICE_FROM_EMAILID','trushali.webwerks@gmail.com');
 date_default_timezone_set('Asia/Kolkata');
 
 $user_city = "";

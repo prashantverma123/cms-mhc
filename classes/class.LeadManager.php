@@ -267,14 +267,13 @@ class LeadManager {
 
     }
 
-		function getPriceList($city,$inqs,$varianttype){
+	function getPriceList($city,$inqs,$varianttype){
 		 $keyValueArray['city'] = $city;
 		 // $keyValueArray['varianttype'] = $varianttype;
 		 $total = 0;
 		 $indx = 0;
 		 // $this->logs->writelogs($this->folderName,"Prices f the services: ".json_encode($inqs) );
 		 foreach ($inqs as $inq) {
-
 			 if($inq != ""){
 				 $keyValueArray['name'] = $inq;
 				 $keyValueArray['varianttype'] = $varianttype[$indx];
@@ -288,5 +287,18 @@ class LeadManager {
 		 // $this->logs->writelogs($this->folderName,"Prices f the services: ".json_encode($inqs) );
 		 return $total;
 	 }
+
+	function send_invoice_email($id){
+		$keyValueArray['id'] = $id;
+		$result = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, "client_firstname,client_lastname,taxed_cost,client_email_id", "", '', false);
+		if($result && $result[0]['client_email_id']){
+			$subject = "Mr Home Care- Invoice";
+			$to = $result[0]['client_email_id'];
+			$from = INVOICE_FROM_EMAILID;
+			sendEmail($to,$from,$subject,$body);
+			return $result[0];
+		}
+
+	}
 }
 ?>

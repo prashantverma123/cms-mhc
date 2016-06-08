@@ -155,5 +155,9 @@ switch($action){
 		$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 		$arrReturn['result'] = 'success';
 		break;
+		case "sendInvoiceMail":
+		$row = $modelObj->send_invoice_email($leadmanager_id);
+		
+		break;
 }
 echo json_encode($arrReturn);

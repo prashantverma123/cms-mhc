@@ -133,6 +133,7 @@ $userId = $session->get('UserId');
 								data: 'action=saveIntoOrder&leadmanager_id='+id,
 								success: function(r){
 									$('#confirmed'+id).html('Confirmed');
+
 								}
 							});
 						}
@@ -147,5 +148,21 @@ $userId = $session->get('UserId');
 
 			});
 		}
+	}
+	function send_invoice_email(id){
+		$.ajax({
+			type: "POST",
+			url: "<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
+			data: 'action=sendInvoiceMail&leadmanager_id='+id,
+			success: function(res){
+				if(res){
+					
+				}
+				alert("Status updated!");
+			},
+			error:function(){
+				alert("failure");
+			}
+		});
 	}
 </script>
