@@ -19,6 +19,7 @@ switch($action){
 				$insertArr['followup_by'] 	= $_POST['followup_by'];
 				$insertArr['job_status']	= 'pending';
 				$insertArr['lead_stage']    = $_POST['lead_stage'];
+				$insertArr['reminder']    = $_POST['reminder'];
 				$insertArr['service1_date'] 		=  date("Y-m-d", strtotime($_POST['service1_date']));
 				$insertArr['service1_time'] 		= $_POST['service1_time'];
 				$insertArr['service2_date'] 		=  date("Y-m-d", strtotime($_POST['service2_date']));
@@ -78,6 +79,7 @@ switch($action){
 				$updateArr['followup_by'] 	= $_POST['followup_by'];
 				$updateArr['job_status']	= $_POST['job_status'];
 				$updateArr['lead_stage']    = $_POST['lead_stage'];
+				$updateArr['reminder']    = $_POST['reminder'];
 				$updateArr['service1_date'] 		=  date("Y-m-d", strtotime($_POST['service1_date']));
 				$updateArr['service1_time'] 		= $_POST['service1_time'];
 				$updateArr['service2_date'] 		=  date("Y-m-d", strtotime($_POST['service2_date']));
@@ -129,6 +131,12 @@ switch($action){
 			break;
 		case "update_leadmanager_status":
 		$updateArr['job_status'] 	= $_POST['status'];
+		$whereArr = array('id' => $leadmanager_id );
+		$returnVal = $modelObj->updateTable($updateArr,$whereArr);
+		$arrReturn['result'] = 'success';
+		break;
+		case "set_lead_reminders":
+		$updateArr['reminder'] 	= $_POST['reminder'];
 		$whereArr = array('id' => $leadmanager_id );
 		$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 		$arrReturn['result'] = 'success';

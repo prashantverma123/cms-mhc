@@ -1,3 +1,26 @@
+
+[06/Jun/2016:11:59:47] (display) [Sample admin] database returned: 0
+[06/Jun/2016:12:09:40] (display) [Sample admin] database returned: 0
+[06/Jun/2016:12:22:20] (display) [Sample admin] database returned: 0
+[06/Jun/2016:12:23:36] (display) [Sample admin] database returned: 0
+[06/Jun/2016:12:24:11] (display) [Sample admin] database returned: 0
+[06/Jun/2016:12:26:37] (display) [Sample admin] database returned: 0
+[06/Jun/2016:17:45:53] (display) [Sample admin] database returned: 0
+[06/Jun/2016:17:48:38] (display) [Sample admin] database returned: 0
+[06/Jun/2016:17:50:01] (display) [Sample admin] database returned: 0
+[06/Jun/2016:17:51:52] (display) [Sample admin] database returned: 0
+[06/Jun/2016:17:52:28] (display) [Sample admin] database returned: 0
+[06/Jun/2016:18:04:02] (display) [Sample admin] database returned: 0
+[06/Jun/2016:18:17:20] (display) [Sample admin] database returned: 0
+[06/Jun/2016:18:17:24] (display) [Sample admin] database returned: 0
+[06/Jun/2016:18:17:52] (category2db) [Sample admin] Prices of the services: []
+[06/Jun/2016:18:17:52] (category2db) [Sample admin] Prices of the services: []
+[06/Jun/2016:18:17:52] (category2db) [Sample admin] Prices of the services: []
+[06/Jun/2016:18:18:16] (category2db) [Sample admin] Insertion: 0
+[06/Jun/2016:18:18:26] (display) [Sample admin] database returned: 0
+[06/Jun/2016:18:20:20] (display) [Sample admin] database returned: 0
+[06/Jun/2016:18:22:37] (display) [Sample admin] database returned: 0
+[06/Jun/2016:18:23:17] (display) [Sample admin] database returned: 0
 [06/Jun/2016:16:22:07] (display) [Sample admin] database returned: 10
 [06/Jun/2016:16:22:50] (display) [Sample admin] database returned: 10
 [06/Jun/2016:16:35:19] (display) [Sample admin] database returned: 10
