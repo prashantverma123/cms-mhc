@@ -5059,3 +5059,8 @@ Bootstrap Datepickers Restyle(in v1.2.4)
 .leadmanager{color: #270339;background-color: #e6ccff;border-color: #b366ff;}
 .cmsuser{color: #001a66;background-color: #ccd9ff;border-color: #99b3ff;}
 .leadstage{color: #cc7a00;background-color: #fff5e6;border-color: #ffe0b3;}
+.order-complaint {
+    height: 100px;
+    width: 50%;
+    overflow-y: auto;
+}

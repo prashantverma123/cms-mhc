@@ -71,34 +71,47 @@ $titlename 		= 'Dashboard';
             <div class="row-fluid">
                <div class="span12">
                   <div class="tabbable tabbable-custom boxless">
-                        <div class="tab-content">
-                          <div class="header-stats-container" style="width:100%;height:100px;" >
+                    <div class="tab-content">
+                          <!-- <div class="header-stats-container" style="width:100%;height:100px;" >
                          <?php foreach ($modules as $module): ?>
                          <div class="boxContainer statistics <?php echo $module['module']; ?>">
                            <h4 style="text-align:center;"><?php echo $module['module']; ?></h4>
                            <p style="text-align:center;"><?php echo $modelObj->get_statistics($module['module']); ?></p>
                          </div>
                         <?php endforeach; ?>
-                         <?php /*if($_SESSION['tmobi']['role'] == 'admin'): ?>
-                         <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;color: #3c763d;background-color: #dff0d8;border-color: #d6e9c6;">
-                           <h4 style="text-align:center;">City</h4>
-                          <p style="text-align:center;"><?php echo $modelObj->get_statistics('city'); ?></p>
-                         </div>
-                         <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;color: #31708f;background-color: #d9edf7;border-color: #bce8f1;">
-                           <h4 style="text-align:center;">Order</h4>
-                          <p style="text-align:center;"><?php echo $modelObj->get_statistics('orders'); ?></p>
-                         </div>
-                         <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;color: #8a6d3b;background-color: #fcf8e3;border-color: #faebcc;">
-                           <h4 style="text-align:center;">Employees</h4>
-                          <p style="text-align:center;"><?php echo $modelObj->get_statistics('employee'); ?></p>
-                         </div>
-                         <div class="boxContainer" style="border-style: solid ;border-width: 2px;height: 80px;width:175px;float:left;margin-left:3%;margin-top:1%;background-color: #acf8e3;border-color: #aaebcc;">
-                           <h4 style="text-align:center;">Category</h4>
-                          <p style="text-align:center;"><?php echo $modelObj->get_statistics('category'); ?></p>
-                         </div>
-                       <?php endif;*/ ?>
-                       </div>
-                       </div>
+                       </div> -->
+                      <div class="order-complaint">
+                        <div class="portlet-body">
+                          <div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
+                              <table class="table table-striped table-bordered table-hover" id="">
+                               <thead>
+                                <tr>
+                                 <th class="hidden-480">Name</th>
+                                 <th class="hidden-480">Email ID</th>
+                                  <th class="hidden-480">Mobile No</th>
+                                 <th class="hidden-480">Feedback</th>
+                                <th>Duration</th>
+                                </tr>
+                              </thead>
+                               <tbody>
+                              <?php $result_data = $modelObj->getOrderComplaint();
+                                if($result_data && count($result_data) > 0):
+                                foreach ($result_data as $key){
+                              ?>
+                                <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
+                                <td class="hidden-480"><?php print $key['name'];?></td>
+                                <td class="hidden-480"><?php print $key['email_id'];?></td>
+                                <td class="hidden-480"><?php print $key['mobile_no'];?></td>
+                                <td class="hidden-480"><?php print $key['order_feedback'];?></td>
+                                <td class="hidden-480"><?php print $key['duration'];?></td>
+                                </tr>
+                            <?php } endif; ?>
+                               </tbody>
+                            </table>
+                              </div>
+                           </div>
+                      </div>
+                    </div>
 
 
                   </div>
@@ -177,4 +190,16 @@ if($('#'+div_name).is(':visible')) {
 		$('#sponsor_image').attr('src', '<?php print IMAGEPATH;?>/min_blck.png');
     }
 }
+(function($){
+      $(window).load(function(){
+        
+        $(".order-complaint").mCustomScrollbar({
+          snapAmount:40,
+          scrollButtons:{enable:true},
+          keyboard:{scrollAmount:40},
+          mouseWheel:{deltaFactor:40},
+          scrollInertia:400
+        });
+      });
+    })(jQuery);
 </script>
