@@ -90,5 +90,11 @@ switch($action){
 			$arrReturn['call'] = 'update';
 			$arrReturn['order_id'] = encryptdata($order_id);
 			break;
+			case "add_order_feedback":
+			$updateArr['order_feedback '] = $_POST['order_feedback'];
+			$whereArr = array('id' => $order_id );
+			$returnVal = $modelObj->updateTable($updateArr,$whereArr);
+			$arrReturn['result'] = 'success';
+			break;
 }
 echo json_encode($arrReturn);

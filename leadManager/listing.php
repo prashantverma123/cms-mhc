@@ -49,7 +49,7 @@ $userId = $session->get('UserId');
 				<td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				<td class="hidden-480"><?php print $key['lead_owner'];?></td>
 				<td class="hidden-480">
-					<select class="small m-wrap" name="lead_stage" id="leadstage<?php print $key['id'];?>" onchange="changeLeadStage(<?php print $key['id'];?>)">
+					<select class="small m-wrap lead_stage" name="lead_stage" id="leadstage<?php print $key['id'];?>" onchange="changeLeadStage(<?php print $key['id'];?>);">
 					<?php echo $modelObj->optionsGenerator('leadstage', 'name', 'id', $key['leadstage_id'], "where  status='0'"); ?>
 					</select>
 					<div id="dialog-modal">
@@ -107,8 +107,7 @@ $(document).ready(function () {
 
     });
 
-
-    $('select').change(function () {
+    $('.lead_stage').change(function () {
 
 			var x = 450;
 			var y = 250;
@@ -193,7 +192,7 @@ $(document).ready(function () {
 			data: 'action=sendInvoiceMail&leadmanager_id='+id,
 			success: function(res){
 				if(res){
-					
+
 				}
 				alert("Status updated!");
 			},
@@ -221,4 +220,5 @@ $(document).ready(function () {
 			});
 		}
 	}
+}
 </script>
