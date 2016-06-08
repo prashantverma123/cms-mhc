@@ -501,7 +501,7 @@ if($leadmanager_id > 0){
 				</span>
 			    <button class="btn blue" type="submit" onClick="return saveData('frm_lead_manager','saveLeadManager');"><i class="icon-ok"></i> Save</button>
 			    <?php /*?><!-- <a href="<?php print SITEPATH;?>/category/display.php" ><button class="btn" type="button">Cancel</button></a>--><?php */?>
-			  	<a  href="javascript:void();" onclick="window.location.href='<?php print SITEPATH;?>/leadManager/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
+			  	<a  href="javascript:void();" onclick="window.location.href='<?php print SITEPATH;?>/cms/leadManager/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
 			</div>
 		 </form>
 		 <!-- END FORM-->
@@ -639,7 +639,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($leadmanager_id =='' || $leadmanager_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/<?php echo $modelObj->folderName; ?>/display.php?leadmanager_id="+res_product_id+"&flag=t";
+		window.location.href = "<?php SITEPATH;?>/cms/<?php echo $modelObj->folderName; ?>/display.php?leadmanager_id="+res_product_id+"&flag=t";
 		<?php } ?>
     }
 

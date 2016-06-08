@@ -20,7 +20,7 @@ $userId = $session->get('UserId');
 				 <th class="hidden-480">Job Status</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
-		   </thead>
+			</thead>
 		   <tbody>
 		   <?php
 		   if(!$_GET['p']){
@@ -52,6 +52,18 @@ $userId = $session->get('UserId');
 					<select class="small m-wrap" name="lead_stage" id="leadstage<?php print $key['id'];?>" onchange="changeLeadStage(<?php print $key['id'];?>)">
 					<?php echo $modelObj->optionsGenerator('leadstage', 'name', 'id', $key['leadstage_id'], "where  status='0'"); ?>
 					</select>
+					<div id="dialog-modal">
+						<label for="">Reminder:</label>
+						<select name="reminder<?php echo $key['id']; ?>" id="reminder<?php echo $key['id']; ?>" tabindex="1" class="medium m-wrap" onchange="set_reminder('<?php echo $key['id']; ?>');">
+							<option value="1D" <?php if($key['reminder']=='1D'): echo "selected"; else: echo "";endif; ?>>1D</option>
+							<option value='3D' <?php if($key['reminder']=='3D'): echo "selected"; else: echo "";endif; ?>>3D</option>
+							<option value='5D' <?php if($key['reminder']=='5D'): echo "selected"; else: echo "";endif; ?>>5D</option>
+							<option value='1W' <?php if($key['reminder']=='1W'): echo "selected"; else: echo "";endif; ?>>1W</option>
+							<option value='2W' <?php if($key['reminder']=='2W'): echo "selected"; else: echo "";endif; ?>>2W</option>
+							<option value='3W' <?php if($key['reminder']=='3W'): echo "selected"; else: echo "";endif; ?>>3W</option>
+							<option value='1M' <?php if($key['reminder']=='1M'): echo "selected"; else: echo "";endif; ?>>1M</option>
+						</select>
+					</div>
 				</td>
 				<td class="hidden-480"><?php print $key['client_firstname'];?></td>
 				<td class="hidden-480"><?php print $key['client_mobile_no'];?></td>
@@ -83,6 +95,31 @@ $userId = $session->get('UserId');
       </div>
    </div>
 <script>
+$(document).ready(function () {
+	(function($) {
+	    if (!$.curCSS) {
+	       $.curCSS = $.css;
+	    }
+	})(jQuery);
+    $('#dialog-modal').dialog({
+        modal: true,
+        autoOpen: false,
+
+    });
+
+
+    $('select').change(function () {
+
+			var x = 450;
+			var y = 250;
+			jQuery("#dialog-modal").dialog('option', 'position', [x,y]);
+            $('#dialog-modal').dialog('open');
+
+
+
+    });
+
+});
 	function dele_leadmanager(d_id){ //alert(d_id);
 		if(d_id !=''){
 			$.ajax({
@@ -108,11 +145,11 @@ $userId = $session->get('UserId');
 			url:"<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
 			data: 'action=update_leadstage&leadmanager_id='+id+'&leadstage_id='+current,
 			success: function(res){
-				alert("lead stage updated");
+				// alert("lead stage updated");
 			},
 			//success: getData,
 			error:function(){
-				alert("failure");
+				// alert("failure");
 				//$("#result").html('there is error while submit');
 			}
 		})
@@ -143,6 +180,25 @@ $userId = $session->get('UserId');
 				error:function(){
 					alert("failure");
 					//$("#result").html('there is error while submit');
+				}
+
+			});
+		}
+	}
+	function set_reminder(id){
+		debugger;
+		if(id !=''){
+			var reminder = $('#reminder'+id).val();
+			$.ajax({
+				type: "POST",
+				url: "<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
+				data: 'action=set_lead_reminders&leadmanager_id='+id+'&reminder='+reminder,
+				success: function(res){
+					alert("Reminder Set !!!");
+				},
+				error:function(){
+					alert("failure");
+
 				}
 
 			});
