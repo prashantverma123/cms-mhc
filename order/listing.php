@@ -3,7 +3,7 @@ $session = Session::getInstance();
 $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
-echo $modelObj->sendEmail();
+// echo $modelObj->sendEmail();
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
@@ -65,17 +65,26 @@ echo $modelObj->sendEmail();
 				<td class="hidden-480"><?php print $key['taxed_cost'];?></td>
 				<td class="hidden-480"><?php print $key['insert_date'];?></td>
 				<td class="hidden-480 jobinfo<?php print $key['id'];?>">
+
 					<?php if($key['job_start'] == '' || $key['job_start'] == '000-00-00'): ?>
 					<input type="checkbox" name="job_info<?php print $key['id'];?>" value="job_start" onchange="updateJobInfo(<?php print $key['id'];?>)">Start
 					<?php elseif($key['job_end'] == '' || $key['job_end'] == '000-00-00'): ?>
 					<input type="checkbox" name="job_info<?php print $key['id'];?>" value="job_end" onchange="updateJobInfo(<?php print $key['id'];?>)">End
-					<?php else: 
+					<?php else:
 						if($key['job_status'] == 'success'):
 					?>
 						<span>Success</span>
 					<?php else: ?>
-					<select class="small m-wrap" name="job_status" id="jobstatus<?php print $key['id'];?>" onchange="saveJobStatus(<?php print $key['id'];?>)"><option value="">Please Select</option><option value="success">Success</option><option value="complaint" <?php if($key['job_status'] == 'complaint'): echo "selected"; else: ""; endif; ?>>Complaint</option></select>
+					<select class="small m-wrap jobstatus" name="job_status"  id="jobstatus<?php print $key['id'];?>" onchange="saveJobStatus(<?php print $key['id'];?>)">
+						<option value="">Please Select</option>
+						<option value="success">Success</option>
+						<option value="complaint" <?php if($key['job_status'] == 'complaint'): echo "selected"; else: ""; endif; ?>>Complaint</option>
+						</select>
+
 					<?php endif; endif; ?>
+
+
+
 				</td>
 				 <td>
 				 	<?php if(in_array('edit',$actionArr)): ?>
@@ -89,9 +98,47 @@ echo $modelObj->sendEmail();
 		   </tbody>
 		</table>
 		<?php echo $modelObj->pagination($recperpage,$page,$result_data['count']); ?>
+		<div id="dialog-modal">
+			<label for="">Order Feedback:</label>
+			 <textarea rows="3" name="order_feedback" id="order_feedback" class="m-wrap span8"><?php echo isset($data)?trim($data['order_feedback']):''; ?></textarea>
+			 <button class="btn blue" name="button" onclick="saveOrderFeedback(<?php print $key['id'];?>)">Submit</button>
+		</div>
       </div>
    </div>
+
 <script>
+$(document).ready(function () {
+	(function($) {
+	    if (!$.curCSS) {
+	       $.curCSS = $.css;
+	    }
+	})(jQuery);
+    $('#dialog-modal').dialog({
+        modal: true,
+        autoOpen: false,
+				open: function(){
+      jQuery('.ui-widget-overlay').bind('click',function(){
+         dialogopen.dialog('close');
+      });
+   },
+   width: "80%",
+   maxWidth: "768px"
+
+    });
+
+
+    $('.jobstatus').change(function () {
+
+			var x = 250;
+			var y = 250;
+			jQuery("#dialog-modal").dialog('option', 'position', [x,y]);
+            $('#dialog-modal').dialog('open');
+
+
+
+    });
+
+});
 	function dele_order(d_id){ //alert(d_id);
 		if(d_id !=''){
 			$.ajax({
@@ -151,6 +198,25 @@ echo $modelObj->sendEmail();
 						else{
 							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" class="small m-wrap"><option value="">Please Select</option><option value="success">Success</option><option selected="selected" value="complaint">Complaint</option></select>');
 						}
+					},
+					error:function(){
+						alert("failure");
+					}
+				});
+			}
+		}
+	}
+	function saveOrderFeedback(id){
+		debugger;
+		if(id!=''){
+			var order_feedback = $('#order_feedback').val();
+			if(order_feedback){
+				$.ajax({
+					type: "POST",
+					url: "<?php print SITEPATH.'/order/category2db.php';?>",
+					data: 'action=add_order_feedback&order_id='+id+'&order_feedback='+order_feedback,
+					success: function(res){
+						alert("Feedback Submitted !!!")
 					},
 					error:function(){
 						alert("failure");
