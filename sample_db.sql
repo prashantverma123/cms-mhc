@@ -463,3 +463,7 @@ ALTER TABLE `employee` ADD INDEX(`designation`);
 ALTER TABLE `employee` ADD CONSTRAINT `fk_designation_employee` FOREIGN KEY (`designation`) REFERENCES `sample_db`.`designation`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 ALTER TABLE `cmsuser` CHANGE `password` `password` TEXT CHARACTER SET latin1 COLLATE latin1_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `leadmanager` CHANGE `city` `city` INT NOT NULL;
+ALTER TABLE `leadmanager` ADD INDEX(`city`); 
+ALTER TABLE `leadmanager` ADD  CONSTRAINT `fk_city_leadmanager` FOREIGN KEY (`city`) REFERENCES `sample_db`.`city`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
