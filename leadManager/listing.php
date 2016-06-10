@@ -169,7 +169,7 @@ $(document).ready(function () {
 								data: 'action=saveIntoOrder&leadmanager_id='+id,
 								success: function(r){
 									$('#confirmed'+id).html('Confirmed');
-
+									send_invoice_email(id);
 								}
 							});
 						}
@@ -192,9 +192,9 @@ $(document).ready(function () {
 			data: 'action=sendInvoiceMail&leadmanager_id='+id,
 			success: function(res){
 				if(res){
-
+					console.log(res);
 				}
-				alert("Status updated!");
+				alert("Invoice sent!");
 			},
 			error:function(){
 				alert("failure");

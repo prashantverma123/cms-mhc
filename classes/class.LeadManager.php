@@ -237,8 +237,8 @@ class LeadManager {
     		$keyValueArray = array();
 			$keyValueArray['leadmanager.id'] = intval($id);
 			$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
-			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.name as lead_source",'','',$joinArray,true);
-			$this->logs->writelogs($this->folderName,"Lead Converted to Order: ".$id);
+			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.id as lead_source",'','',$joinArray,false);
+			//print_r($dataArr);
 			foreach ($dataArr as $k=>$value) {
 				$values['name'] = $value['client_firstname'];
 				$values['lead_source'] = $value['lead_source'];
@@ -255,19 +255,22 @@ class LeadManager {
 				$values['price'] = $value['price'];
 				$values['commission'] = $value['commission'];
 				$values['taxed_cost'] = $value['taxed_cost'];
-				$values['author_id'] = "";
+				$values['order_id'] = $value['order_id'];
+ 				$values['author_id'] = $_SESSION['tmobi']['UserId'];
 				$values['author_name'] = "";
 				$values['insert_date']		= date('Y-m-d H:i:s');
 				$values['update_date']		= date('Y-m-d H:i:s');
 				$values['status']= 0;
 				$values['ip']= getIP();
 			}
-			return $this -> db -> insertDataIntoTable($values, 'orders');
+			$this->logs->writelogs($this->folderName,"Lead Converted to Order: ".$id);
+			return $this -> db -> insertDataIntoTable($values, 'order');
     	}
 
     }
 
 	function getPriceList($city,$inqs,$varianttype){
+		$keyValueArray = array();
 		 $keyValueArray['city'] = $city;
 		 // $keyValueArray['varianttype'] = $varianttype;
 		 $total = 0;
@@ -289,16 +292,275 @@ class LeadManager {
 	 }
 
 	function send_invoice_email($id){
-		$keyValueArray['id'] = $id;
-		$result = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, "client_firstname,client_lastname,taxed_cost,client_email_id", "", '', false);
-		if($result && $result[0]['client_email_id']){
+		$keyValueArray = array();
+		$keyValueArray['leadmanager.id'] = $id;
+		$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
+		$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
+		$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
+		$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,p1.name as service1,p2.name as service2,p3.name as service3",'','',$joinArray,false);
+		//$result = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, "client_firstname,client_lastname,taxed_cost,client_email_id", "", '', false);
+		$l = encryptdata($id);
+		$m = encryptdata($result[0]['order_id']);
+		if($result && $result[0]['client_email_id']!=''){
 			$subject = "Mr Home Care- Invoice";
 			$to = $result[0]['client_email_id'];
 			$from = INVOICE_FROM_EMAILID;
-			sendEmail($to,$from,$subject,$body);
-			return $result[0];
-		}
+		/*	$body = "Dear ".$result[0]['client_firstname'].", <br /><br /><br />";
+			$body .= "<h3>Thank you! </h3><br/><br/><br/>";
+			$body .= "<table style='width=100%'>";
+			$body .= "<tr><th>Sr No.</th><th>Service</th><th>Qty</th><th>Rate</th><th>Discount</th><th>Amount</th></tr>";
+			$body .= "<tr><td>1</td><td>".$result[0]['service1']."<br />".$result[0]['service2']."<br />".$result[0]['service3']."</td><td></td><td></td><td></td><td>".$result[0]['taxed_cost']."</td></tr>";
+			$body .= "</table><br /><br />";
+			$body .= "<div><a style=' background-color: #4d90fe;color: white;text-shadow: none;' class='btn btn-success' href='".SITEPATH."/payment/paynow.php?m=".$m."&l=".$l."'>Pay Now</a></div>";*/
+			$body  = '<table cellspacing="0" cellpadding="0" border="1" align="center" style="width:80%">
+<tbody>
+<tr>
+<td bgcolor="white" style="padding:20px 30px 80px 30px">
+<table cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" align="center" style="margin-top:10px;width:100%;max-width:600px;padding:50px 0 0px 0px">
+<tbody>
+<tr>
+<td>
+<table cellspacing="0" cellpadding="0" border="0" align="left" style="width:40%;padding:0px 0 0 0">
+<tbody>
+<tr>
+<td style="padding:0 0 0px 10px;font-family:"Neris Light",arial;font-size:18px;min-height:auto;width:50px">Hello</td>
+<td>';
+$body .= '<span style="padding:0px 0 0 0px;font-family:"Neris Semibold",arial;font-size:18px;width:50px;min-height:0px">
+'.$result[0]['client_firstname'].'
+</span>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="0" align="right" style="width:50%;max-width:100%;float:right">
+<tbody>
+<tr>
+<td align="right" style="padding:0px 0 0px 0px;font-family:"Neris Light",arial;font-size:12px">
+INVOICE NO.
+<span style="padding:0px 0 0px 0px;border:none;border-collapse:collapse;font-family:"Roboto",sans-serif;font-size:12px;font-weight:700;width:80px;text-align:right">
+'.$result[0]['order_id'].'
+</span>
+<p align="right" valign="top" style="padding:0px 0 0px 0px;border:none;font-family:"Roboto",sans-serif;font-size:12px;width:100px;text-align:right"></p>
+'.date('d M, Y',strtotime(date('Y-m-d'))).'
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:10px 0 10px 0">
+<hr width="100%" size="1" color="#fec11f">
+<a target="_blank" href="http://www.mrhomecare.in">
+<img width="10%" alt="Doormint logo" src="https://www.mrhomecare.in/wp-content/themes/mrhomecare/mhc-lib/img/logo.png" class="CToWUd">
+</a>
+<table border="0" align="right" style="padding:0 65px 10px 20px;width:50%;max-width:50%">
+<tbody><tr>
+<td>
+<table border="0" style="width:50%;max-width:100%">
+<tbody>
+<tr>
+<td valign="top" align="left" style="padding:0px 0 0px 0px;font-family:"Roboto",sans-serif;font-size:14px;font-weight:700;line-height:1em">
+Bill to
+</td>
+</tr>
+</tbody>
+</table>
+<table border="0" style="margin-right:30%" align="right" valign="top">
+<tbody>
+<tr>
+<td style="padding:0 0 0px 0px">
+<p align="left" style="padding:0px 0 0px 0px;border:none;overflow:hidden;font-family:"Roboto",sans-serif;font-size:13px;width:200px;min-height:120px">
+<b>'.$result[0]['client_firstname'].'</b>
+<br>
+<br>
+'.$result[0]['address'].'
+<br>
+Phone - <a target="_blank" value="'.$result[0]['client_mobile_no'].'" href="tel:'.$result[0]['client_mobile_no'].'">'.$result[0]['client_mobile_no'].'</a>
+<br>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody></table>
 
+<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:20px 0 0px 0">
+<tbody><tr>
+<td style="width:100px">
+<hr width="100%" size="1px" color="#fec11f" align="left" style="display:inline-block">
+</td>
+<td style="width:50px;text-align:center;font-family:"Roboto",sans-serif">
+<h6 style="display:inline;color:#fec11f;font-size:18px;padding:0 0px 0 0px">Booking Details</h6>
+</td>
+<td style="width:100px">
+<hr width="100%" size="1px" color="#fec11f" align="right" style="display:inline-block">
+</td>
+</tr>
+</tbody></table>
+<span style="font-family:"Neris Thin",arial;font-size:15px;font-weight:400;padding:0px 0 20px 20px">
+<table border="0" style="color:black;font-size:14px;font-family:"Neris Thin",arial">
+<tbody><tr>
+<td>Service:</td>
+<td>
+<b>'.$result[0]['service1'].'</b>
+</td>
+</tr>
+<tr>
+<td>Date:</td>
+<td>
+<b>'.date('d M, Y',strtotime(date('Y-m-d'))).'</b>
+</td>
+</tr>
+<tr>
+</tr>
+</tbody></table>
+</span>
+<table width="100%" border="0" style="border-collapse:collapse;font-family:"Roboto",sans-serif;color:black;font-size:12px">
+<tbody><tr width="100%" style="font-weight:500;font-size:14px;background:#fec11f;color:white;height:30px">
+<td align="center" style="width:10px">
+<strong>Sr.No.</strong>
+</td>
+<td align="center">
+<strong>Service Breakup</strong>
+</td>
+<td align="center">
+<strong>Quantity</strong>
+</td>
+<td align="center">
+<strong>Rate</strong>
+</td>
+<td align="center">
+<strong>Amount</strong>
+</td>
+</tr>
+<tr cellpadding="1">
+<td></td>
+<td align="center" style="font-weight:700;font-size:14px;padding-top:5px;padding-bottom:5px" colspan="1">
+
+</td>
+</tr>
+<tr>
+<td align="center">
+1
+</td>
+<td align="left">
+'.$result[0]['service1'].'<br />'.$result[0]['service2'].'<br />'.'
+</td>
+<td align="center">
+1
+</td>
+<td align="center">
+'.$result[0]['taxed_cost'].'
+</td>
+<td align="center">
+'.$result[0]['taxed_cost'].'
+</td>
+</tr>
+<tr>
+<td style="width:50px"></td>
+<td></td>
+</tr>
+<tr style="border-bottom:1px solid #fec11f">
+<td></td>
+<td></td>
+<td align="right" style="padding:0 10px 0 0" colspan="2">
+</td>
+<td>
+<strong>
+<p style="border:none;float:center;text-align:center">
+
+</p>
+</strong>
+</td>
+</tr>
+<tr style="border-bottom:1px solid #fec11f">
+<td></td>
+<td></td>
+<td></td>
+<td align="right" style="padding:0 10px 0 0">
+<strong>Net Payable</strong>
+</td>
+<td>
+<p style="border:none;float:center;font-weight:700;text-align:center">
+'.$result[0]['taxed_cost'].'
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2">CIN:</td>
+<td></td>
+<td align="right" style="font-size:14px;padding:0 10px 0 0"></td>
+<td>
+<strong>
+<p type="text" style="border:none;float:center;text-align:center;font-weight:700">
+</p>
+</strong>
+</td>
+</tr>
+<tr>
+<td colspan="3"></td>
+<td align="right" colspan="2">
+<a target="_blank" style="padding:5px;border:1px solid #fec11f;color:white;background-color:#fec11f;text-decoration:none" href="'.SITEPATH."/payment/paynow.php?m=".$m."&l=".$l.'">
+Click to pay online
+</a>
+</td>
+</tr>
+<tr>
+<td colspan="4"></td>
+<td>
+</td>
+</tr>
+</tbody></table>
+</td>
+</tr>
+</tbody>
+</table>
+<table width="60%" border="0" align="center">
+<tbody><tr>
+<td style="padding:20px 0 0px 0"></td>
+<td>
+</td>
+</tr>
+</tbody></table>
+<table width="100%" border="0" align="center">
+<tbody><tr>
+<td>
+<h2 align="center" width="100%" style="border-collapse:collapse;font-family:"Roboto",sans-serif;color:black;font-weight:300;font-size:14px" border="0">
+</h2>
+<table align="center">
+<tbody><tr>
+<td>
+<a target="_blank" href="https://twitter.com/iammrhomecare">
+<img alt="Twitter" src="https://ci4.googleusercontent.com/proxy/ZA132cvXifK-T-hiiLsaxND_LyWN_i5fd48EIiAguPV4tj_eoGIHub5lmEpI8RaJxTXBQrIrDCSz2vzb4x33rTHThXphH7wFkUSaO5FgZkb8y2tEX7A62j8kDiADIGdGX9xdwg=s0-d-e1-ft#http://toolbox.doormint.in/assets/twitter-e2997968f53ea2c21452aa584d7ba86b.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
+</a>
+<a target="_blank" href="https://www.facebook.com/MisterHomecare/">
+<img alt="Facebook" src="https://ci5.googleusercontent.com/proxy/3h8fNXMYy8VMfHDey-dljQlf1JFdeJ3YP4Ojvka3LjLq_Jq951vh_EjIZC9dSa9uaLw30lpKmkihYUqJZJc2mfPHid-yYP8xSchWNC3WtYb8AiCLiP4X2vkkbgThNoPIhYtOwPI=s0-d-e1-ft#http://toolbox.doormint.in/assets/facebook-63ea30390ec66a28071289b964b6dd82.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
+</a>
+</td>
+</tr>
+</tbody></table>
+<p align="center" style="font-family:"Roboto",sans-serif;color:black;font-weight:300;font-size:15px">
+<i>Thanks for using our service!</i>
+</p>
+</td>
+</tr>
+</tbody></table>
+</td>
+</tr>
+</tbody>
+</table>';
+
+			$r = sendEmail($to,$from,$subject,$body);
+			if($r)
+				return true;
+			else
+				return false;
+		}else{
+			return false;
+		}
 	}
 }
 ?>

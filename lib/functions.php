@@ -516,9 +516,20 @@ function replacespecialcharsurl($str){
 		            'MIME-Version: 1.0' . "\r\n" .
 		            'Content-type: text/html; charset=utf-8';
 		if(mail($to, $subject, $body, $headers))
-		    echo "Email sent";
+		    return true;
 		else
-		    echo "Email sending failed";
+		    return false;
+		exit;
+    }
+
+    function checkValid($orderId){
+    	$db =  Database::Instance();
+		$dataArr = $db->getDataFromTable(array('order_id'=>$orderId),'order','payment_status','','',false);
+		if($dataArr[0]['payment_status'] != "success"){
+			return true;
+		}else{
+			return false;
+		}
     }
 
 ?>

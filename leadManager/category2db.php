@@ -60,6 +60,8 @@ switch($action){
 				$insertArr['varianttype2'] = $_POST['varianttype2'];
 				$insertArr['varianttype3'] = $_POST['varianttype3'];
 
+				$insertArr['order_id'] = uniqid ('MHC'.rand(0,9));;
+
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
 				$insertArr['author_name']			= "Prashant";
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
@@ -165,7 +167,7 @@ switch($action){
 		break;
 		case "sendInvoiceMail":
 		$row = $modelObj->send_invoice_email($leadmanager_id);
-		
+		$arrReturn['result'] = $row;
 		break;
 }
 echo json_encode($arrReturn);

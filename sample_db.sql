@@ -467,3 +467,8 @@ ALTER TABLE `cmsuser` CHANGE `password` `password` TEXT CHARACTER SET latin1 COL
 ALTER TABLE `leadmanager` CHANGE `city` `city` INT NOT NULL;
 ALTER TABLE `leadmanager` ADD INDEX(`city`); 
 ALTER TABLE `leadmanager` ADD  CONSTRAINT `fk_city_leadmanager` FOREIGN KEY (`city`) REFERENCES `sample_db`.`city`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `order` ADD `order_id` VARCHAR(144) NOT NULL AFTER `order_feedback`;
+ ALTER TABLE `leadmanager` ADD `order_id` VARCHAR(144) NOT NULL AFTER `taxed_cost`;
+
+ ALTER TABLE `order` ADD `payment_status` ENUM('pending','success','canceled') NOT NULL DEFAULT 'pending' AFTER `order_id`;
