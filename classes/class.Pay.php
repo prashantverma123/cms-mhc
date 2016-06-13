@@ -15,7 +15,7 @@ class Pay {
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();
 		$this -> orderId = isset($_GET['m'])?$_GET['m']:"";
-		checkValid($this -> orderId);
+		//checkValid($this -> orderId);
 	}
 	function get_order_details($orderId,$leadmanagerId){
 		$keyValueArray = array();
