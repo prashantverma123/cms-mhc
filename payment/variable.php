@@ -1,5 +1,7 @@
 <?php
 $moduleName 	= 'pay';
 $modelObj = new Pay();
-$leadmanagerObj = new Leadmanager();
+$orderObj1 = new Order();
+$leadmanagerObj = new LeadManager();
+
 ?>

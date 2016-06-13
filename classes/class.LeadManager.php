@@ -10,7 +10,7 @@ class LeadManager {
 	public function __construct() {
 		$this -> tableName = 'leadmanager';
 		$this -> folderName  = "leadmanager";
-		$this -> className = "leadManager";
+		$this -> className = "leadmanager";
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();
 		checkRole('leadmanager');
@@ -308,7 +308,7 @@ class LeadManager {
 		if($result && $result[0]['client_email_id']!=''){
 			$subject = "Mr Home Care- Invoice";
 			$to = $result[0]['client_email_id'];
-			$from = INVOICE_FROM_EMAILID;
+			$from = 'Mr Home care'.INVOICE_FROM_EMAILID;
 		/*	$body = "Dear ".$result[0]['client_firstname'].", <br /><br /><br />";
 			$body .= "<h3>Thank you! </h3><br/><br/><br/>";
 			$body .= "<table style='width=100%'>";
