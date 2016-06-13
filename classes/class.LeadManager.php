@@ -241,6 +241,9 @@ class LeadManager {
 			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.id as lead_source",'','',$joinArray,false);
 			//print_r($dataArr);
 			foreach ($dataArr as $k=>$value) {
+				$serviceArr["service_inquiry1"] = $value['service_inquiry1'];
+				$serviceArr["service_inquiry2"] = $value['service_inquiry2'];
+				$serviceArr["service_inquiry3"] = $value['service_inquiry3'];
 				$values['name'] = $value['client_firstname'];
 				$values['lead_source'] = $value['lead_source'];
 				$values['mobile_no'] = $value['client_mobile_no'];
@@ -252,7 +255,7 @@ class LeadManager {
 				$values['city'] = $value['city'];
 				$values['state'] = $value['state'];
 				$values['pincode'] = $value['pincode'];
-				$values['service'] = $value['service_inquiry1_booked'].' '.$value['service_inquiry2_booked'].' '.$value['service_inquiry3_booked'];
+				$values['service'] = serialize($serviceArr);
 				$values['price'] = $value['price'];
 				$values['commission'] = $value['commission'];
 				$values['taxed_cost'] = $value['taxed_cost'];

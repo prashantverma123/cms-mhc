@@ -34,7 +34,7 @@ $userId = $session->get('UserId');
 		   }
 		   $recperpage=PER_PAGE_ROWS;
 			 $filterData = array('city' =>$_SESSION['tmobi']['city']);
-			$result_data = $modelObj->getListingData('lead_source', $page,$recperpage,$searchData,$filterData,$sort);
+			$result_data = $modelObj->getListingData('lead_source', $page,$recperpage,$searchData,$filterData,'',$sort);
 
 			foreach ($result_data['rows'] as $key){
 				// if($key['parent_id'] == 0){
