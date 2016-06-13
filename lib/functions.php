@@ -423,39 +423,6 @@ function replacespecialcharsurl($str){
 		foreach ($dataArr as $role) {
 			$roles[] = $role['role'];
 		}
-		/*switch($class):
-			case "category" :
-				$access = 'admin';
-			break;
-			case "employee" :
-				$access = 'admin';
-			break;
-			case "city" :
-				$access = 'admin';
-			break;
-			case "CmsUser" :
-				$access = 'admin';
-			break;
-			case "leadsource" :
-				$access = 'admin,customer_care';
-			break;
-			case "leadmanager" :
-				$access = 'admin,customer_care';
-			break;
-			case "leadstage" :
-				$access = 'admin';
-			break;
-			case "orders" :
-				$access = 'admin';
-			break;
-			case "pricelist" :
-				$access = 'admin,customer_care';
-			break;
-			case "product" :
-				$access = 'admin';
-			break;
-		endswitch;*/
-
 		//$roles = explode(',',$access);
 		$condition ='';
 		$i = 1;

@@ -201,7 +201,7 @@ class Pricelist {
 		//$numOfRows = $this-> db ->getCount($this -> tableName);
 		$pageCount = $numOfRows/$recperpage;
 			$pagecount = floor($pageCount);
-		 	if($pagecount > 0){
+		 	if($pagecount > 0 && $page!=$pagecount){
 		 		if($page==1){
 		 			$prev = "";
 		 			$class= "disabled";
@@ -219,7 +219,8 @@ class Pricelist {
 
 		 		$pagination = "<div class='pagination'><ul><li class='".$class."'><a href='".$prev."'>Prev</a></li>";
 				for($c= 0; $c<=$pagecount;$c++):
-					$pagination .= "<li><a href='".SITEPATH."/".$this -> folderName."/display.php?p=".($c+1)."'>" .($c+1)."</a></li>";
+					if($page-1 == $c): $selcted= 'current'; else: $selcted= ''; endif;
+					$pagination .= "<li><a class='$selcted' href='".SITEPATH."/".$this -> folderName."/display.php?p=".($c+1)."'>" .($c+1)."</a></li>";
 				endfor;
 				$pagination .= '<li class="'.$class1.'"><a href="'.$next.'">Next</a></li>';
 				$pagination .="</ul></div>";

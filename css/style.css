@@ -5065,3 +5065,5 @@ Bootstrap Datepickers Restyle(in v1.2.4)
     overflow-y: auto;
 }
 .complaint-head{padding: 15px;text-align: center;font-weight: bold;width:50%;}
+
+.current{background-color: gray !important;color: white;}
