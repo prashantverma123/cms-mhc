@@ -66,7 +66,7 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label"> 	Team Leader <span class="required">*</span></label>
+	 				 <label class="control-label"> 	Team Leader </label>
 	 				 <div class="controls">
 						 <select tabindex="1" class="medium m-wrap" id="teamLeader_deployment" name="teamLeader_deployment">
 							<?php  echo $modelObj->optionsGeneratorByIndex(5); ?>
@@ -78,7 +78,7 @@ if($leadmanager_id > 0){
 	 			 </div>
 				 <div class="span6 ">
 				 <div class="control-group">
-					<label class="control-label"> Supervisor  <span class="required">*</span></label>
+					<label class="control-label"> Supervisor  </label>
 					<div class="controls">
 						<select tabindex="1" class="medium m-wrap" id="supervisor_deployment" name="supervisor_deployment">
 						<?php  echo $modelObj->optionsGeneratorByIndex(5); ?>
@@ -89,7 +89,7 @@ if($leadmanager_id > 0){
 				</div>
 				<div class="span6 ">
 				<div class="control-group">
-				 <label class="control-label"> 	Janitor/Technician <span class="required">*</span></label>
+				 <label class="control-label"> 	Janitor/Technician </label>
 				 <div class="controls">
 					 <select tabindex="1" class="medium m-wrap" id="janitor_deployment" name="janitor_deployment">
 						<?php  echo $modelObj->optionsGeneratorByIndex(10); ?>
