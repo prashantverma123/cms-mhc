@@ -55,7 +55,7 @@ $userId = $session->get('UserId');
 				 	<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/category/display.php?category_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<?php endif; if(in_array('delete',$actionArr)): ?>
-					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_category(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
+					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_category(<?php print $key['id'];?>)" class="edit" title="Delete" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
 			  		<?php endif; ?>
 			  </tr>
 		<?php } ?>
