@@ -52,9 +52,9 @@ $userId = $session->get('UserId');
 					<select class="small m-wrap lead_stage" name="lead_stage" id="leadstage<?php print $key['id'];?>" onchange="changeLeadStage(<?php print $key['id'];?>);">
 					<?php echo $modelObj->optionsGenerator('leadstage', 'name', 'id', $key['leadstage_id'], "where  status='0'"); ?>
 					</select>
-					<div id="dialog-modal">
+					<div id="dialog-modal_<?php echo $key['id']; ?>" class="dialog-modal">
 						<label for="">Reminder:</label>
-						<select name="reminder<?php echo $key['id']; ?>" id="reminder<?php echo $key['id']; ?>" tabindex="1" class="medium m-wrap" onchange="set_reminder('<?php echo $key['id']; ?>');">
+						<select name="reminder<?php echo $key['id']; ?>" id="reminder<?php echo $key['id']; ?>" tabindex="1" class="medium m-wrap leadstage" onchange="" data-id="<?php echo $key['id']; ?>">
 							<option value="1D" <?php if($key['reminder']=='1D'): echo "selected"; else: echo "";endif; ?>>1D</option>
 							<option value='3D' <?php if($key['reminder']=='3D'): echo "selected"; else: echo "";endif; ?>>3D</option>
 							<option value='5D' <?php if($key['reminder']=='5D'): echo "selected"; else: echo "";endif; ?>>5D</option>
@@ -67,13 +67,13 @@ $userId = $session->get('UserId');
 				</td>
 				<td class="hidden-480"><?php print $key['client_firstname'];?></td>
 				<td class="hidden-480"><?php print $key['client_mobile_no'];?></td>
-				<td class="hidden-480"><?php print $key['service_date'];?></td>
-				<td class="hidden-480"><?php print $key['service_time'];?></td>
+				<td class="hidden-480"><?php print $key['service1_date'];?></td>
+				<td class="hidden-480"><?php print $key['service1_time'];?></td>
 				 <td id="confirmed<?php echo $key['id']; ?>">
 				 	<?php if($key['job_status']=='confirmed'):
 				 	echo "Confirmed";
 				 else: ?>
-				 	<select name="job_status<?php echo $key['id']; ?>" id="job_status<?php echo $key['id']; ?>" tabindex="1" class="small m-wrap" onchange="update_status('<?php echo $key['id']; ?>');">
+				 	<select name="job_status<?php echo $key['id']; ?>" id="job_status<?php echo $key['id']; ?>" tabindex="1" class="small m-wrap " onchange="update_status('<?php echo $key['id']; ?>');">
 				 		<option value="pending" <?php if($key['job_status']=='pending'): echo "selected"; else: echo "";endif; ?>>Pending</option>
 				 		<option value='in_process' <?php if($key['job_status']=='in_process'): echo "selected"; else: echo "";endif; ?>>In Process</option>
 				 		<option value='confirmed' <?php if($key['job_status']=='confirmed'): echo "selected"; else: echo "";endif; ?>>Confirmed</option>
@@ -84,7 +84,7 @@ $userId = $session->get('UserId');
 					<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/'.$modelObj->folderName.'/display.php?leadmanager_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<?php endif; if(in_array('delete',$actionArr)): ?>
-					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_leadmanager(<?php print $key['id'];?>)" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
+					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_leadmanager(<?php print $key['id'];?>)" class="edit" title="Delete" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
 			  		<?php endif; ?>
 			  	</td>
 			  </tr>
@@ -95,30 +95,37 @@ $userId = $session->get('UserId');
       </div>
    </div>
 <script>
+var x = 450;var y = 250;
 $(document).ready(function () {
 	(function($) {
 	    if (!$.curCSS) {
 	       $.curCSS = $.css;
 	    }
 	})(jQuery);
-    $('#dialog-modal').dialog({
+
+    $('.dialog-modal').dialog({
         modal: true,
         autoOpen: false,
 
     });
+    jQuery(".dialog-modal").dialog('option', 'position', [x,y]);
 
-    $('.lead_stage').change(function () {
-
-			var x = 450;
-			var y = 250;
-			jQuery("#dialog-modal").dialog('option', 'position', [x,y]);
-            $('#dialog-modal').dialog('open');
-
-
-
-    });
+   $( ".leadstage" ).on('change',function() {
+  var myid =  $(this).attr("data-id");
+ 	 set_reminder(myid);
+	});
 
 });
+
+	function createDialog(id){
+	$('#dialog-modal_'+id).dialog({
+        modal: true,
+        autoOpen: false,
+
+    });
+     jQuery('#dialog-modal_'+id).dialog('option', 'position', [x,y]);
+	}
+
 	function dele_leadmanager(d_id){ //alert(d_id);
 		if(d_id !=''){
 			$.ajax({
@@ -139,12 +146,14 @@ $(document).ready(function () {
 	}
 	function changeLeadStage(id){
 		var current= $('#leadstage'+id).val();
+
 		$.ajax({
 			type:"POST",
 			url:"<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
 			data: 'action=update_leadstage&leadmanager_id='+id+'&leadstage_id='+current,
 			success: function(res){
 				// alert("lead stage updated");
+				$('#dialog-modal_'+id).dialog('open');
 			},
 			//success: getData,
 			error:function(){
@@ -200,6 +209,7 @@ $(document).ready(function () {
 				alert("failure");
 			}
 		});
+	}
 
 	function set_reminder(id){
 		debugger;
@@ -211,6 +221,9 @@ $(document).ready(function () {
 				data: 'action=set_lead_reminders&leadmanager_id='+id+'&reminder='+reminder,
 				success: function(res){
 					alert("Reminder Set !!!");
+					$('#dialog-modal_'+id).dialog('destroy');
+					createDialog(id);
+
 				},
 				error:function(){
 					alert("failure");
@@ -220,5 +233,5 @@ $(document).ready(function () {
 			});
 		}
 	}
-}
+
 </script>
