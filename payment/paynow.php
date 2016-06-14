@@ -27,18 +27,18 @@ $l = $_GET['l']?$_GET['l']:"";
 
 
 
+/*if ( count( $_POST ) ){ 
+
+  pay_page( array ('key' => $_POST['key'], 'txnid' => $_POST['txnid'], 'amount' => $_POST['amount'],'firstname' => $_POST['firstname'], 'email' => $_POST['email'], 'phone' => $_POST['phone'],'productinfo' => $_POST['productinfo'], 'surl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=s', 'furl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=f','udf1'=>decryptdata($m),'udf2'=>decryptdata($l)), 
+      SALT );
+
+}else*/
 /* Payments made easy. */
-
 if ( count( $_POST ) ){ 
-
-	pay_page( array ('key' => $_POST['key'], 'txnid' => $_POST['txnid'], 'amount' => $_POST['amount'],'firstname' => $_POST['firstname'], 'email' => $_POST['email'], 'phone' => $_POST['phone'],'productinfo' => $_POST['productinfo'], 'surl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=s', 'furl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=f','udf1'=>decryptdata($m),'udf2'=>decryptdata($l)), 
-			SALT );
-
-
-
-/* Merchant Page. ( All the html code ) */
-
-}elseif($row[0]['payment_status'] == 'success') {
+  pay_page( array ('key' => $_POST['key'], 'txnid' => $_POST['txnid'], 'amount' => $_POST['amount'],'firstname' => $_POST['firstname'], 'email' => $_POST['email'], 'phone' => $_POST['phone'],'productinfo' => $_POST['productinfo'], 'surl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=s', 'furl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=f','udf1'=>decryptdata($m),'udf2'=>decryptdata($l)), 
+      SALT );
+}
+elseif($row[0]['payment_status'] == 'success') {
 	echo "<h1>Payment url has been expired!</h1>";
 }else{
 ?>
@@ -135,15 +135,37 @@ opacity: 1;
 
   .col-submit button { width: 30%; margin: 0 auto; }
 }
+.error{color:red;}
 </style>
+<script src="<?php print JSFILEPATH;?>/jquery-1.8.3.min.js" type="text/javascript"></script>  
 <script type="text/javascript" src="<?php print JSFILEPATH;?>/jquery.validate.js"></script>
 <script type="text/javascript">
+$(document).ready(function(){
 $('#frmMrHomeCarePayment').validate({
     rules:{
-      firstname:"required"
-      
-    }
+      firstname:"required",
+      lastname:"required",
+      city:"required",
+      phone:{
+        required:true,
+        number:true
+      },
+      productinfo:"required",
+      email:{
+        required:true,
+        email:true
+      },
+      zipcode:{
+        required:true,
+        number:true
+      }
+    },
+    submitHandler: function() {
+      $("#frmMrHomeCarePayment").submit();
+      return false;
+     } 
 });
+})
 </script>
 	</head>
 	
@@ -154,19 +176,19 @@ $('#frmMrHomeCarePayment').validate({
 <div class="formwrapper" style="">
 	<div style="text-align:center"><h3> Payment Form</h3></div>
 <div class="formcontainer">
-  <form method='POST' id="frmMrHomeCarePayment">
+  <form method='POST' id="frmMrHomeCarePayment" name="frmMrHomeCarePayment">
     <input name='key' type='hidden' value="<?php echo KEY; ?>"> 
         <input name='txnid' type='hidden' value='<?php echo isset($row[0]["order_id"])?$row[0]["order_id"]:"";?>'> 
   	  <div class="col-2">
     <label>
       Firstname
-      <input name='firstname' type='text' value='<?php echo isset($row[0]["client_firstname"])?$row[0]["client_firstname"]:"";?>' tabindex="1">
+      <input name='firstname' id="firstname" type='text' value='<?php echo isset($row[0]["client_firstname"])?$row[0]["client_firstname"]:"";?>' tabindex="1">
     </label>
   </div>
     <div class="col-2">
     <label>
       Lastname
-      <input name='lastname' type='text' value='<?php echo isset($row[0]["client_lastname"])?$row[0]["client_lastname"]:"";?>' tabindex="2">
+      <input name='lastname' id="lastname" type='text' value='<?php echo isset($row[0]["client_lastname"])?$row[0]["client_lastname"]:"";?>' tabindex="2">
     </label>
   </div>
 
@@ -175,32 +197,32 @@ $('#frmMrHomeCarePayment').validate({
   <div class="col-3">
     <label>
       Email
-      <input name='email' type='text' value='<?php echo isset($row[0]["client_email_id"])?$row[0]["client_email_id"]:"";?>' tabindex="3">
+      <input name='email' id="email" type='text' value='<?php echo isset($row[0]["client_email_id"])?$row[0]["client_email_id"]:"";?>' tabindex="3">
     </label>
   </div>
   <div class="col-3">
     <label>
       Phone
-      <input name='phone' type='text' value='<?php echo isset($row[0]["client_mobile_no"])?$row[0]["client_mobile_no"]:"";?>' tabindex="4">
+      <input name='phone' id="phone" type='text' value='<?php echo isset($row[0]["client_mobile_no"])?$row[0]["client_mobile_no"]:"";?>' tabindex="4">
     </label>
   </div>
 
   <div class="col-3">
     <label>
       City
-      <input name='city' type='text' value='<?php echo isset($row[0]["cityname"])?$row[0]["cityname"]:"";?>' tabindex="5">
+      <input name='city' id="city" type='text' value='<?php echo isset($row[0]["cityname"])?$row[0]["cityname"]:"";?>' tabindex="5">
     </label>
   </div>
   <div class="col-3">
     <label>
       Pincode
-      <input name='zipcode' type='text' value='<?php echo isset($row[0]["pincode"])?$row[0]["pincode"]:"";?>' tabindex="6">
+      <input name='zipcode' id="zipdoc" type='text' value='<?php echo isset($row[0]["pincode"])?$row[0]["pincode"]:"";?>' tabindex="6">
     </label>
   </div>
   <div class="col-3">
     <label>
       Product Info
-      <input name='productinfo' type='text' value='<?php echo isset($row[0]["service1"])?$row[0]["service1"]:""." ".isset($row[0]["service2"])?$row[0]["service2"]:""." ".isset($row[0]["service3"])?$row[0]["service3"]:"";?>' tabindex="7">
+      <input name='productinfo' id="productinfo" type='text' value='<?php echo isset($row[0]["service1"])?$row[0]["service1"]:""; echo " ";  echo isset($row[0]["service2"])?$row[0]["service2"]:""; echo " ";  echo isset($row[0]["service3"])?$row[0]["service3"]:""; ?>' tabindex="7">
     </label>
   </div>
   <div class="col-3">

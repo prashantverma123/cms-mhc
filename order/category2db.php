@@ -25,7 +25,7 @@ switch($action){
 				$insertArr['city'] 			= $_POST['city'];
 				$insertArr['state'] 			= $_POST['state'];
 				$insertArr['pincode'] 			= $_POST['pincode'];
-				$insertArr['service'] 			= serialize($_POST['service']);
+				$insertArr['service'] 			= $_POST['service'];
 				$insertArr['price'] 			= $_POST['price'];
 				$insertArr['commission'] 			= $_POST['commission'];
 				$insertArr['taxed_cost'] 			= $_POST['taxed_cost'];
@@ -54,7 +54,7 @@ switch($action){
 				$updateArr['city'] 	= $_POST['city'];
 				$updateArr['state'] 	= $_POST['state'];
 				$updateArr['pincode'] 	= $_POST['pincode'];
-				$updateArr['service'] 	= serialize($_POST['service']);
+				$updateArr['service'] 	= $_POST['service'];
 				$updateArr['price'] 	= $_POST['price'];
 				$updateArr['commission'] 	= $_POST['commission'];
 				$updateArr['taxed_cost'] 	= $_POST['taxed_cost'];

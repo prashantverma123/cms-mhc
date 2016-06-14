@@ -241,9 +241,9 @@ class LeadManager {
 			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.id as lead_source",'','',$joinArray,false);
 			//print_r($dataArr);
 			foreach ($dataArr as $k=>$value) {
-				$serviceArr["service_inquiry1"] = $value['service_inquiry1'];
-				$serviceArr["service_inquiry2"] = $value['service_inquiry2'];
-				$serviceArr["service_inquiry3"] = $value['service_inquiry3'];
+				$serviceArr[] = $value['service_inquiry1'];
+				$serviceArr[] = $value['service_inquiry2'];
+				$serviceArr[] = $value['service_inquiry3'];
 				$values['name'] = $value['client_firstname'];
 				$values['lead_source'] = $value['lead_source'];
 				$values['mobile_no'] = $value['client_mobile_no'];
@@ -255,7 +255,7 @@ class LeadManager {
 				$values['city'] = $value['city'];
 				$values['state'] = $value['state'];
 				$values['pincode'] = $value['pincode'];
-				$values['service'] = serialize($serviceArr);
+				$values['service'] = implode(',',$serviceArr);
 				$values['price'] = $value['price'];
 				$values['commission'] = $value['commission'];
 				$values['taxed_cost'] = $value['taxed_cost'];
@@ -308,7 +308,7 @@ class LeadManager {
 		if($result && $result[0]['client_email_id']!=''){
 			$subject = "Mr Home Care- Invoice";
 			$to = $result[0]['client_email_id'];
-			$from = 'Mr Home care'.INVOICE_FROM_EMAILID;
+			$from = 'Mr Home care-'.INVOICE_FROM_EMAILID;
 		/*	$body = "Dear ".$result[0]['client_firstname'].", <br /><br /><br />";
 			$body .= "<h3>Thank you! </h3><br/><br/><br/>";
 			$body .= "<table style='width=100%'>";
@@ -356,7 +356,7 @@ INVOICE NO.
 <td style="padding:10px 0 10px 0">
 <hr width="100%" size="1" color="#fec11f">
 <a target="_blank" href="http://www.mrhomecare.in">
-<img width="10%" alt="Doormint logo" src="https://www.mrhomecare.in/wp-content/themes/mrhomecare/mhc-lib/img/logo.png" class="CToWUd">
+<img width="30%" alt="Doormint logo" src="https://www.mrhomecare.in/wp-content/themes/mrhomecare/mhc-lib/img/logo.png" class="CToWUd">
 </a>
 <table border="0" align="right" style="padding:0 65px 10px 20px;width:50%;max-width:50%">
 <tbody><tr>
