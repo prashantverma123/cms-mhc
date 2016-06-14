@@ -212,7 +212,7 @@ $(document).ready(function () {
 	}
 
 	function set_reminder(id){
-		debugger;
+		
 		if(id !=''){
 			var reminder = $('#reminder'+id).val();
 			$.ajax({
