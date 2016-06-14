@@ -161,7 +161,7 @@ class Category {
 		//$numOfRows = $this-> db ->getCount($this -> tableName);
 		$pageCount = $numOfRows/$recperpage;
 			$pagecount = floor($pageCount);
-		 	if($pagecount > 0 && $page!=$pagecount){
+		 	if($pagecount > 0 && $numOfRows > $recperpage){
 		 		if($page==1){
 		 			$prev = "";
 		 			$class= "disabled";

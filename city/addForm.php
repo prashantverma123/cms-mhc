@@ -140,7 +140,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($city_id =='' || $city_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/cms/city/display.php?city_id="+res_city_id+"&flag=t";
+		window.location.href = "<?php SITEPATH;?>/city/display.php?city_id="+res_city_id+"&flag=t";
 		<?php } ?>
     }
 </script>

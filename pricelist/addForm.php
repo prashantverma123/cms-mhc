@@ -221,7 +221,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($pricelist_id =='' || $pricelist_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/cms/pricelist/display.php?pricelist_id="+res_pricelist_id+"&flag=t";
+		window.location.href = "<?php SITEPATH;?>/pricelist/display.php?pricelist_id="+res_pricelist_id+"&flag=t";
 		<?php } ?>
     }
 </script>

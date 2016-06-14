@@ -229,7 +229,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($employee_id =='' || $employee_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/cms/employee/display.php?employee_id="+res_employee_id+"&flag=t";
+		window.location.href = "<?php SITEPATH;?>/employee/display.php?employee_id="+res_employee_id+"&flag=t";
 		<?php } ?>
     }
 </script>

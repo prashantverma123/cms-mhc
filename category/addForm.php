@@ -204,7 +204,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($category_id =='' || $category_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/cms/category/display.php?category_id="+res_category_id+"&flag=t";
+		window.location.href = "<?php SITEPATH;?>/category/display.php?category_id="+res_category_id+"&flag=t";
 		<?php } ?>
     }
 </script>

@@ -160,7 +160,7 @@ if($leadmanager_id > 0){
 
 				<div class="span4 ">
 				<div class="control-group">
-				 <label class="control-label">client email id <!--<span class="required">*</span>--></label>
+				 <label class="control-label">client email id <span class="required">*</span></label>
 				 <div class="controls">
 						<input type="text" placeholder="Please Enter client email id" value="<?php echo isset($data)?$data['client_email_id']:''; ?>" id="client_email_id" name="client_email_id" class="m-wrap span12">
 						<span class="help-block" id="client_email_id_error"> </span>
@@ -174,7 +174,7 @@ if($leadmanager_id > 0){
 					<div class="span6 ">
 	 				<div class="control-group">
 
-	 				 <label class="control-label">Address <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Address <span class="required">*</span></label>
 	 				 <div class="controls">
 						  <textarea rows="3" name="address" id="address" class="m-wrap span12"><?php echo isset($data)?trim($data['address']):''; ?></textarea>
 	 						<!-- <input type="text" placeholder="Please Enter address" value="<?php echo isset($data)?$data['address']:''; ?>" id="address" name="address" class="m-wrap span12"> -->
@@ -483,7 +483,7 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">Taxed Cost <!--<span class="required">*</span>--></label>
+	 				 <label class="control-label">Billing Amount <span class="required">*</span></label>
 	 				 <div class="controls">
 	 						<input type="text" placeholder="Please Enter taxed cost" value="<?php echo isset($data)?$data['taxed_cost']:''; ?>" id="taxed_cost" name="taxed_cost" class="m-wrap span12">
 	 						<span class="help-block" id="taxed_cost_error"> </span>
@@ -499,7 +499,7 @@ if($leadmanager_id > 0){
 				</span>
 			    <button class="btn blue" type="submit" onClick="return saveData('frm_lead_manager','saveLeadManager');"><i class="icon-ok"></i> Save</button>
 			    <?php /*?><!-- <a href="<?php print SITEPATH;?>/category/display.php" ><button class="btn" type="button">Cancel</button></a>--><?php */?>
-			  	<a  href="javascript:void();" onclick="window.location.href='<?php print SITEPATH;?>/cms/leadManager/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
+			  	<a  href="javascript:void();" onclick="window.location.href='<?php print SITEPATH;?>/leadManager/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
 			</div>
 		 </form>
 		 <!-- END FORM-->
@@ -569,6 +569,17 @@ function saveData(frm_id, action){
 	    		client_firstname:"required",
 	    		client_lastname:"required",
 	    		client_mobile_no:{
+	    			required:true,
+	    			number:true
+	    		},
+	    		client_email_id:{
+	    			required:true,
+	    			email:true
+	    		},
+	    		address:{
+	    			required:true
+	    		},
+	    		taxed_cost:{
 	    			required:true
 	    		},
 	    		service_inquiry1_booked:{
@@ -652,12 +663,13 @@ function saveData(frm_id, action){
         var res_action=jObj.action; //alert('AAs');
         //alert(success);
         var res_product_id=jObj.leadmanager_id; //alert('AA'+res_product_id);
+        
 		$('#record_modified').show();
 			 setTimeout(function () {
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($leadmanager_id =='' || $leadmanager_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/cms/<?php echo $modelObj->folderName; ?>/display.php?leadmanager_id="+res_product_id+"&flag=t";
+		window.location.href = "<?php echo SITEPATH;?>/<?php echo $modelObj->folderName; ?>/display.php?leadmanager_id="+res_product_id+"&flag=t";
 		<?php } ?>
     }
 
