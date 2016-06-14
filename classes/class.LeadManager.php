@@ -396,7 +396,7 @@ Phone - <a target="_blank" value="'.$result[0]['client_mobile_no'].'" href="tel:
 <td style="width:100px">
 <hr width="100%" size="1px" color="#fec11f" align="left" style="display:inline-block">
 </td>
-<td style="width:50px;text-align:center;font-family:"Roboto",sans-serif">
+<td style="width:50px !important;text-align:center !important;">
 <h6 style="display:inline;color:#fec11f;font-size:18px;padding:0 0px 0 0px">Booking Details</h6>
 </td>
 <td style="width:100px">

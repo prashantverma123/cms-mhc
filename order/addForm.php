@@ -27,7 +27,7 @@ if($order_id > 0){
 						<label class="control-label">Lead Source <span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap lead_source" id="lead_source" name="lead_source">
-									<?php echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['id'], " where status='0'"); ?>
+									<?php echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['lead_source'], " where status='0'"); ?>
 							</select>
 						</div>
 					 </div>
@@ -135,7 +135,7 @@ if($order_id > 0){
 						<div class="controls">
 
 						<select tabindex="1" class="large m-wrap" id="city" name="city">
-								<?php echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id'], " where status='0'"); ?>
+								<?php echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city'], " where status='0'"); ?>
 						</select>
 						</div>
 					 </div>
@@ -171,8 +171,9 @@ if($order_id > 0){
 						<div class="controls">
 							<!-- <input type="text" id="service" name="service" value="<?php echo isset($data)?$data['service']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span> -->
-							<select tabindex="1" class="large m-wrap" id="service" name="service" multiple>
-							<?php echo $modelObj->optionsGenerator('pricelist', 'name', 'id',$data['service'], " where status='0'"); ?>
+							<?php //print_r(unserialize($data['service'])); ?>
+							<select tabindex="1" class="large m-wrap" id="service" name="service[]" multiple>
+							<?php echo $modelObj->multipleOptionsGenerator('pricelist', 'name', 'id',unserialize($data['service']), " where status='0'"); ?>
 							</select>
 						</div>
 					 </div>

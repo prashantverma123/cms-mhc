@@ -32,7 +32,7 @@ class Order {
 					$main_sql .= ' and ';
 				foreach ($filterData as $key => $value) {
 
-					$main_sql .= $key." like '%".$value."%'";
+					$main_sql .= '`order`.'.$key." like '%".$value."%'";
 				}
 
 			}
@@ -50,7 +50,7 @@ class Order {
 
 				$j = 1;
 				foreach ($fields as $field) {
-					$main_sql .= $field." like '%".$searchData['filter']."%'";
+					$main_sql .= '`order`.'.$field." like '%".$searchData['filter']."%'";
 					if($j < count($fields)){
 						$main_sql .= " OR ";
 					}
@@ -62,7 +62,7 @@ class Order {
 			}
 		}
 		if ($search == 'byname') {
-			$keyValueArray['sqlclause'] = "name like '$searchData%'";
+			$keyValueArray['sqlclause'] = "`order`.name like '$searchData%'";
 		}else if ($search == 'integer') {
 			$keyValueArray['sqlclause'] = "substring(name,1,1) between '0' AND '9'";
 		}
@@ -75,8 +75,9 @@ class Order {
 			$sort =  '`'.$this -> tableName.'`.insert_date DESC';
 		}
 		$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=order.lead_source');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,leadsource.name as leadsource_name", $sort, $limit,$joinArray, false);
-		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
+		$joinArray[] = array('type'=>'left','table'=>'pricelist','condition'=>"pricelist.id = SUBSTRING_INDEX(SUBSTRING_INDEX(`order`.service, ',', FIND_IN_SET(pricelist.id,`order`.service)), ',', -1)");
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,leadsource.name as leadsource_name,GROUP_CONCAT(pricelist.name ORDER BY pricelist.id SEPARATOR '|') as 'services'", $sort, $limit,$joinArray, true);
+		//$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,leadsource.name as leadsource_name", $sort, $limit,$joinArray, true);
 
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
@@ -271,6 +272,27 @@ class Order {
             $options_str.='<option value="' . $result['value'] . '"';
             if ($selected_value != "" && $selected_value == $result['value'])
                 $options_str.=' selected ';
+            $options_str.='>' . $result['display'] . '</option>';
+        }
+        return $options_str;
+    }
+
+    public function multipleOptionsGenerator($table, $display_field, $value_field, $selected_value="", $conditions="") {
+	
+	$options_str = "";
+       $stmt = "select " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " group by ".$display_field." order by " . $display_field;
+        $this -> db ->query($stmt);
+        $options_str = "<option value=''>Please Select</option>";
+        while ($result = $this-> db ->fetch()) {
+            $options_str.='<option value="' . $result['value'] . '"';
+            if(is_array($selected_value) && $selected_value != ""){
+            	if (in_array($result['value'], $selected_value)){
+                	$options_str.=' selected ';
+                }
+            }
+            elseif ($selected_value == $result['value']){
+            	$options_str.=' selected ';
+            }
             $options_str.='>' . $result['display'] . '</option>';
         }
         return $options_str;

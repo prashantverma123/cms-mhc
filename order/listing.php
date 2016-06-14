@@ -59,7 +59,7 @@ $userId = $session->get('UserId');
 				<!-- <td><input type="checkbox" class="checkboxes" value="1" /></td>-->
 				 <td><?php print $key['name'];?></td>
 				 <td class="hidden-480"><?php print $key['leadsource_name'];?></td>
-				 <td class="hidden-480"><?php print $key['service'];?></td>
+				 <td class="hidden-480"><?php print $key['services'];?></td>
 				 <td class="hidden-480"><?php print $key['mobile_no'];?></td>
 				 <td class="hidden-480"><?php print $key['email_id'];?></td>
 				<td class="hidden-480"><?php print $key['price'];?></td>
