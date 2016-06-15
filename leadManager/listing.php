@@ -5,6 +5,19 @@ $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
 ?>
 <div class="portlet-body">
+	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
+	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>ASC</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>DESC</option></select>
+	<select name="filterby">
+		<option value="leadsource_name" <?php if($_GET['filterby'] == 'leadsource_name'): echo 'selected';else: ''; endif; ?>>Lead Source</option>
+		<option value="lead_stage" <?php if($_GET['filterby'] == 'lead_stage'): echo 'selected';else: ''; endif; ?>>Lead Stage</option>
+		<option value="lead_owner" <?php if($_GET['filterby'] == 'lead_owner'): echo 'selected';else: ''; endif; ?>>Lead Owner</option>
+
+	</select>
+	<select></select>
+		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
+		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
+	<button type="submit">Submit</button>
+	</form>
 	<div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
     	<table class="table table-striped table-bordered table-hover" id="">
 		   <thead>
@@ -33,8 +46,11 @@ $userId = $session->get('UserId');
 		   		$sort = $_GET['sort'];
 		   }
 		   $recperpage=PER_PAGE_ROWS;
-			 $filterData = array('city' =>$_SESSION['tmobi']['city']);
-			$result_data = $modelObj->getListingData('lead_source', $page,$recperpage,$searchData,$filterData,'',$sort);
+			$filterData = array('city' =>$_SESSION['tmobi']['city']);
+			// if ($_GET['filterby']) {
+		 //     $filterData = array('city' =>$_SESSION['tmobi']['city'],'lead_source' =>$_SESSION['tmobi']['city']);
+			// }
+			$result_data = $modelObj->getListingData($_GET['filterby'], $page,$recperpage,$searchData,$filterData,'',$sort);
 
 			foreach ($result_data['rows'] as $key){
 				// if($key['parent_id'] == 0){
@@ -212,7 +228,7 @@ $(document).ready(function () {
 	}
 
 	function set_reminder(id){
-		
+
 		if(id !=''){
 			var reminder = $('#reminder'+id).val();
 			$.ajax({
