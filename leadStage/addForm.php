@@ -135,7 +135,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($lead_id =='' || $lead_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/<?php echo $modelObj->folderName; ?>/display.php?lead_id="+res_lead_id+"&flag=t";
+		window.location.href = "<?php echo SITEPATH;?>/<?php echo $modelObj->folderName; ?>/display.php?lead_id="+res_lead_id+"&flag=t";
 		<?php } ?>
     }
 </script>

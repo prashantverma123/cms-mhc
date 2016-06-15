@@ -392,7 +392,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($order_id =='' || $order_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/order/display.php";
+		window.location.href = "<?php echo SITEPATH;?>/order/display.php";
 		<?php } ?>
     }
 </script>

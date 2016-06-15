@@ -219,17 +219,17 @@ function saveData(frm_id, action){
 	});
     }
 
-    function getData(success){ alert('Jmd................');
+    function getData(success){ //alert('Jmd................');
         var jObj=eval("("+success+")");
-				console.log("Test",jObj);
+				//console.log("Test",jObj);
         var res_action=jObj.action; //alert('AAs');
-        var res_employee_id=jObj.employee_id; alert('AA'+res_employee_id);
+        var res_employee_id=jObj.employee_id; //alert('AA'+res_employee_id);
 		$('#record_modified').show();
 			 setTimeout(function () {
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($employee_id =='' || $employee_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/employee/display.php?employee_id="+res_employee_id+"&flag=t";
+		window.location.href = "<?php echo SITEPATH;?>/employee/display.php?employee_id="+res_employee_id+"&flag=t";
 		<?php } ?>
     }
 </script>

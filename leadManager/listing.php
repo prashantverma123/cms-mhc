@@ -84,7 +84,7 @@ $userId = $session->get('UserId');
 					<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/'.$modelObj->folderName.'/display.php?leadmanager_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<?php endif; if(in_array('delete',$actionArr)): ?>
-					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_leadmanager(<?php print $key['id'];?>)" class="edit" title="Delete" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
+					<span class="label label-warning"><a href="javascript:void(0);" onclick="deleteConfirm('leadmanager',<?php print $key['id'];?>,'delete_leadmanager','leadmanager_id')" class="edit" title="Delete" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
 			  		<?php endif; ?>
 			  	</td>
 			  </tr>
@@ -126,7 +126,7 @@ $(document).ready(function () {
      jQuery('#dialog-modal_'+id).dialog('option', 'position', [x,y]);
 	}
 
-	function dele_leadmanager(d_id){ //alert(d_id);
+/*	function dele_leadmanager(d_id){ //alert(d_id);
 		if(d_id !=''){
 			$.ajax({
 				type: "POST",
@@ -143,7 +143,7 @@ $(document).ready(function () {
 
 			});
 		}
-	}
+	}*/
 	function changeLeadStage(id){
 		var current= $('#leadstage'+id).val();
 

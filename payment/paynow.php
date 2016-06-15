@@ -154,10 +154,6 @@ $('#frmMrHomeCarePayment').validate({
       email:{
         required:true,
         email:true
-      },
-      zipcode:{
-        required:true,
-        number:true
       }
     },
     submitHandler: function() {
@@ -213,12 +209,12 @@ $('#frmMrHomeCarePayment').validate({
       <input name='city' id="city" type='text' value='<?php echo isset($row[0]["cityname"])?$row[0]["cityname"]:"";?>' tabindex="5">
     </label>
   </div>
-  <div class="col-3">
+<!--   <div class="col-3">
     <label>
       Pincode
-      <input name='zipcode' id="zipdoc" type='text' value='<?php echo isset($row[0]["pincode"])?$row[0]["pincode"]:"";?>' tabindex="6">
+      <input name='zipcode' id="zipdoc" type='text' value='<?php //echo isset($row[0]["pincode"])?$row[0]["pincode"]:"";?>' tabindex="6">
     </label>
-  </div>
+  </div> -->
   <div class="col-3">
     <label>
       Product Info

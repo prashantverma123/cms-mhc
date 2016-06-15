@@ -62,7 +62,7 @@ if($city_id > 0){
 				</span>
 			    <button class="btn blue" type="submit" onClick="return saveData('frm_city_master','saveCity');"><i class="icon-ok"></i> Save</button>
 			    <?php /*?><!-- <a href="<?php print SITEPATH;?>/category/display.php" ><button class="btn" type="button">Cancel</button></a>--><?php */?>
-			  	<a  href="javascript:void();" onclick="window.location.href='<?php print SITEPATH;?>/cityMaster/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
+			  	<a  href="javascript:void();" onclick="window.location.href='<?php print SITEPATH;?>/city/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
 			</div>
 		 </form>
 		 <!-- END FORM-->
@@ -140,7 +140,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($city_id =='' || $city_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/city/display.php?city_id="+res_city_id+"&flag=t";
+		window.location.href = "<?php echo SITEPATH;?>/city/display.php?city_id="+res_city_id+"&flag=t";
 		<?php } ?>
     }
 </script>

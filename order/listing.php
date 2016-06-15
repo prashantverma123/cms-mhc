@@ -92,7 +92,7 @@ $userId = $session->get('UserId');
 				 	<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/order/display.php?order_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<?php endif; if(in_array('delete',$actionArr)): ?>
-					<span class="label label-warning"><a href="javascript:void(0);" onclick="dele_order(<?php print $key['id'];?>)" class="edit" title="Delete" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
+					<span class="label label-warning"><a href="javascript:void(0);" onclick="deleteConfirm('order',<?php print $key['id'];?>,'delete_order','order_id')" class="edit" title="Delete" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
 					<?php endif; ?>
 				</td>
 			  </tr>
@@ -141,7 +141,7 @@ $(document).ready(function () {
     });
 
 });
-	function dele_order(d_id){ //alert(d_id);
+	/*function dele_order(d_id){ //alert(d_id);
 		if(d_id !=''){
 			$.ajax({
 				type: "POST",
@@ -158,7 +158,7 @@ $(document).ready(function () {
 
 			});
 		}
-	}
+	}*/
 	function updateJobInfo(id){
 		if(id!=''){
 			if($('input[type="checkbox"][name="job_info'+id+'"]:checked').length == 1){

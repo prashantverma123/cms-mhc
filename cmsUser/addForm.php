@@ -229,7 +229,7 @@ function saveData(frm_id, action){
 			}, 1000);
 			//console.log($cmsuser_id);
 		<?php if($cmsuser_id =='' || $cmsuser_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/cms/<?php echo $modelObj->folderName; ?>/display.php?cmsuser_id="+res_cmsuser_id+"&flag=t";
+		window.location.href = "<?php echo SITEPATH;?>/cms/<?php echo $modelObj->folderName; ?>/display.php?cmsuser_id="+res_cmsuser_id+"&flag=t";
 		<?php } ?>
     }
 </script>

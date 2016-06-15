@@ -38,3 +38,21 @@ function ajaxFileUpload(fieldId, callbackF, moduleName)
 	});
 	return false;
 }
+
+function deleteConfirm(module,d_id,action,id_var){
+	var r = confirm("Do you really want to delete this record?");
+	if(r == true){
+		$.ajax({
+			type: "POST",
+			url: CMSROOTPATH+"/"+module+"/category2db.php",
+			data: 'action='+action+'&'+id_var+'='+d_id,
+			success: function(res){
+				$('#row_id_'+d_id).hide('slow');
+			},
+			error:function(){
+				alert("failure");
+			}
+
+		});
+	}
+}

@@ -24,7 +24,7 @@ if($category_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Name <!--<span class="required">*</span>--></label>
+						<label class="control-label">Name <span class="required">*</span></label>
 						<div class="controls">
 						   <input type="text" placeholder="Please Enter Category Name" value="<?php echo isset($data)?$data['name']:''; ?>" id="category_name" name="category_name" class="m-wrap span12">
 						   <span class="help-block" id="category_name_error"> </span>
@@ -77,7 +77,7 @@ if($category_id > 0){
 				<div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Summary</label>
+						<label class="control-label">Summary<span class="required">*</span></label>
 						<div class="controls">
 						   <textarea rows="3" name="summary" id="summary" class="m-wrap span12"><?php echo isset($data)?trim($data['summary']):''; ?></textarea>
 						   <!--<span class="help-block">This field has error.</span>-->
@@ -160,6 +160,14 @@ $(document).ready(function() {
 <?php } ?>
 function saveData(frm_id, action){
         //alert('Jai Mata Di............' + frm_id);
+        $('#frm_about_category').validate({
+		rules:{
+			category_name:"required",
+			summary:{
+				required:true
+			}
+		},
+		submitHandler: function() {
         $('.error').hide();
         var flag=0;
         var category_name = $('#category_name').val();
@@ -193,18 +201,20 @@ function saveData(frm_id, action){
         }
 
         return false;
+        }
+    	});
     }
 
     function getData(success){ //alert('Jmd................');
         var jObj=eval("("+success+")");
         var res_action=jObj.action; //alert('AAs');
-        var res_category_id=jObj.category_id; alert('AA'+res_category_id);
+        var res_category_id=jObj.category_id; //alert('AA'+res_category_id);
 		$('#record_modified').show();
 			 setTimeout(function () {
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($category_id =='' || $category_id == 0){ ?>
-		window.location.href = "<?php SITEPATH;?>/category/display.php?category_id="+res_category_id+"&flag=t";
+		window.location.href = "<?php echo SITEPATH;?>/category/display.php?category_id="+res_category_id+"&flag=t";
 		<?php } ?>
     }
 </script>
