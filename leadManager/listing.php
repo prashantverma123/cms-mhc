@@ -8,12 +8,12 @@ $userId = $session->get('UserId');
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
 	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>ASC</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>DESC</option></select>
 	<select name="filterby">
-		<option value="leadsource_name" <?php if($_GET['filterby'] == 'leadsource_name'): echo 'selected';else: ''; endif; ?>>Lead Source</option>
-		<option value="lead_stage" <?php if($_GET['filterby'] == 'lead_stage'): echo 'selected';else: ''; endif; ?>>Lead Stage</option>
+		<option value="leadsource.name" <?php if($_GET['filterby'] == 'leadsource.name'): echo 'selected';else: ''; endif; ?>>Lead Source</option>
+		<option value="leadstage.name" <?php if($_GET['filterby'] == 'leadstage.name'): echo 'selected';else: ''; endif; ?>>Lead Stage</option>
 		<option value="lead_owner" <?php if($_GET['filterby'] == 'lead_owner'): echo 'selected';else: ''; endif; ?>>Lead Owner</option>
 
 	</select>
-	<select></select>
+
 		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
 		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
 	<button type="submit">Submit</button>
@@ -50,8 +50,10 @@ $userId = $session->get('UserId');
 			// if ($_GET['filterby']) {
 		 //     $filterData = array('city' =>$_SESSION['tmobi']['city'],'lead_source' =>$_SESSION['tmobi']['city']);
 			// }
+
 			$result_data = $modelObj->getListingData($_GET['filterby'], $page,$recperpage,$searchData,$filterData,'',$sort);
 
+			//print_r($result_data);
 			foreach ($result_data['rows'] as $key){
 				// if($key['parent_id'] == 0){
 				// 	$is_parent_val = 'Yes';
