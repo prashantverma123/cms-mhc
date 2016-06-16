@@ -309,13 +309,6 @@ class LeadManager {
 			$subject = "Mr Home Care- Invoice";
 			$to = $result[0]['client_email_id'];
 			$from = 'Mr Home care-'.INVOICE_FROM_EMAILID;
-		/*	$body = "Dear ".$result[0]['client_firstname'].", <br /><br /><br />";
-			$body .= "<h3>Thank you! </h3><br/><br/><br/>";
-			$body .= "<table style='width=100%'>";
-			$body .= "<tr><th>Sr No.</th><th>Service</th><th>Qty</th><th>Rate</th><th>Discount</th><th>Amount</th></tr>";
-			$body .= "<tr><td>1</td><td>".$result[0]['service1']."<br />".$result[0]['service2']."<br />".$result[0]['service3']."</td><td></td><td></td><td></td><td>".$result[0]['taxed_cost']."</td></tr>";
-			$body .= "</table><br /><br />";
-			$body .= "<div><a style=' background-color: #4d90fe;color: white;text-shadow: none;' class='btn btn-success' href='".SITEPATH."/payment/paynow.php?m=".$m."&l=".$l."'>Pay Now</a></div>";*/
 			$body  = '<table cellspacing="0" cellpadding="0" border="1" align="center" style="width:80%">
 <tbody>
 <tr>
@@ -356,7 +349,7 @@ INVOICE NO.
 <td style="padding:10px 0 10px 0">
 <hr width="100%" size="1" color="#fec11f">
 <a target="_blank" href="http://www.mrhomecare.in">
-<img width="30%" alt="Doormint logo" src="https://www.mrhomecare.in/wp-content/themes/mrhomecare/mhc-lib/img/logo.png" class="CToWUd">
+<img width="30%" alt="Mr Home Care logo" src="https://www.mrhomecare.in/wp-content/themes/mrhomecare/mhc-lib/img/logo.png" class="CToWUd">
 </a>
 <table border="0" align="right" style="padding:0 65px 10px 20px;width:50%;max-width:50%">
 <tbody><tr>
@@ -538,10 +531,10 @@ Click to pay online
 <tbody><tr>
 <td>
 <a target="_blank" href="https://twitter.com/iammrhomecare">
-<img alt="Twitter" src="https://ci4.googleusercontent.com/proxy/ZA132cvXifK-T-hiiLsaxND_LyWN_i5fd48EIiAguPV4tj_eoGIHub5lmEpI8RaJxTXBQrIrDCSz2vzb4x33rTHThXphH7wFkUSaO5FgZkb8y2tEX7A62j8kDiADIGdGX9xdwg=s0-d-e1-ft#http://toolbox.doormint.in/assets/twitter-e2997968f53ea2c21452aa584d7ba86b.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
+<img alt="Twitter" src="'.SITEPATH.'/images/twitter.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
 </a>
 <a target="_blank" href="https://www.facebook.com/MisterHomecare/">
-<img alt="Facebook" src="https://ci5.googleusercontent.com/proxy/3h8fNXMYy8VMfHDey-dljQlf1JFdeJ3YP4Ojvka3LjLq_Jq951vh_EjIZC9dSa9uaLw30lpKmkihYUqJZJc2mfPHid-yYP8xSchWNC3WtYb8AiCLiP4X2vkkbgThNoPIhYtOwPI=s0-d-e1-ft#http://toolbox.doormint.in/assets/facebook-63ea30390ec66a28071289b964b6dd82.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
+<img alt="Facebook" src="'.SITEPATH.'/images/facebook.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
 </a>
 </td>
 </tr>
@@ -565,6 +558,13 @@ Click to pay online
 		}else{
 			return false;
 		}
+	}
+
+	function get_variant_type(){
+		$keyValueArray['sqlclause'] = 'category_type=(select pricelist.category_type from pricelist where pricelist.id="'.$_POST['id'].'") group by pricelist.varianttype';
+		$joinArray[] = array('type'=>'left','table'=>'variantmaster','condition'=>'variantmaster.id=pricelist.varianttype');
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, 'pricelist', " variantmaster.varianttype,variantmaster.id", '', '',$joinArray, false);
+		return $dataArr;
 	}
 }
 ?>

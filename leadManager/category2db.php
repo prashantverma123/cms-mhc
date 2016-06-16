@@ -169,5 +169,9 @@ switch($action){
 		$row = $modelObj->send_invoice_email($leadmanager_id);
 		$arrReturn['result'] = $row;
 		break;
+		case "getVaiantType":
+		$row = $modelObj->get_variant_type($_POST['id']);
+		$arrReturn['result'] = $row;
+		break;
 }
 echo json_encode($arrReturn);

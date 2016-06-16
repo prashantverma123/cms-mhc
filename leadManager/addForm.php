@@ -255,8 +255,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Service Inquiry1 <span class="required">*</span></label>
 	 				 <div class="controls">
-	 						<!-- <input type="text" placeholder="Please Enter service inquiry" value="<?php echo isset($data)?$data['service_inquiry1']:''; ?>" id="service_inquiry1" name="service_inquiry1" class="m-wrap span12"> -->
-							<select tabindex="1" class="large m-wrap" id="service_inquiry1" name="service_inquiry1">
+							<select tabindex="1" class="large m-wrap" id="service_inquiry1" name="service_inquiry1" onchange="getVaiantType(this.value,'varianttype1')">
 						   <?php  echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry1']," where status='0'"); ?>
 							</select>
 	 						<span class="help-block" id="service_inquiry1_error"> </span>
@@ -268,7 +267,9 @@ if($leadmanager_id > 0){
 				 <label class="control-label">Variant Type 1 <span class="required">*</span></label>
 				 <div class="controls">
 					 <select tabindex="1" class="large m-wrap" id="varianttype1" name="varianttype1" onchange="showPrice();">
-						<?php  echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype1']," where status='0'"); ?>
+						<?php
+							if($leadmanager_id != '')  
+							echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype1']," where status='0'"); ?>
 					 </select>
 				 </div>
 				</div>
@@ -315,7 +316,8 @@ if($leadmanager_id > 0){
 	 				 <label class="control-label">Service Inquiry2 <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
 	 						<!-- <input type="text" placeholder="Please Enter service inquiry2" value="<?php echo isset($data)?$data['service_inquiry2']:''; ?>" id="service_inquiry2" name="service_inquiry2" class="m-wrap span12"> -->
-							<select tabindex="1" class="large m-wrap" id="service_inquiry2" name="service_inquiry2">
+							<select tabindex="1" class="large m-wrap" id="service_inquiry2" name="service_inquiry2" onchange="getVaiantType(this.value,'varianttype2')" >
+							 
 							 <?php  echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry2']," where status='0'"); ?>
 							</select>
 	 						<span class="help-block" id="service_inquiry2_error"> </span>
@@ -327,7 +329,7 @@ if($leadmanager_id > 0){
 					<label class="control-label">Variant Type 2 </label>
 					<div class="controls">
 						<select tabindex="1" class="large m-wrap" id="varianttype2" name="varianttype2" onchange="showPrice();">
-						 <?php  echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype2']," where status='0'"); ?>
+						 <?php  if($leadmanager_id != '')  echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype2']," where status='0'"); ?>
 						</select>
 					</div>
 				 </div>
@@ -372,7 +374,7 @@ if($leadmanager_id > 0){
 	 				 <label class="control-label">Service Inquiry3 <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
 	 						<!-- <input type="text" placeholder="Please Enter service inquiry3" value="<?php echo isset($data)?$data['service_inquiry3']:''; ?>" id="service_inquiry3" name="service_inquiry3" class="m-wrap span12"> -->
-							<select tabindex="1" class="large m-wrap" id="service_inquiry3" name="service_inquiry3">
+							<select tabindex="1" class="large m-wrap" id="service_inquiry3" name="service_inquiry3" onchange="getVaiantType(this.value,'varianttype3')">
 							 <?php  echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry3']," where status='0'"); ?>
 							</select>
 							<span class="help-block" id="service_inquiry3_error"> </span>
@@ -384,7 +386,7 @@ if($leadmanager_id > 0){
 					 <label class="control-label">Variant Type 3 </label>
 					 <div class="controls">
 						 <select tabindex="1" class="large m-wrap" id="varianttype3" name="varianttype3" onchange="showPrice();">
-							<?php  echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype3']," where status='0'"); ?>
+							<?php if($leadmanager_id != '') echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype3']," where status='0'"); ?>
 						 </select>
 					 </div>
 					</div>
@@ -507,6 +509,8 @@ if($leadmanager_id > 0){
 	</div>
 <script>
 $(document).ready(function(){
+
+
 	$('#service1_date').datepicker({
   	format:'yyyy/mm/dd'
   });
@@ -547,7 +551,6 @@ $(document).ready(function(){
 <?php if($leadmanager_id != '' && $flag != 'new'){ ?>
 $(document).ready(function() {
   change_tab(1);
-
 });
 <?php }else if($flag=='new'){ ?>
 $(document).ready(function() {
@@ -672,7 +675,28 @@ function saveData(frm_id, action){
 		window.location.href = "<?php echo SITEPATH;?>/<?php echo $modelObj->folderName; ?>/display.php?leadmanager_id="+res_product_id+"&flag=t";
 		<?php } ?>
     }
+    function getVaiantType(id,service){
 
+	  	$.ajax({
+	        type: "POST",
+	        url: "<?php print SITEPATH;?>/<?php echo $modelObj->folderName; ?>/category2db.php",
+	        data: {action:'getVaiantType',id:id,service:service},
+	        success: function(vartypes){
+	        	var jObj1=eval("("+vartypes+")");
+	        	console.log(jObj1.result);
+	        	var options = '';
+	        	$.each(jObj1.result,function(i,e){
+	        		options += '<option value="'+e.id+'">'+e.varianttype+'</option>';
+	        	});
+	        	$('#'+service).html(options);
+	        },
+	        error:function(){
+	            alert("failure");
+	            //$("#result").html('there is error while submit');
+	        }
+
+	    });
+    }
 </script>
 <link type="text/css" href="<?php print JSFILEPATH;?>/jquery-ui-1.8.11.custom/css/ui-lightness/jquery-ui-1.8.11.custom.css" rel="stylesheet" />
 <link rel="start" href="<?php print JSFILEPATH;?>/jquery-ui-1.8.11.custom/development-bundle/themes/base/jquery.ui.all.css" />
