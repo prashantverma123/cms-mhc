@@ -123,7 +123,7 @@ class LeadManager {
 			$keyValueArray[$key]=$val;
 		}
 		$keyValueArray['sqlclause'] = $main_sql;
-		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, "count(id) as cnt");
+		$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, " * ", " client_firstname ASC ", '',$joinArray, false);
 		$sql_count = $dataArr[0]['cnt'];
 		return $sql_count;
 	}// eof getPaginationQuery
