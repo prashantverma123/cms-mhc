@@ -232,13 +232,37 @@ class LeadManager {
 
 	        return $options_str;
 	    }
+	    function generateInvoiceId($firstname,$lastname,$serviceArr,$city,$id){
+				//echo "Hi generating invoice"; exit();
+			$service = "";
+				for ($i=0; $i < count($serviceArr); $i++) {
+					$words = explode(" ", $serviceArr[$i]);
+					$acronym = "";
+					for($j = 0; $j<count($words); $j++){
+									$t = array();
+									$t = $words[$j];
+									if(!empty($t))
+									$acronym .= $t{0};
+					}
+					$service .= strtoupper($acronym).',';
 
+				}
+
+
+				$invoiceId = strtoupper($firstname[0]) .strtoupper($lastname[0]) . '/'.$service.'/2016-17'. '/'.strtoupper($city[0]). '/'.$id ;
+				echo $invoiceId;
+				return $invoiceId;
+			}
     function insertIntoOrder($id){
     	if(intval($id)){
     		$keyValueArray = array();
 			$keyValueArray['leadmanager.id'] = intval($id);
 			$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
-			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.id as lead_source",'','',$joinArray,false);
+			$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=leadmanager.city');
+			$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
+			$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
+			$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
+			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.id as lead_source,city.name as city_name,p1.name as service1,p2.name as service2,p3.name as service3",'','',$joinArray,false);
 			//print_r($dataArr);
 			foreach ($dataArr as $k=>$value) {
 				$serviceArr[] = $value['service_inquiry1'];
@@ -260,6 +284,7 @@ class LeadManager {
 				$values['commission'] = $value['commission'];
 				$values['taxed_cost'] = $value['taxed_cost'];
 				$values['order_id'] = $value['order_id'];
+				$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($value['service1'],$value['service2'],$value['service3']),$value['city_name'],$id);
  				$values['author_id'] = $_SESSION['tmobi']['UserId'];
 				$values['author_name'] = "";
 				$values['insert_date']		= date('Y-m-d H:i:s');
@@ -267,7 +292,7 @@ class LeadManager {
 				$values['status']= 0;
 				$values['ip']= getIP();
 			}
-			$this->logs->writelogs($this->folderName,"Lead Converted to Order: ".$id);
+			//$this->logs->writelogs($this->folderName,"Lead Converted to Order: ".$id);
 			return $this -> db -> insertDataIntoTable($values, 'order');
     	}
 
@@ -309,13 +334,6 @@ class LeadManager {
 			$subject = "Mr Home Care- Invoice";
 			$to = $result[0]['client_email_id'];
 			$from = 'Mr Home care-'.INVOICE_FROM_EMAILID;
-		/*	$body = "Dear ".$result[0]['client_firstname'].", <br /><br /><br />";
-			$body .= "<h3>Thank you! </h3><br/><br/><br/>";
-			$body .= "<table style='width=100%'>";
-			$body .= "<tr><th>Sr No.</th><th>Service</th><th>Qty</th><th>Rate</th><th>Discount</th><th>Amount</th></tr>";
-			$body .= "<tr><td>1</td><td>".$result[0]['service1']."<br />".$result[0]['service2']."<br />".$result[0]['service3']."</td><td></td><td></td><td></td><td>".$result[0]['taxed_cost']."</td></tr>";
-			$body .= "</table><br /><br />";
-			$body .= "<div><a style=' background-color: #4d90fe;color: white;text-shadow: none;' class='btn btn-success' href='".SITEPATH."/payment/paynow.php?m=".$m."&l=".$l."'>Pay Now</a></div>";*/
 			$body  = '<table cellspacing="0" cellpadding="0" border="1" align="center" style="width:80%">
 <tbody>
 <tr>
@@ -356,7 +374,7 @@ INVOICE NO.
 <td style="padding:10px 0 10px 0">
 <hr width="100%" size="1" color="#fec11f">
 <a target="_blank" href="http://www.mrhomecare.in">
-<img width="30%" alt="Doormint logo" src="https://www.mrhomecare.in/wp-content/themes/mrhomecare/mhc-lib/img/logo.png" class="CToWUd">
+<img width="30%" alt="Mr Home Care logo" src="https://www.mrhomecare.in/wp-content/themes/mrhomecare/mhc-lib/img/logo.png" class="CToWUd">
 </a>
 <table border="0" align="right" style="padding:0 65px 10px 20px;width:50%;max-width:50%">
 <tbody><tr>
@@ -538,10 +556,10 @@ Click to pay online
 <tbody><tr>
 <td>
 <a target="_blank" href="https://twitter.com/iammrhomecare">
-<img alt="Twitter" src="https://ci4.googleusercontent.com/proxy/ZA132cvXifK-T-hiiLsaxND_LyWN_i5fd48EIiAguPV4tj_eoGIHub5lmEpI8RaJxTXBQrIrDCSz2vzb4x33rTHThXphH7wFkUSaO5FgZkb8y2tEX7A62j8kDiADIGdGX9xdwg=s0-d-e1-ft#http://toolbox.doormint.in/assets/twitter-e2997968f53ea2c21452aa584d7ba86b.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
+<img alt="Twitter" src="'.SITEPATH.'/images/twitter.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
 </a>
 <a target="_blank" href="https://www.facebook.com/MisterHomecare/">
-<img alt="Facebook" src="https://ci5.googleusercontent.com/proxy/3h8fNXMYy8VMfHDey-dljQlf1JFdeJ3YP4Ojvka3LjLq_Jq951vh_EjIZC9dSa9uaLw30lpKmkihYUqJZJc2mfPHid-yYP8xSchWNC3WtYb8AiCLiP4X2vkkbgThNoPIhYtOwPI=s0-d-e1-ft#http://toolbox.doormint.in/assets/facebook-63ea30390ec66a28071289b964b6dd82.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
+<img alt="Facebook" src="'.SITEPATH.'/images/facebook.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
 </a>
 </td>
 </tr>
@@ -565,6 +583,13 @@ Click to pay online
 		}else{
 			return false;
 		}
+	}
+
+	function get_variant_type(){
+		$keyValueArray['sqlclause'] = 'category_type=(select pricelist.category_type from pricelist where pricelist.id="'.$_POST['id'].'") group by pricelist.varianttype';
+		$joinArray[] = array('type'=>'left','table'=>'variantmaster','condition'=>'variantmaster.id=pricelist.varianttype');
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, 'pricelist', " variantmaster.varianttype,variantmaster.id", '', '',$joinArray, false);
+		return $dataArr;
 	}
 }
 ?>

@@ -132,7 +132,7 @@ public function query($sql, $debug=0, $ismongo=''){
         $sql .= ", ";
       }
     }
-	//  echo $sql; //die;
+	 //echo $sql; //die;
   //  echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
   //  echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
     $res=$this->query($sql, $debug, '', $log_id);
@@ -339,7 +339,8 @@ public function query($sql, $debug=0, $ismongo=''){
      while($row  = $this->fetch()){
         array_push($posts, $row);
       }
-
+      // echo "Hi I am in Database";
+      // print_r($posts);
       return $posts;
     }
 
