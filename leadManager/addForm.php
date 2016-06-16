@@ -315,9 +315,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Service Inquiry2 <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<!-- <input type="text" placeholder="Please Enter service inquiry2" value="<?php echo isset($data)?$data['service_inquiry2']:''; ?>" id="service_inquiry2" name="service_inquiry2" class="m-wrap span12"> -->
 							<select tabindex="1" class="large m-wrap" id="service_inquiry2" name="service_inquiry2" onchange="getVaiantType(this.value,'varianttype2')" >
-							 
 							 <?php  echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry2']," where status='0'"); ?>
 							</select>
 	 						<span class="help-block" id="service_inquiry2_error"> </span>
@@ -684,11 +682,12 @@ function saveData(frm_id, action){
 	        success: function(vartypes){
 	        	var jObj1=eval("("+vartypes+")");
 	        	console.log(jObj1.result);
-	        	var options = '';
+	        	var options = '<option value="">Please Select</option>';
 	        	$.each(jObj1.result,function(i,e){
 	        		options += '<option value="'+e.id+'">'+e.varianttype+'</option>';
 	        	});
 	        	$('#'+service).html(options);
+	        	
 	        },
 	        error:function(){
 	            alert("failure");
