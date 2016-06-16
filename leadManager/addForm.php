@@ -40,7 +40,7 @@ if($leadmanager_id > 0){
 							<!-- <select tabindex="1" class="large m-wrap" id="category_id" name="category_id">
 						   <?php  echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $selected_value=""," where status='0'"); ?>
 							</select> -->
-							<input type="text" placeholder="Please Enter Lead Owner" value="<?php echo isset($data)?$data['lead_owner']:''; ?>" id="lead_owner" name="lead_owner" class="m-wrap span12">
+							<input tabindex="2" type="text" placeholder="Please Enter Lead Owner" value="<?php echo isset($data)?$data['lead_owner']:''; ?>" id="lead_owner" name="lead_owner" class="m-wrap span12">
  						   <span class="help-block" id="validity_error"> </span>
 						</div>
 					 </div>
@@ -52,7 +52,7 @@ if($leadmanager_id > 0){
 					 <div class="control-group">
 						<label class="control-label">Lead Stage <span class="required">*</span></label>
 						<div class="controls">
-							<select tabindex="1" class="large m-wrap" id="lead_stage" name="lead_stage">
+							<select tabindex="3" class="large m-wrap" id="lead_stage" name="lead_stage">
 						   <?php  echo $modelObj->optionsGenerator('leadstage', 'name', 'id',$data['lead_stage']," where status='0'"); ?>
 							</select>
 						</div>
@@ -68,7 +68,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label"> 	Team Leader </label>
 	 				 <div class="controls">
-						 <select tabindex="1" class="medium m-wrap" id="teamLeader_deployment" name="teamLeader_deployment">
+						 <select tabindex="4" class="medium m-wrap" id="teamLeader_deployment" name="teamLeader_deployment">
 							<?php  echo $modelObj->optionsGeneratorByIndex(5); ?>
 						 </select>
 
@@ -80,7 +80,7 @@ if($leadmanager_id > 0){
 				 <div class="control-group">
 					<label class="control-label"> Supervisor  </label>
 					<div class="controls">
-						<select tabindex="1" class="medium m-wrap" id="supervisor_deployment" name="supervisor_deployment">
+						<select tabindex="5" class="medium m-wrap" id="supervisor_deployment" name="supervisor_deployment">
 						<?php  echo $modelObj->optionsGeneratorByIndex(5); ?>
 					 </select>
 						 <span class="help-block" id="supervisor_deployment_error"> </span>
@@ -91,7 +91,7 @@ if($leadmanager_id > 0){
 				<div class="control-group">
 				 <label class="control-label"> 	Janitor/Technician </label>
 				 <div class="controls">
-					 <select tabindex="1" class="medium m-wrap" id="janitor_deployment" name="janitor_deployment">
+					 <select tabindex="6" class="medium m-wrap" id="janitor_deployment" name="janitor_deployment">
 						<?php  echo $modelObj->optionsGeneratorByIndex(10); ?>
 					 </select>
 						<span class="help-block" id="janitor_deployment_error"> </span>
@@ -109,7 +109,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label"> Salutation <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter Salutation" value="<?php echo isset($data)?$data['client_salutation']:''; ?>" id="client_salutation" name="client_salutation" class="m-wrap span12">
+	 						<input tabindex="7" type="text" placeholder="Please Enter Salutation" value="<?php echo isset($data)?$data['client_salutation']:''; ?>" id="client_salutation" name="client_salutation" class="m-wrap span12">
 	 						<span class="help-block" id="client_salutation_error"> </span>
 	 				 </div>
 	 				</div>
@@ -118,7 +118,7 @@ if($leadmanager_id > 0){
 				 <div class="control-group">
 					<label class="control-label">Firstname <span class="required">*</span></label>
 					<div class="controls">
-						 <input type="text" placeholder="Please Enter Firstname" value="<?php echo isset($data)?$data['client_firstname']:''; ?>" id="client_firstname" name="client_firstname" class="m-wrap span12">
+						 <input tabindex="8" type="text" placeholder="Please Enter Firstname" value="<?php echo isset($data)?$data['client_firstname']:''; ?>" id="client_firstname" name="client_firstname" class="m-wrap span12">
 						 <span class="help-block" id="client_firstname_error"> </span>
 					</div>
 				 </div>
@@ -129,7 +129,7 @@ if($leadmanager_id > 0){
 				<div class="control-group">
 				 <label class="control-label">Lastname <span class="required">*</span></label>
 				 <div class="controls">
-						<input type="text" placeholder="Please Enter Lastname" value="<?php echo isset($data)?$data['client_lastname']:''; ?>" id="client_lastname" name="client_lastname" class="m-wrap span12">
+						<input tabindex="9" type="text" placeholder="Please Enter Lastname" value="<?php echo isset($data)?$data['client_lastname']:''; ?>" id="client_lastname" name="client_lastname" class="m-wrap span12">
 						<span class="help-block" id="client_lastname_error"> </span>
 				 </div>
 				</div>
@@ -142,7 +142,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Mobile No <span class="required">*</span></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter Mobile No" value="<?php echo isset($data)?$data['client_mobile_no']:''; ?>" id="client_mobile_no" name="client_mobile_no" class="m-wrap span12">
+	 						<input tabindex="10" type="text" placeholder="Please Enter Mobile No" value="<?php echo isset($data)?$data['client_mobile_no']:''; ?>" id="client_mobile_no" name="client_mobile_no" class="m-wrap span12">
 	 						<span class="help-block" id="client_mobile_no_error"> </span>
 	 				 </div>
 	 				</div>
@@ -152,7 +152,7 @@ if($leadmanager_id > 0){
 				 <div class="control-group">
 					<label class="control-label">Alternate no <!--<span class="required">*</span>--></label>
 					<div class="controls">
-						 <input type="text" placeholder="Please Enter Alternate No" value="<?php echo isset($data)?$data['alternate_no']:''; ?>" id="alternate_no" name="alternate_no" class="m-wrap span12">
+						 <input tabindex="11" type="text" placeholder="Please Enter Alternate No" value="<?php echo isset($data)?$data['alternate_no']:''; ?>" id="alternate_no" name="alternate_no" class="m-wrap span12">
 						 <span class="help-block" id="alternate_no_error"> </span>
 					</div>
 				 </div>
@@ -162,7 +162,7 @@ if($leadmanager_id > 0){
 				<div class="control-group">
 				 <label class="control-label">client email id <span class="required">*</span></label>
 				 <div class="controls">
-						<input type="text" placeholder="Please Enter client email id" value="<?php echo isset($data)?$data['client_email_id']:''; ?>" id="client_email_id" name="client_email_id" class="m-wrap span12">
+						<input tabindex="12" type="text" placeholder="Please Enter client email id" value="<?php echo isset($data)?$data['client_email_id']:''; ?>" id="client_email_id" name="client_email_id" class="m-wrap span12">
 						<span class="help-block" id="client_email_id_error"> </span>
 				 </div>
 				</div>
@@ -176,7 +176,7 @@ if($leadmanager_id > 0){
 
 	 				 <label class="control-label">Address <span class="required">*</span></label>
 	 				 <div class="controls">
-						  <textarea rows="3" name="address" id="address" class="m-wrap span12"><?php echo isset($data)?trim($data['address']):''; ?></textarea>
+						  <textarea tabindex="13" rows="3" name="address" id="address" class="m-wrap span12"><?php echo isset($data)?trim($data['address']):''; ?></textarea>
 	 						<!-- <input type="text" placeholder="Please Enter address" value="<?php echo isset($data)?$data['address']:''; ?>" id="address" name="address" class="m-wrap span12"> -->
 	 						<span class="help-block" id="address_error"> </span>
 	 				 </div>
@@ -191,7 +191,7 @@ if($leadmanager_id > 0){
 					<div class="control-group">
 					 <label class="control-label">Landmark <!--<span class="required">*</span>--></label>
 					 <div class="controls">
-							<input type="text" placeholder="Please Enter landmark" value="<?php echo isset($data)?$data['landmark']:''; ?>" id="landmark" name="landmark" class="m-wrap span12">
+							<input tabindex="14" type="text" placeholder="Please Enter landmark" value="<?php echo isset($data)?$data['landmark']:''; ?>" id="landmark" name="landmark" class="m-wrap span12">
 							<span class="help-block" id="landmark_error"> </span>
 					 </div>
 					</div>
@@ -201,7 +201,7 @@ if($leadmanager_id > 0){
 
 	 				 <label class="control-label">location <span class="required">*</span></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter Location" value="<?php echo isset($data)?$data['location']:''; ?>" id="location" name="location" class="m-wrap span12">
+	 						<input tabindex="15" type="text" placeholder="Please Enter Location" value="<?php echo isset($data)?$data['location']:''; ?>" id="location" name="location" class="m-wrap span12">
 	 						<span class="help-block" id="location_error"> </span>
 	 				 </div>
 	 				</div>
@@ -212,7 +212,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">City <span class="required">*</span></label>
 	 				 <div class="controls">
-							<select tabindex="1" class="medium m-wrap" id="city" name="city">
+							<select tabindex="16" class="medium m-wrap" id="city" name="city">
 						   <?php  echo $modelObj->optionsGenerator('city', 'name', 'id', $data['city']," where status='0'"); ?>
 							</select>
 							<span class="help-block" id="city_error"> </span>
@@ -226,7 +226,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">State <span class="required">*</span></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter state" value="<?php echo isset($data)?$data['state']:''; ?>" id="state" name="state" class="m-wrap span12">
+	 						<input tabindex="17" type="text" placeholder="Please Enter state" value="<?php echo isset($data)?$data['state']:''; ?>" id="state" name="state" class="m-wrap span12">
 	 						<span class="help-block" id="state_error"> </span>
 	 				 </div>
 	 				</div>
@@ -237,7 +237,7 @@ if($leadmanager_id > 0){
 				<div class="control-group">
 				 <label class="control-label">Pincode <!--<span class="required">*</span>--></label>
 				 <div class="controls">
-						<input type="text" placeholder="Please Enter pincode" value="<?php echo isset($data)?$data['pincode']:''; ?>" id="pincode" name="pincode" class="m-wrap span12">
+						<input tabindex="18" type="text" placeholder="Please Enter pincode" value="<?php echo isset($data)?$data['pincode']:''; ?>" id="pincode" name="pincode" class="m-wrap span12">
 						<span class="help-block" id="pincode_error"> </span>
 				 </div>
 				</div>
@@ -255,7 +255,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Service Inquiry1 <span class="required">*</span></label>
 	 				 <div class="controls">
-							<select tabindex="1" class="large m-wrap" id="service_inquiry1" name="service_inquiry1" onchange="getVaiantType(this.value,'varianttype1')">
+							<select tabindex="19" class="large m-wrap" id="service_inquiry1" name="service_inquiry1" onchange="getVaiantType(this.value,'varianttype1')">
 						   <?php  echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry1']," where status='0'"); ?>
 							</select>
 	 						<span class="help-block" id="service_inquiry1_error"> </span>
@@ -266,9 +266,9 @@ if($leadmanager_id > 0){
 				<div class="control-group">
 				 <label class="control-label">Variant Type 1 <span class="required">*</span></label>
 				 <div class="controls">
-					 <select tabindex="1" class="large m-wrap" id="varianttype1" name="varianttype1" onchange="showPrice();">
+					 <select tabindex="20" class="large m-wrap" id="varianttype1" name="varianttype1" onchange="showPrice();">
 						<?php
-							if($leadmanager_id != '')  
+							if($leadmanager_id != '')
 							echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype1']," where status='0'"); ?>
 					 </select>
 				 </div>
@@ -280,7 +280,7 @@ if($leadmanager_id > 0){
 					<div class="control-group">
 					 <label class="control-label">Service1 Date <span class="required">*</span></label>
 					 <div class="controls">
-							<input type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service1_date']:''; ?>" id="service1_date" name="service1_date" class="m-wrap span12 datepicker">
+							<input tabindex="21" type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service1_date']:''; ?>" id="service1_date" name="service1_date" class="m-wrap span12 datepicker">
 							<span class="help-block" id="cost1_error"> </span>
 					 </div>
 					</div>
@@ -289,7 +289,7 @@ if($leadmanager_id > 0){
 				<div class="control-group">
 				 <label class="control-label">Service1 Time  <span class="required">*</span></label>
 				 <div class="controls bootstrap-timepicker timepicker">
-						<input type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service1_time']:''; ?>" id="service1_time" name="service1_time" class="m-wrap span12">
+						<input tabindex="22" type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service1_time']:''; ?>" id="service1_time" name="service1_time" class="m-wrap span12">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
 						<span class="help-block" id="service1_time_error"> </span>
 				 </div>
@@ -303,8 +303,8 @@ if($leadmanager_id > 0){
 	 				 <label class="control-label">Service Inquiry1 Booked <span class="required">*</span></label>
 	 				 <div class="controls">
 	 						<!-- <input type="text" placeholder="Please Enter service inquiry1 booked" value="<?php //echo isset($data)?$data['service_inquiry1_booked']:''; ?>" id="service_inquiry1_booked" name="service_inquiry1_booked" class="m-wrap span12"> -->
-	 						<label class="checkbox-inline"><input type="radio" id="inquiry11" name="service_inquiry1_booked" value="yes" <?php if($data['service_inquiry1_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
-	 						<label class="checkbox-inline"><input type="radio" id="inquiry12" name="service_inquiry1_booked" value="no" <?php if($data['service_inquiry1_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
+	 						<label class="checkbox-inline"><input tabindex="23" type="radio" id="inquiry11" name="service_inquiry1_booked" value="yes" <?php if($data['service_inquiry1_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
+	 						<label class="checkbox-inline"><input tabindex="24" type="radio" id="inquiry12" name="service_inquiry1_booked" value="no" <?php if($data['service_inquiry1_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
 	 						<span class="help-block" id="service_inquiry1_booked_error"> </span>
 	 				 </div>
 	 				</div>
@@ -315,7 +315,8 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Service Inquiry2 <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-							<select tabindex="1" class="large m-wrap" id="service_inquiry2" name="service_inquiry2" onchange="getVaiantType(this.value,'varianttype2')" >
+
+							<select tabindex="25" class="large m-wrap" id="service_inquiry2" name="service_inquiry2" onchange="getVaiantType(this.value,'varianttype2')" >
 							 <?php  echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry2']," where status='0'"); ?>
 							</select>
 	 						<span class="help-block" id="service_inquiry2_error"> </span>
@@ -326,7 +327,7 @@ if($leadmanager_id > 0){
 				 <div class="control-group">
 					<label class="control-label">Variant Type 2 </label>
 					<div class="controls">
-						<select tabindex="1" class="large m-wrap" id="varianttype2" name="varianttype2" onchange="showPrice();">
+						<select tabindex="26" class="large m-wrap" id="varianttype2" name="varianttype2" onchange="showPrice();">
 						 <?php  if($leadmanager_id != '')  echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype2']," where status='0'"); ?>
 						</select>
 					</div>
@@ -338,7 +339,7 @@ if($leadmanager_id > 0){
 					<div class="control-group">
 					 <label class="control-label">Service2 Date </label>
 					 <div class="controls">
-							<input type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service2_date']:''; ?>" id="service2_date" name="service2_date" class="m-wrap span12 datepicker">
+							<input tabindex="27" type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service2_date']:''; ?>" id="service2_date" name="service2_date" class="m-wrap span12 datepicker">
 							<span class="help-block" id="cost2_error"> </span>
 					 </div>
 					</div>
@@ -347,7 +348,7 @@ if($leadmanager_id > 0){
 				<div class="control-group">
 				 <label class="control-label">Service2 Time </label>
 				 <div class="controls bootstrap-timepicker timepicker">
-						<input type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service2_time']:''; ?>" id="service2_time" name="service2_time" class="m-wrap span12">
+						<input tabindex="28" type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service2_time']:''; ?>" id="service2_time" name="service2_time" class="m-wrap span12">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
 						<span class="help-block" id="service2_time_error"> </span>
 				 </div>
@@ -359,8 +360,8 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Service Inquiry2 Booked <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<label class="checkbox-inline"><input type="radio" id="inquiry11" name="service_inquiry2_booked" value="yes" <?php if($data['service_inquiry2_booked']=='yes'): echo "checked"; else: ""; endif; ?>/>Yes</label>
-	 						<label class="checkbox-inline"><input type="radio" id="inquiry12" name="service_inquiry2_booked" value="no" <?php if($data['service_inquiry2_booked']=='no'): echo "checked"; else: ""; endif; ?>/>No</label>
+	 						<label class="checkbox-inline"><input tabindex="29" type="radio" id="inquiry11" name="service_inquiry2_booked" value="yes" <?php if($data['service_inquiry2_booked']=='yes'): echo "checked"; else: ""; endif; ?>/>Yes</label>
+	 						<label class="checkbox-inline"><input tabindex="30" type="radio" id="inquiry12" name="service_inquiry2_booked" value="no" <?php if($data['service_inquiry2_booked']=='no'): echo "checked"; else: ""; endif; ?>/>No</label>
 	 						<span class="help-block" id="service_inquiry2_booked_error"> </span>
 	 				 </div>
 	 				</div>
@@ -372,7 +373,7 @@ if($leadmanager_id > 0){
 	 				 <label class="control-label">Service Inquiry3 <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
 	 						<!-- <input type="text" placeholder="Please Enter service inquiry3" value="<?php echo isset($data)?$data['service_inquiry3']:''; ?>" id="service_inquiry3" name="service_inquiry3" class="m-wrap span12"> -->
-							<select tabindex="1" class="large m-wrap" id="service_inquiry3" name="service_inquiry3" onchange="getVaiantType(this.value,'varianttype3')">
+							<select tabindex="31" class="large m-wrap" id="service_inquiry3" name="service_inquiry3" onchange="getVaiantType(this.value,'varianttype3')">
 							 <?php  echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry3']," where status='0'"); ?>
 							</select>
 							<span class="help-block" id="service_inquiry3_error"> </span>
@@ -383,7 +384,7 @@ if($leadmanager_id > 0){
 					<div class="control-group">
 					 <label class="control-label">Variant Type 3 </label>
 					 <div class="controls">
-						 <select tabindex="1" class="large m-wrap" id="varianttype3" name="varianttype3" onchange="showPrice();">
+						 <select tabindex="32" class="large m-wrap" id="varianttype3" name="varianttype3" onchange="showPrice();">
 							<?php if($leadmanager_id != '') echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype3']," where status='0'"); ?>
 						 </select>
 					 </div>
@@ -395,7 +396,7 @@ if($leadmanager_id > 0){
 					<div class="control-group">
 						<label class="control-label">Service3 Date </label>
 						 <div class="controls">
-								<input type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service3_date']:''; ?>" id="service3_date" name="service3_date" class="m-wrap span12 datepicker">
+								<input tabindex="33" type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service3_date']:''; ?>" id="service3_date" name="service3_date" class="m-wrap span12 datepicker">
 								<span class="help-block" id="cost2_error"> </span>
 						 </div>
 						</div>
@@ -404,7 +405,7 @@ if($leadmanager_id > 0){
 						<div class="control-group">
 							<label class="control-label">Service3 Time </label>
 						 	<div class="controls bootstrap-timepicker timepicker">
-								<input type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service3_time']:''; ?>" id="service3_time" name="service3_time" class="m-wrap span12">
+								<input tabindex="34" type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service3_time']:''; ?>" id="service3_time" name="service3_time" class="m-wrap span12">
 								<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
 								<span class="help-block" id="service2_time_error"> </span>
 						 	</div>
@@ -416,8 +417,8 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Service Inquiry3 Booked <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<label class="checkbox-inline"><input type="radio" id="inquiry11" name="service_inquiry3_booked" value="yes" <?php if($data['service_inquiry3_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
-	 						<label class="checkbox-inline"><input type="radio" id="inquiry12" name="service_inquiry3_booked" value="no" <?php if($data['service_inquiry3_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
+	 						<label class="checkbox-inline"><input tabindex="35" type="radio" id="inquiry11" name="service_inquiry3_booked" value="yes" <?php if($data['service_inquiry3_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
+	 						<label class="checkbox-inline"><input tabindex="36" type="radio" id="inquiry12" name="service_inquiry3_booked" value="no" <?php if($data['service_inquiry3_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
 	 						<span class="help-block" id="service_inquiry3_booked_error"> </span>
 	 				 </div>
 	 				</div>
@@ -428,7 +429,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Additional Note <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-						 <textarea rows="3" name="additional_note" id="additional_note" class="m-wrap span12"><?php echo isset($data)?trim($data['additional_note']):''; ?></textarea>
+						 <textarea tabindex="37" rows="3" name="additional_note" id="additional_note" class="m-wrap span12"><?php echo isset($data)?trim($data['additional_note']):''; ?></textarea>
 	 						<!-- <input type="text" placeholder="Please Enter additional note" value="<?php echo isset($data)?$data['additional_note']:''; ?>" id="additional_note" name="additional_note" class="m-wrap span12"> -->
 	 						<span class="help-block" id="additional_note_error"> </span>
 	 				 </div>
@@ -441,7 +442,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Promo Code <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter Promo Code" value="<?php echo isset($data)?$data['promo_code']:''; ?>" id="promo_code" name="promo_code" class="m-wrap span12">
+	 						<input tabindex="38" type="text" placeholder="Please Enter Promo Code" value="<?php echo isset($data)?$data['promo_code']:''; ?>" id="promo_code" name="promo_code" class="m-wrap span12">
 	 						<span class="help-block" id="promo_code_error"> </span>
 	 				 </div>
 	 				</div>
@@ -452,7 +453,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Discount <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter Discount" value="<?php echo isset($data)?$data['discount']:''; ?>" id="discount" name="discount" class="m-wrap span12">
+	 						<input tabindex="39" type="text" placeholder="Please Enter Discount" value="<?php echo isset($data)?$data['discount']:''; ?>" id="discount" name="discount" class="m-wrap span12">
 	 						<span class="help-block" id="discount_error"> </span>
 	 				 </div>
 	 				</div>
@@ -463,7 +464,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Price <span class="required">*</span></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter Price" value="<?php echo isset($data)?$data['price']:''; ?>" id="price" name="price" class="m-wrap span12">
+	 						<input tabindex="40" type="text" placeholder="Please Enter Price" value="<?php echo isset($data)?$data['price']:''; ?>" id="price" name="price" class="m-wrap span12">
 	 						<span class="help-block" id="price_error"> </span>
 	 				 </div>
 	 				</div>
@@ -474,7 +475,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Commission <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter Commission" value="<?php echo isset($data)?$data['commission']:''; ?>" id="commission" name="commission" class="m-wrap span12">
+	 						<input tabindex="41" type="text" placeholder="Please Enter Commission" value="<?php echo isset($data)?$data['commission']:''; ?>" id="commission" name="commission" class="m-wrap span12">
 	 						<span class="help-block" id="commission_error"> </span>
 	 				 </div>
 	 				</div>
@@ -485,7 +486,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Billing Amount <span class="required">*</span></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter taxed cost" value="<?php echo isset($data)?$data['taxed_cost']:''; ?>" id="taxed_cost" name="taxed_cost" class="m-wrap span12">
+	 						<input tabindex="42" type="text" placeholder="Please Enter taxed cost" value="<?php echo isset($data)?$data['taxed_cost']:''; ?>" id="taxed_cost" name="taxed_cost" class="m-wrap span12">
 	 						<span class="help-block" id="taxed_cost_error"> </span>
 	 				 </div>
 	 				</div>
@@ -513,7 +514,7 @@ $(document).ready(function(){
   	format:'yyyy/mm/dd'
   });
 
-	if($('#lead_stage').val()!='closed'){
+	if($('#lead_stage option:selected').text()!='Closed'){
 		$('.serviceDateTime1').hide();
 		$('.serviceDateTime2').hide();
 		$('.serviceDateTime3').hide();
@@ -523,7 +524,7 @@ $(document).ready(function(){
 		$('.serviceDateTime3').show();
 	}
 	$('#lead_stage').change(function(){
-		if($('#lead_stage').val()!='closed'){
+		if($('#lead_stage option:selected').text()!='Closed'){
 			$('.serviceDateTime1').hide();
 			$('.serviceDateTime2').hide();
 			$('.serviceDateTime3').hide();
@@ -664,7 +665,7 @@ function saveData(frm_id, action){
         var res_action=jObj.action; //alert('AAs');
         //alert(success);
         var res_product_id=jObj.leadmanager_id; //alert('AA'+res_product_id);
-        
+
 		$('#record_modified').show();
 			 setTimeout(function () {
 				document.getElementById('record_modified').style.display='none';
@@ -687,7 +688,6 @@ function saveData(frm_id, action){
 	        		options += '<option value="'+e.id+'">'+e.varianttype+'</option>';
 	        	});
 	        	$('#'+service).html(options);
-	        	
 	        },
 	        error:function(){
 	            alert("failure");

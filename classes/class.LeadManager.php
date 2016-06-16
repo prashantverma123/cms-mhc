@@ -232,13 +232,37 @@ class LeadManager {
 
 	        return $options_str;
 	    }
+	    function generateInvoiceId($firstname,$lastname,$serviceArr,$city,$id){
+				//echo "Hi generating invoice"; exit();
+			$service = "";
+				for ($i=0; $i < count($serviceArr); $i++) {
+					$words = explode(" ", $serviceArr[$i]);
+					$acronym = "";
+					for($j = 0; $j<count($words); $j++){
+									$t = array();
+									$t = $words[$j];
+									if(!empty($t))
+									$acronym .= $t{0};
+					}
+					$service .= strtoupper($acronym).',';
 
+				}
+
+
+				$invoiceId = strtoupper($firstname[0]) .strtoupper($lastname[0]) . '/'.$service.'/2016-17'. '/'.strtoupper($city[0]). '/'.$id ;
+				echo $invoiceId;
+				return $invoiceId;
+			}
     function insertIntoOrder($id){
     	if(intval($id)){
     		$keyValueArray = array();
 			$keyValueArray['leadmanager.id'] = intval($id);
 			$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
-			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.id as lead_source",'','',$joinArray,false);
+			$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=leadmanager.city');
+			$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
+			$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
+			$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
+			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.id as lead_source,city.name as city_name,p1.name as service1,p2.name as service2,p3.name as service3",'','',$joinArray,false);
 			//print_r($dataArr);
 			foreach ($dataArr as $k=>$value) {
 				$serviceArr[] = $value['service_inquiry1'];
@@ -260,6 +284,7 @@ class LeadManager {
 				$values['commission'] = $value['commission'];
 				$values['taxed_cost'] = $value['taxed_cost'];
 				$values['order_id'] = $value['order_id'];
+				$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($value['service1'],$value['service2'],$value['service3']),$value['city_name'],$id);
  				$values['author_id'] = $_SESSION['tmobi']['UserId'];
 				$values['author_name'] = "";
 				$values['insert_date']		= date('Y-m-d H:i:s');
@@ -267,7 +292,7 @@ class LeadManager {
 				$values['status']= 0;
 				$values['ip']= getIP();
 			}
-			$this->logs->writelogs($this->folderName,"Lead Converted to Order: ".$id);
+			//$this->logs->writelogs($this->folderName,"Lead Converted to Order: ".$id);
 			return $this -> db -> insertDataIntoTable($values, 'order');
     	}
 
