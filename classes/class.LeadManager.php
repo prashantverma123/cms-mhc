@@ -87,7 +87,8 @@ class LeadManager {
 				$this -> finalData[] = $dataArr[$p];
 			}
 		}
-		$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " client_firstname ASC ", '', false);
+		//$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " client_firstname ASC ", '', false);
+		$countAll = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, " * ", " client_firstname ASC ", '',$joinArray, false);
 		$result['rows'] = $this -> finalData;
 		$result['count'] = count($countAll);
 		//echo '<pre>'; print_r($result);
@@ -327,8 +328,19 @@ class LeadManager {
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
 		$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,p1.name as service1,p2.name as service2,p3.name as service3",'','',$joinArray,false);
-		
-		$taxes = $this -> db -> getDataFromTable('', 'tax', "tax.name,tax.value", "", '', false);
+		$whereArr = array();
+		$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
+		$tax_breakup = '';
+		$total_tax = 0;
+		$total_tax_amount = 0;
+		if($taxes):
+			foreach ($taxes as $tax) {
+				$tax_breakup .= $tax['name']. ' @ '.$tax['value'].' % '.date('Y').'-'.(date('y')+ 1).'<br />';
+				$total_tax = $total_tax + $tax['value'];
+			}
+		endif;
+		$total_tax_amount = ($result[0]['taxed_cost']*$total_tax)/100;
+		$total_amount = $result[0]['taxed_cost'] - $total_tax_amount;
 		$l = encryptdata($id);
 		$m = encryptdata($result[0]['order_id']);
 		if($result && $result[0]['client_email_id']!=''){
@@ -476,32 +488,19 @@ Phone - <a target="_blank" value="'.$result[0]['client_mobile_no'].'" href="tel:
 1
 </td>
 <td align="center">
-'.$result[0]['taxed_cost'].'
+'.$total_amount.'
 </td>
 <td align="center">
-'.$result[0]['taxed_cost'].'
+'.$total_amount.'
 </td>
 </tr>
 <tr>
 <td align="center">
 </td>
-<td align="left">';
-if($taxes):
-	foreach ($taxes as $tax) {
-		echo $tax['name']. ' @ '.$tax['value'].' %'.date('y');
-	}
-endif;
-$body = '
+<td align="left">'.$tax_breakup.'
 </td>
-<td align="center">
-
-</td>
-<td align="center">
-'.$result[0]['taxed_cost'].'
-</td>
-<td align="center">
-'.$result[0]['taxed_cost'].'
-</td>
+<td></td><td></td>
+<td align="center">'.$total_tax_amount.'</td>
 </tr>
 <tr>
 <td style="width:50px"></td>
