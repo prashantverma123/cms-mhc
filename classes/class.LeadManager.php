@@ -327,7 +327,8 @@ class LeadManager {
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
 		$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,p1.name as service1,p2.name as service2,p3.name as service3",'','',$joinArray,false);
-		//$result = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, "client_firstname,client_lastname,taxed_cost,client_email_id", "", '', false);
+		
+		$taxes = $this -> db -> getDataFromTable('', 'tax', "tax.name,tax.value", "", '', false);
 		$l = encryptdata($id);
 		$m = encryptdata($result[0]['order_id']);
 		if($result && $result[0]['client_email_id']!=''){
@@ -473,6 +474,27 @@ Phone - <a target="_blank" value="'.$result[0]['client_mobile_no'].'" href="tel:
 </td>
 <td align="center">
 1
+</td>
+<td align="center">
+'.$result[0]['taxed_cost'].'
+</td>
+<td align="center">
+'.$result[0]['taxed_cost'].'
+</td>
+</tr>
+<tr>
+<td align="center">
+</td>
+<td align="left">';
+if($taxes):
+	foreach ($taxes as $tax) {
+		echo $tax['name']. ' @ '.$tax['value'].' %'.date('y');
+	}
+endif;
+$body = '
+</td>
+<td align="center">
+
 </td>
 <td align="center">
 '.$result[0]['taxed_cost'].'
