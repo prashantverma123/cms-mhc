@@ -257,8 +257,9 @@ class LeadManager {
 
 				}
 
+				$formattedservice = rtrim($service, ",");
 
-				$invoiceId = strtoupper($firstname[0]) .strtoupper($lastname[0]) . '/'.rtrim($service, ",").'/2016-17'. '/'.strtoupper($city[0]). '/'.$id ;
+				$invoiceId = strtoupper($firstname[0]) .strtoupper($lastname[0]) . '/'.$formattedservice.'/2016-17'. '/'.strtoupper($city[0]). '/'.$id ;
 				echo $invoiceId;
 				return $invoiceId;
 			}
