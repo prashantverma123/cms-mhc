@@ -87,7 +87,7 @@ class LeadManager {
 				$this -> finalData[] = $dataArr[$p];
 			}
 		}
-		$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " client_firstname ASC ", '', false);
+		$countAll = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " * ", " client_firstname ASC ", '', $joinArray,false);
 		$result['rows'] = $this -> finalData;
 		$result['count'] = count($countAll);
 		//echo '<pre>'; print_r($result);

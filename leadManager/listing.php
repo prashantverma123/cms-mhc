@@ -18,6 +18,18 @@ $userId = $session->get('UserId');
 		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
 	<button type="submit">Submit</button>
 	</form>
+	<!-- <form name="export" method="post">
+    	<input type="submit" value="Click Me!" name="export2excel">
+</form> -->
+
+<!-- <?php
+
+if(isset($_POST["export2excel"]))
+{
+	$modelObj->ExportExcel("leadmanager");
+}
+
+?> -->
 	<div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
     	<table class="table table-striped table-bordered table-hover" id="">
 		   <thead>
