@@ -245,12 +245,20 @@ class LeadManager {
 									if(!empty($t))
 									$acronym .= $t{0};
 					}
-					$service .= strtoupper($acronym).',';
+					$service .= strtoupper($acronym);
+
+
+						if (strtoupper($acronym)!='') {
+						$service .=',';
+						}
+
+
+
 
 				}
 
 
-				$invoiceId = strtoupper($firstname[0]) .strtoupper($lastname[0]) . '/'.$service.'/2016-17'. '/'.strtoupper($city[0]). '/'.$id ;
+				$invoiceId = strtoupper($firstname[0]) .strtoupper($lastname[0]) . '/'.rtrim($service, ",").'/2016-17'. '/'.strtoupper($city[0]). '/'.$id ;
 				echo $invoiceId;
 				return $invoiceId;
 			}
@@ -337,7 +345,7 @@ class LeadManager {
 		if($taxes):
 			foreach ($taxes as $tax) {
 				$tax_breakup = '';
-				
+
 				$tax_breakup = $tax['name']. ' @ '.$tax['value'].' % '.date('Y').'-'.(date('y')+ 1).'<br />';
 				$tax_amount = ($result[0]['taxed_cost']*$tax['value'])/100;
 				$total_tax_amount = $total_tax_amount + $tax_amount;
@@ -349,7 +357,7 @@ class LeadManager {
 				<td></td><td></td>
 				<td align="center">'.$tax_amount.'</td>
 				</tr>';
-				
+
 			}
 		endif;
 		$total_amount = $result[0]['taxed_cost'] - $total_tax_amount;
