@@ -327,20 +327,33 @@ class LeadManager {
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
-		$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,p1.name as service1,p2.name as service2,p3.name as service3",'','',$joinArray,false);
+		$joinArray[] = array('type'=>'left','table'=>'`order`','condition'=>'`order`.order_id=leadmanager.order_id');
+		$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,p1.name as service1,p2.name as service2,p3.name as service3,`order`.invoice_id",'','',$joinArray,false);
 		$whereArr = array();
 		$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
-		$tax_breakup = '';
 		$total_tax = 0;
 		$total_tax_amount = 0;
+		$taxHtml = '';
 		if($taxes):
 			foreach ($taxes as $tax) {
-				$tax_breakup .= $tax['name']. ' @ '.$tax['value'].' % '.date('Y').'-'.(date('y')+ 1).'<br />';
-				$total_tax = $total_tax + $tax['value'];
+				$tax_breakup = '';
+				
+				$tax_breakup = $tax['name']. ' @ '.$tax['value'].' % '.date('Y').'-'.(date('y')+ 1).'<br />';
+				$tax_amount = ($result[0]['taxed_cost']*$tax['value'])/100;
+				$total_tax_amount = $total_tax_amount + $tax_amount;
+				$taxHtml .= '<tr>
+				<td align="center">
+				</td>
+				<td align="left">'.$tax_breakup.'
+				</td>
+				<td></td><td></td>
+				<td align="center">'.$tax_amount.'</td>
+				</tr>';
+				
 			}
 		endif;
-		$total_tax_amount = ($result[0]['taxed_cost']*$total_tax)/100;
 		$total_amount = $result[0]['taxed_cost'] - $total_tax_amount;
+
 		$l = encryptdata($id);
 		$m = encryptdata($result[0]['order_id']);
 		if($result && $result[0]['client_email_id']!=''){
@@ -373,7 +386,7 @@ $body .= '<span style="padding:0px 0 0 0px;font-family:"Neris Semibold",arial;fo
 <td align="right" style="padding:0px 0 0px 0px;font-family:"Neris Light",arial;font-size:12px">
 INVOICE NO.
 <span style="padding:0px 0 0px 0px;border:none;border-collapse:collapse;font-family:"Roboto",sans-serif;font-size:12px;font-weight:700;width:80px;text-align:right">
-'.$result[0]['order_id'].'
+'.$result[0]['invoice_id'].'
 </span>
 <p align="right" valign="top" style="padding:0px 0 0px 0px;border:none;font-family:"Roboto",sans-serif;font-size:12px;width:100px;text-align:right"></p>
 '.date('d M, Y',strtotime(date('Y-m-d'))).'
@@ -493,16 +506,7 @@ Phone - <a target="_blank" value="'.$result[0]['client_mobile_no'].'" href="tel:
 <td align="center">
 '.$total_amount.'
 </td>
-</tr>
-<tr>
-<td align="center">
-</td>
-<td align="left">'.$tax_breakup.'
-</td>
-<td></td><td></td>
-<td align="center">'.$total_tax_amount.'</td>
-</tr>
-<tr>
+</tr>'.$taxHtml.'<tr>
 <td style="width:50px"></td>
 <td></td>
 </tr>
