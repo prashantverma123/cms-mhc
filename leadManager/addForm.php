@@ -140,9 +140,9 @@ if($leadmanager_id > 0){
 			  <div class="row-fluid">
 					<div class="span4 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">Mobile No <span class="required">*</span></label>
+	 				 <label class="control-label">Contact No. </label>
 	 				 <div class="controls">
-	 						<input tabindex="10" type="text" placeholder="Please Enter Mobile No" value="<?php echo isset($data)?$data['client_mobile_no']:''; ?>" id="client_mobile_no" name="client_mobile_no" class="m-wrap span12">
+	 						<input tabindex="10" type="text" placeholder="Please Enter Contact No" value="<?php echo isset($data)?$data['client_mobile_no']:''; ?>" id="client_mobile_no" name="client_mobile_no" class="m-wrap span12">
 	 						<span class="help-block" id="client_mobile_no_error"> </span>
 	 				 </div>
 	 				</div>
@@ -160,7 +160,7 @@ if($leadmanager_id > 0){
 
 				<div class="span4 ">
 				<div class="control-group">
-				 <label class="control-label">client email id <span class="required">*</span></label>
+				 <label class="control-label">client email id </label>
 				 <div class="controls">
 						<input tabindex="12" type="text" placeholder="Please Enter client email id" value="<?php echo isset($data)?$data['client_email_id']:''; ?>" id="client_email_id" name="client_email_id" class="m-wrap span12">
 						<span class="help-block" id="client_email_id_error"> </span>
@@ -614,11 +614,9 @@ function saveData(frm_id, action){
 	    		client_firstname:"required",
 	    		client_lastname:"required",
 	    		client_mobile_no:{
-	    			required:true,
 	    			number:true
 	    		},
 	    		client_email_id:{
-	    			required:true,
 	    			email:true
 	    		},
 	    		address:{
@@ -672,7 +670,7 @@ function saveData(frm_id, action){
 
     }
     function showPrice(){
-			var inq1 = $('#service_inquiry1 :selected').text();
+		var inq1 = $('#service_inquiry1 :selected').text();
     	var inq2 = $('#service_inquiry2 :selected').text();
     	var inq3 = $('#service_inquiry3 :selected').text();
     	var city = $('#city').val();
