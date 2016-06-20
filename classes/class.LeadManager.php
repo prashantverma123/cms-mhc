@@ -266,6 +266,7 @@ class LeadManager {
     function insertIntoOrder($id){
     	if(intval($id)){
     		$keyValueArray = array();
+    		$response = '';
 			$keyValueArray['leadmanager.id'] = intval($id);
 			$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
 			$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=leadmanager.city');
@@ -278,6 +279,8 @@ class LeadManager {
 				$serviceArr[] = $value['service_inquiry1'];
 				$serviceArr[] = $value['service_inquiry2'];
 				$serviceArr[] = $value['service_inquiry3'];
+				if ($value['invoice_type']==0) {
+
 				$values['name'] = $value['client_firstname'];
 				$values['lead_source'] = $value['lead_source'];
 				$values['mobile_no'] = $value['client_mobile_no'];
@@ -301,9 +304,48 @@ class LeadManager {
 				$values['update_date']		= date('Y-m-d H:i:s');
 				$values['status']= 0;
 				$values['ip']= getIP();
+
+				$response =  $this -> db -> insertDataIntoTable($values, 'order');
+				}
+
+				else {
+					foreach ($serviceArr as $key => $service) {
+						$indx = 1;
+						$servicename = 'service'.$indx;
+						$indx = $indx +1;
+						$values = array();
+						$values['name'] = $value['client_firstname'];
+						$values['lead_source'] = $value['lead_source'];
+						$values['mobile_no'] = $value['client_mobile_no'];
+						$values['alternate_no'] = $value['alternate_no'];
+						$values['email_id'] = $value['client_email_id'];
+						$values['address'] = $value['address'];
+						$values['landmark'] = $value['landmark'];
+						$values['location'] = $value['location'];
+						$values['city'] = $value['city'];
+						$values['state'] = $value['state'];
+						$values['pincode'] = $value['pincode'];
+						$values['service'] = $service;
+						$values['price'] = $value['price'];
+						$values['commission'] = $value['commission'];
+						$values['taxed_cost'] = $value['taxed_cost'];
+						$values['order_id'] = $value['order_id'];
+						$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($value[$servicename]),$value['city_name'],$id);
+		 				$values['author_id'] = $_SESSION['tmobi']['UserId'];
+						$values['author_name'] = "";
+						$values['insert_date']		= date('Y-m-d H:i:s');
+						$values['update_date']		= date('Y-m-d H:i:s');
+						$values['status']= 0;
+						$values['ip']= getIP();
+
+						$response =  $this -> db -> insertDataIntoTable($values, 'order');
+
+					}
+				}
+
 			}
 			//$this->logs->writelogs($this->folderName,"Lead Converted to Order: ".$id);
-			return $this -> db -> insertDataIntoTable($values, 'order');
+			return $response;
     	}
 
     }

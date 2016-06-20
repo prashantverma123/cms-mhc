@@ -517,6 +517,19 @@ if($leadmanager_id > 0){
 	 				</div>
 	 			 </div>
 				</div>
+				<div class="row-fluid">
+					<div class="span6 ">
+	 				<div class="control-group">
+	 				 <label class="control-label">Invoice Type<span class="required">*</span></label>
+	 				 <div class="controls">
+	 						<!-- <input type="text" placeholder="Please Enter service inquiry1 booked" value="<?php //echo isset($data)?$data['service_inquiry1_booked']:''; ?>" id="service_inquiry1_booked" name="service_inquiry1_booked" class="m-wrap span12"> -->
+	 						<label class="checkbox-inline"><input tabindex="43" type="radio" id="invoice_type11" name="invoice_type" value="0" <?php if($data['invoice_type']=='0'): echo "checked"; else: ""; endif; ?> />Single</label>
+	 						<label class="checkbox-inline"><input tabindex="44" type="radio" id="invoice_type12" name="invoice_type" value="1" <?php if($data['invoice_type']=='1'): echo "checked"; else: ""; endif; ?> />Multiple</label>
+	 						<span class="help-block" id="service_inquiry1_booked_error"> </span>
+	 				 </div>
+	 				</div>
+	 			 </div>
+				</div>
 				</div>
 
 			<div class="form-actions">
