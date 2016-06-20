@@ -56,6 +56,7 @@ switch($action){
 				$insertArr['price'] 	= $_POST['price'];
 				$insertArr['commission'] 	= $_POST['commission'];
 				$insertArr['taxed_cost'] 	= $_POST['taxed_cost'];
+				$insertArr['invoice_type'] 	= $_POST['invoice_type'];
 				$insertArr['varianttype1'] = $_POST['varianttype1'];
 				$insertArr['varianttype2'] = $_POST['varianttype2'];
 				$insertArr['varianttype3'] = $_POST['varianttype3'];
@@ -118,6 +119,7 @@ switch($action){
 				$updateArr['price'] 	= $_POST['price'];
 				$updateArr['commission'] 	= $_POST['commission'];
 				$updateArr['taxed_cost'] 	= $_POST['taxed_cost'];
+				$updateArr['invoice_type'] 	= $_POST['invoice_type'];
 				$updateArr['varianttype1'] = $_POST['varianttype1'];
 				$updateArr['varianttype2'] = $_POST['varianttype2'];
 				$updateArr['varianttype3'] = $_POST['varianttype3'];
