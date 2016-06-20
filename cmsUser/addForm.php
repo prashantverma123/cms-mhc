@@ -170,7 +170,8 @@ function saveData(frm_id, action){
 				minlength: 6,
 				equalTo: "#password"
 			},
-			role:"required"
+			role:"required",
+			city:"required"
 		},
 		messages:{
 			email:{

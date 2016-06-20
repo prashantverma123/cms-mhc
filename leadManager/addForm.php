@@ -473,6 +473,31 @@ if($leadmanager_id > 0){
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
+	 				 <label class="control-label">Invoice Mode <span class="required">*</span></label>
+	 				 	<div class="controls">
+	 				 		<select name="invoice_mode" id="invoice_mode" onchange="showPartnerInfo(this.value)">
+	 				 			<option value=''>Please Select</option>
+	 				 			<option value='C' <?php if($data['invoice_mode'] == 'C'): echo "selected"; else: ""; endif; ?>>Client</option>
+	 				 			<option value='P' <?php if($data['invoice_mode'] == 'P'): echo "selected"; else: ""; endif; ?>>Partner</option>
+	 				 		</select>
+	 						<span class="help-block" id="commission_error"> </span>
+	 				 	</div>
+	 				</div>
+	 			 	</div>
+	 			 	<div class="span6" id="partner_mode_row">
+	 				<div class="control-group">
+	 				 <label class="control-label">Partner Amount <span class="required">*</span></label>
+	 				 	<div class="controls">
+	 						<input tabindex="41" type="text" placeholder="Please Enter Partner Amount" value="<?php echo isset($data)?$data['partner_amount']:''; ?>" id="partner_amount" name="partner_amount" class="m-wrap span12"> 		
+	 						<span class="help-block" id="commission_error"> </span>
+	 				 	</div>
+	 				</div>
+	 			 	</div>
+				</div>
+
+				<div class="row-fluid">
+					<div class="span6 ">
+	 				<div class="control-group">
 	 				 <label class="control-label">Commission <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
 	 						<input tabindex="41" type="text" placeholder="Please Enter Commission" value="<?php echo isset($data)?$data['commission']:''; ?>" id="commission" name="commission" class="m-wrap span12">
@@ -509,6 +534,11 @@ if($leadmanager_id > 0){
 <script>
 $(document).ready(function(){
 
+	if($('#invoice_mode').val() == 'P'){
+    		$('#partner_mode_row').show();
+    	}else{
+    		$('#partner_mode_row').hide();
+    	}
 
 	$('#service1_date').datepicker({
   	format:'yyyy/mm/dd'
@@ -695,6 +725,14 @@ function saveData(frm_id, action){
 	        }
 
 	    });
+    }
+
+    function showPartnerInfo(current){
+    	if(current == 'P'){
+    		$('#partner_mode_row').show();
+    	}else{
+    		$('#partner_mode_row').hide();
+    	}
     }
 </script>
 <link type="text/css" href="<?php print JSFILEPATH;?>/jquery-ui-1.8.11.custom/css/ui-lightness/jquery-ui-1.8.11.custom.css" rel="stylesheet" />

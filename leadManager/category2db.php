@@ -54,6 +54,9 @@ switch($action){
 				$insertArr['promo_code'] 	= $_POST['promo_code'];
 				$insertArr['discount'] 	= $_POST['discount'];
 				$insertArr['price'] 	= $_POST['price'];
+				$insertArr['invoice_mode'] 	= $_POST['invoice_mode'];
+				if($_POST['invoice_mode'] == 'P')
+				$insertArr['partner_amount'] 	= $_POST['partner_amount'];
 				$insertArr['commission'] 	= $_POST['commission'];
 				$insertArr['taxed_cost'] 	= $_POST['taxed_cost'];
 				$insertArr['varianttype1'] = $_POST['varianttype1'];
@@ -116,6 +119,9 @@ switch($action){
 				$updateArr['promo_code'] 	= $_POST['promo_code'];
 				$updateArr['discount'] 	= $_POST['discount'];
 				$updateArr['price'] 	= $_POST['price'];
+				$updateArr['invoice_mode'] 	= $_POST['invoice_mode'];
+				if($_POST['invoice_mode'] == 'P')
+				$updateArr['partner_amount'] 	= $_POST['partner_amount'];
 				$updateArr['commission'] 	= $_POST['commission'];
 				$updateArr['taxed_cost'] 	= $_POST['taxed_cost'];
 				$updateArr['varianttype1'] = $_POST['varianttype1'];
