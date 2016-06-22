@@ -117,7 +117,7 @@ $titlename 		= 'Add Order Details';
 </html>
 <script>
 function refreshData(){
-  	window.location.href = "<?php SITEPATH;?>/cms/order/display.php";
+  	window.location.href = "<?php SITEPATH;?>/order/display.php";
 }
 function filter(name){
   $.ajax({
