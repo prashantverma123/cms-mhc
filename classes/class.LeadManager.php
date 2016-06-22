@@ -50,6 +50,16 @@ class LeadManager {
 
 				$j = 1;
 				foreach ($fields as $field) {
+					if($field == 'client_firstname'){
+						$name = explode(' ',$searchData['filter']);
+						//print_r($name);
+						if($name[0]){
+						$main_sql .= 'client_firstname'." like '%".$name[0]."%' ";
+						}
+						if(count($name) > 2){
+						$main_sql .= 'client_lastname'." like '%".$name[1]."%' ";
+						}
+					}else
 					$main_sql .= $field." like '%".$searchData['filter']."%'";
 					if($j < count($fields)){
 						$main_sql .= " OR ";
@@ -72,7 +82,7 @@ class LeadManager {
 		if($sort != '') {
 			$sort = 'client_firstname '.$sort;
 		}else{
-			$sort = 'client_firstname ASC';
+			$sort = 'leadmanager.insert_date DESC';
 		}
 		/*$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);*/
 
@@ -247,12 +257,12 @@ class LeadManager {
 					}
 					$service .= strtoupper($acronym);
 
-
+					
 						if (strtoupper($acronym)!='') {
 						$service .=',';
 						}
-
-
+					
+					
 
 
 				}
@@ -260,7 +270,7 @@ class LeadManager {
 				$formattedservice = rtrim($service, ",");
 
 				$invoiceId = strtoupper($firstname[0]) .strtoupper($lastname[0]) . '/'.$formattedservice.'/2016-17'. '/'.strtoupper($city[0]). '/'.$id ;
-				echo $invoiceId;
+				//echo $invoiceId;
 				return $invoiceId;
 			}
     function insertIntoOrder($id){
@@ -279,7 +289,7 @@ class LeadManager {
 				$serviceArr[] = $value['service_inquiry1'];
 				$serviceArr[] = $value['service_inquiry2'];
 				$serviceArr[] = $value['service_inquiry3'];
-				if ($value['invoice_type']==0) {
+				if ($value['invoice_type']==-1) {
 
 				$values['name'] = $value['client_firstname'];
 				$values['lead_source'] = $value['lead_source'];
@@ -304,16 +314,20 @@ class LeadManager {
 				$values['update_date']		= date('Y-m-d H:i:s');
 				$values['status']= 0;
 				$values['ip']= getIP();
-
+				
 				$response =  $this -> db -> insertDataIntoTable($values, 'order');
 				}
 
 				else {
+					$indx = 0;
 					foreach ($serviceArr as $key => $service) {
-						$indx = 1;
-						$servicename = 'service'.$indx;
+						
+						
 						$indx = $indx +1;
+						$variant = array($value['varianttype'.$indx]);
+						$servicename = 'service'.$indx;
 						$values = array();
+						$values['leadmanager_id'] = $value['id'];
 						$values['name'] = $value['client_firstname'];
 						$values['lead_source'] = $value['lead_source'];
 						$values['mobile_no'] = $value['client_mobile_no'];
@@ -326,9 +340,11 @@ class LeadManager {
 						$values['state'] = $value['state'];
 						$values['pincode'] = $value['pincode'];
 						$values['service'] = $service;
-						$values['price'] = $value['price'];
+						$values['service_date'] = $value['service'.$indx.'_date'];
+						$values['service_time'] = $value['service'.$indx.'_time'];
+						$values['price'] = $this->getPriceList($value['city'],array($value[$servicename]),$variant)-(0.15*$this->getPriceList($value['city'],array($value[$servicename]),$variant));
 						$values['commission'] = $value['commission'];
-						$values['taxed_cost'] = $value['taxed_cost'];
+						$values['taxed_cost'] = $this->getPriceList($value['city'],array($value[$servicename]),$variant);
 						$values['order_id'] = $value['order_id'];
 						$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($value[$servicename]),$value['city_name'],$id);
 		 				$values['author_id'] = $_SESSION['tmobi']['UserId'];
@@ -339,11 +355,14 @@ class LeadManager {
 						$values['ip']= getIP();
 
 						$response =  $this -> db -> insertDataIntoTable($values, 'order');
-
+						
 					}
+					//print_r($values);
+						// exit();
 				}
-
+				
 			}
+
 			//$this->logs->writelogs($this->folderName,"Lead Converted to Order: ".$id);
 			return $response;
     	}
@@ -351,17 +370,20 @@ class LeadManager {
     }
 
 	function getPriceList($city,$inqs,$varianttype){
-		$keyValueArray = array();
+		
 		 $keyValueArray['city'] = $city;
 		 // $keyValueArray['varianttype'] = $varianttype;
 		 $total = 0;
 		 $indx = 0;
 		 // $this->logs->writelogs($this->folderName,"Prices f the services: ".json_encode($inqs) );
 		 foreach ($inqs as $inq) {
+		 	$keyValueArray = array();
 			 if($inq != ""){
 				 $keyValueArray['name'] = $inq;
 				 $keyValueArray['varianttype'] = $varianttype[$indx];
 				 $dataArr = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "taxed_cost", '', '', false);
+				 // print_r($dataArr);
+				 // print_r($varianttype[$indx]);
 				 $this->logs->writelogs($this->folderName,"Prices of the services: ".json_encode($dataArr) );
 				 $total =$total+$dataArr[0]['taxed_cost'];
 				 // $this->logs->writelogs($this->folderName,"Prices of the services: ".json_encode($dataArr) );
@@ -371,6 +393,30 @@ class LeadManager {
 		 // $this->logs->writelogs($this->folderName,"Prices f the services: ".json_encode($inqs) );
 		 return $total;
 	 }
+
+	 // function getindividualPrice($city,$inqs,$varianttype){
+		// $keyValueArray = array();
+		//  $keyValueArray['city'] = $city;
+		//  // $keyValueArray['varianttype'] = $varianttype;
+		//  $total = 0;
+		//  $indx = 0;
+		 
+		
+		// 	 if($inq != ""){
+		// 		 $keyValueArray['name'] = $inq;
+		// 		 $keyValueArray['varianttype'] = $varianttype[$indx];
+		// 		 $dataArr = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "taxed_cost", '', '', false);
+		// 		 $this->logs->writelogs($this->folderName,"Prices of the services: ".json_encode($dataArr) );
+		// 		 $total =$total+$dataArr[0]['taxed_cost'];
+		// 		 // $this->logs->writelogs($this->folderName,"Prices of the services: ".json_encode($dataArr) );
+		// 	 }
+		// 	 $indx = $indx +1;
+		 
+		//  // $this->logs->writelogs($this->folderName,"Prices f the services: ".json_encode($inqs) );
+		//  return $total;
+	 // }
+
+
 
 	function send_invoice_email($id){
 		$keyValueArray = array();
@@ -388,7 +434,7 @@ class LeadManager {
 		if($taxes):
 			foreach ($taxes as $tax) {
 				$tax_breakup = '';
-
+				
 				$tax_breakup = $tax['name']. ' @ '.$tax['value'].' % '.date('Y').'-'.(date('y')+ 1).'<br />';
 				$tax_amount = ($result[0]['taxed_cost']*$tax['value'])/100;
 				$total_tax_amount = $total_tax_amount + $tax_amount;
@@ -400,7 +446,7 @@ class LeadManager {
 				<td></td><td></td>
 				<td align="center">'.$tax_amount.'</td>
 				</tr>';
-
+				
 			}
 		endif;
 		$total_amount = $result[0]['taxed_cost'] - $total_tax_amount;
