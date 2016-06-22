@@ -22,6 +22,7 @@ $userId = $session->get('UserId');
 				 <th class="hidden-480">Username</th>
 				 <th class="hidden-480">City</th>
 				 <th class="hidden-480">Role</th>
+				 <th class="hidden-480">Status</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
 		   </thead>
@@ -53,6 +54,12 @@ $userId = $session->get('UserId');
 				 <td class="hidden-480"><?php print $key['username'];?></td>
 				 <td class="hidden-480"><?php print $key['cityName'];?></td>
 				  <td class="hidden-480"><?php print $key['role'];?></td>
+				  <td class="hidden-480">
+				  	<select name="status" class="small" onchange="updateStatus(this.value,<?php print $key['id'];?>);">
+				  		<option value='1' <?php if($key['status'] == '1'): echo "selected"; else: ""; endif; ?>>Approved</option>
+				  		<option value='2' <?php if($key['status'] == '2'): echo "selected"; else: ""; endif; ?>>Unapproved</option>
+				  	</select>
+				  </td>
 				 <td>
 				 	<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/'.$modelObj->folderName.'/display.php?cmsuser_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
@@ -70,6 +77,28 @@ $userId = $session->get('UserId');
       </div>
    </div>
 <script>
+	function updateStatus(value,d_id){
+		if(d_id !=''){
+			$.ajax({
+				type: "POST",
+				url: "<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
+				data: 'action=update_status&cmsuser_id='+d_id+'&status='+value,
+				success: function(res){
+					if(res){
+						alert("Status Updated");
+					}else{
+						alert("Failed to update");
+					}
+				},
+				//success: getData,
+				error:function(){
+					alert("failure");
+					//$("#result").html('there is error while submit');
+				}
+
+			});
+		}
+	}
 	/*function dele_cmsuser(d_id){ //alert(d_id);
 		if(d_id !=''){
 			$.ajax({

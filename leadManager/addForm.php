@@ -488,7 +488,7 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Partner Amount <span class="required">*</span></label>
 	 				 	<div class="controls">
-	 						<input tabindex="41" type="text" placeholder="Please Enter Partner Amount" value="<?php echo isset($data)?$data['partner_amount']:''; ?>" id="partner_amount" name="partner_amount" class="m-wrap span12"> 		
+	 						<input tabindex="41" type="text" placeholder="Please Enter Partner Amount" value="<?php echo isset($data)?$data['partner_amount']:''; ?>" id="partner_amount" name="partner_amount" class="m-wrap span12">
 	 						<span class="help-block" id="commission_error"> </span>
 	 				 	</div>
 	 				</div>

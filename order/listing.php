@@ -22,13 +22,14 @@ $userId = $session->get('UserId');
 				 <th>Name</th>
 				 <th class="hidden-480">Lead Source</th>
 				 <th class="hidden-480">Service</th>
+				 <th class="hidden-480">Service Date</th>
+				 <th class="hidden-480">Service Time</th>
 				 <th class="hidden-480">Contact No</th>
 				 <th class="hidden-480">Email Id</th>
-				 <th class="hidden-480">Price</th>
-				 <th class="hidden-480">Commission</th>
-				 <th class="hidden-480">Taxed Cost</th>
-				 <th class="hidden-480">Created On</th>
+				 <th class="hidden-480"> Site Address</th>
+				 <th class="hidden-480">Billing Amount</th>
 				 <th class="hidden-480">Job Updates</th>
+				 <th class="hidden-480">Generate Invoice</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
 		   </thead>
@@ -60,12 +61,13 @@ $userId = $session->get('UserId');
 				 <td><?php print $key['name'];?></td>
 				 <td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				 <td class="hidden-480"><?php print $key['service'];?></td>
+				 <td class="hidden-480"><?php print $key['service_date'];?></td>
+				<td class="hidden-480"><?php print $key['service_time'];?></td>
 				 <td class="hidden-480"><?php print $key['mobile_no'];?></td>
 				 <td class="hidden-480"><?php print $key['email_id'];?></td>
-				<td class="hidden-480"><?php print $key['price'];?></td>
-				<td class="hidden-480"><?php print $key['commission'];?></td>
+				<td class="hidden-480"><?php print $key['address'];?></td>
 				<td class="hidden-480"><?php print $key['taxed_cost'];?></td>
-				<td class="hidden-480"><?php print $key['insert_date'];?></td>
+
 				<td class="hidden-480 jobinfo<?php print $key['id'];?>">
 
 					<?php if($key['job_start'] == '' || $key['job_start'] == '000-00-00'): ?>
@@ -87,6 +89,9 @@ $userId = $session->get('UserId');
 
 
 
+				</td>
+				<td class="hidden-480">
+					<div type="button" class="btn btn-success invoicebtn" data-id="<?php print $key['id'];?>">Success</div>
 				</td>
 				 <td>
 				 	<?php if(in_array('edit',$actionArr)): ?>
@@ -140,6 +145,12 @@ $(document).ready(function () {
 
     });
 
+     $(".invoicebtn").on('click',function(){
+     	var id = $(this).attr("data-id");
+     	send_invoice_email(id);
+        alert(id);
+    });
+
 });
 	/*function dele_order(d_id){ //alert(d_id);
 		if(d_id !=''){
@@ -159,6 +170,23 @@ $(document).ready(function () {
 			});
 		}
 	}*/
+	function send_invoice_email(id){
+		$.ajax({
+			type: "POST",
+			url: "<?php print SITEPATH.'/order/category2db.php';?>",
+			data: 'action=sendInvoiceMail&order_id='+id,
+			success: function(res){
+				console.log(res);
+				if(res){
+					console.log(res);
+				}
+				alert("Invoice sent!");
+			},
+			error:function(){
+				alert("failure");
+			}
+		});
+	}
 	function updateJobInfo(id){
 		if(id!=''){
 			if($('input[type="checkbox"][name="job_info'+id+'"]:checked').length == 1){

@@ -71,5 +71,15 @@ switch($action){
 				$arrReturn = true;
 			}
 			break;
+			case "update_status":
+				$whereArr = array('id' => $cmsuser_id );
+				$updateArr = array('status'=>$_POST['status']);
+				$returnVal = $modelObj->updateTable($updateArr,$whereArr);
+				if($returnVal):
+				$arrReturn['result'] = true;
+				else:
+				$arrReturn['result'] = false;
+				endif;
+			break;
 }
 echo json_encode($arrReturn);

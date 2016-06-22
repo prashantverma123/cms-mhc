@@ -321,8 +321,6 @@ class LeadManager {
 				else {
 					$indx = 0;
 					foreach ($serviceArr as $key => $service) {
-						
-						
 						$indx = $indx +1;
 						$variant = array($value['varianttype'.$indx]);
 						$servicename = 'service'.$indx;
@@ -370,7 +368,6 @@ class LeadManager {
     }
 
 	function getPriceList($city,$inqs,$varianttype){
-		
 		 $keyValueArray['city'] = $city;
 		 // $keyValueArray['varianttype'] = $varianttype;
 		 $total = 0;
@@ -400,8 +397,6 @@ class LeadManager {
 		//  // $keyValueArray['varianttype'] = $varianttype;
 		//  $total = 0;
 		//  $indx = 0;
-		 
-		
 		// 	 if($inq != ""){
 		// 		 $keyValueArray['name'] = $inq;
 		// 		 $keyValueArray['varianttype'] = $varianttype[$indx];
@@ -411,7 +406,6 @@ class LeadManager {
 		// 		 // $this->logs->writelogs($this->folderName,"Prices of the services: ".json_encode($dataArr) );
 		// 	 }
 		// 	 $indx = $indx +1;
-		 
 		//  // $this->logs->writelogs($this->folderName,"Prices f the services: ".json_encode($inqs) );
 		//  return $total;
 	 // }

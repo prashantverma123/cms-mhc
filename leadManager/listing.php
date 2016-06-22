@@ -11,7 +11,8 @@ $userId = $session->get('UserId');
 		<option value="leadsource.name" <?php if($_GET['filterby'] == 'leadsource.name'): echo 'selected';else: ''; endif; ?>>Lead Source</option>
 		<option value="leadstage.name" <?php if($_GET['filterby'] == 'leadstage.name'): echo 'selected';else: ''; endif; ?>>Lead Stage</option>
 		<option value="lead_owner" <?php if($_GET['filterby'] == 'lead_owner'): echo 'selected';else: ''; endif; ?>>Lead Owner</option>
-
+		<option value="client_firstname" <?php if($_GET['filterby'] == 'client_firstname'): echo 'selected';else: ''; endif; ?>>Client Name</option>
+		<option value="client_mobile_no" <?php if($_GET['filterby'] == 'client_mobile_no'): echo 'selected';else: ''; endif; ?>>Client Mobile No.</option>
 	</select>
 
 		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
@@ -31,6 +32,7 @@ $userId = $session->get('UserId');
 				 <th class="hidden-480">Service Date</th>
 				 <th class="hidden-480">Service Time</th>
 				 <th class="hidden-480">Job Status</th>
+				 <th class="hidden-480">Inquiry Date/time</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
 			</thead>
@@ -63,7 +65,7 @@ $userId = $session->get('UserId');
 		 ?>
 			  <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
 				<!-- <td><input type="checkbox" class="checkboxes" value="1" /></td>-->
-				<!-- <td><?php print $key['category_id'];?></td> -->
+				<!-- <td><?php //print $key['category_id'];?></td> -->
 				<td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				<td class="hidden-480"><?php print $key['lead_owner'];?></td>
 				<td class="hidden-480">
@@ -98,6 +100,7 @@ $userId = $session->get('UserId');
 				 	</select>
 				 <?php endif; ?>
 				</td>
+				<td><?php echo $key['insert_date']; ?></td>
 				<td>
 					<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/'.$modelObj->folderName.'/display.php?leadmanager_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
@@ -196,7 +199,7 @@ $(document).ready(function () {
 								data: 'action=saveIntoOrder&leadmanager_id='+id,
 								success: function(r){
 									$('#confirmed'+id).html('Confirmed');
-									send_invoice_email(id);
+									//send_invoice_email(id);
 								}
 							});
 						}

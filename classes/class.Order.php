@@ -279,7 +279,7 @@ class Order {
     }
 
     public function multipleOptionsGenerator($table, $display_field, $value_field, $selected_value="", $conditions="") {
-	
+
 	$options_str = "";
        $stmt = "select " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " group by ".$display_field." order by " . $display_field;
         $this -> db ->query($stmt);
@@ -307,10 +307,10 @@ class Order {
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
-		
+
 		//$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, 'leadmanager', "leadmanager.id,leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,p1.name as service1,p2.name as service2,p3.name as service3,`order`.invoice_id",'','',$joinArray,false);
-		$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, 'order', "`order`.order_id,leadmanager.id,leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,leadmanager.client_mobile_no,p1.name as service1,p2.name as service2,p3.name as service3,`order`.invoice_id",'','',$joinArray,false);
-		
+		$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, 'order', "`order`.order_id,leadmanager.id,leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,leadmanager.client_mobile_no,p1.name as service1,p2.name as service2,p3.name as service3,`order`.invoice_id",'','',$joinArray,true);
+		//print_r($result);
 		$whereArr = array();
 		$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
 		$total_tax = 0;
@@ -319,7 +319,6 @@ class Order {
 		if($taxes):
 			foreach ($taxes as $tax) {
 				$tax_breakup = '';
-				
 				$tax_breakup = $tax['name']. ' @ '.$tax['value'].' % '.date('Y').'-'.(date('y')+ 1).'<br />';
 				$tax_amount = ($result[0]['taxed_cost']*$tax['value'])/100;
 				$total_tax_amount = $total_tax_amount + $tax_amount;
@@ -331,17 +330,17 @@ class Order {
 				<td></td><td></td>
 				<td align="center">'.$tax_amount.'</td>
 				</tr>';
-				
 			}
 		endif;
 		$total_amount = $result[0]['taxed_cost'] - $total_tax_amount;
 
-		$l = encryptdata($id);
+		//$l = encryptdata($id);
+		$l = encryptdata($result[0]['id']);
 		$m = encryptdata($result[0]['order_id']);
 		if($result && $result[0]['client_email_id']!=''){
 			$subject = "Mr Home Care- Invoice";
-			// $to = $result[0]['client_email_id'].';prashant.verma@mrhomecare.in';
-			$to ='pra0408@gmail.com'.';prashant.verma@mrhomecare.in';
+			//$to = $result[0]['client_email_id'].';prashant.verma@mrhomecare.in';
+			$to ='pra0408@gmail.com'.';trushali.bahira@mrhomecare.in';
 			$from = 'Mr Home care-'.INVOICE_FROM_EMAILID;
 			$body  = '<div bgcolor="#f6f8f1"><table cellspacing="0" cellpadding="0" border="1" align="center" style="width:80%">
 <tbody>
