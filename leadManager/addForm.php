@@ -670,7 +670,7 @@ function saveData(frm_id, action){
 
     }
     function showPrice(){
-			var inq1 = $('#service_inquiry1 :selected').text();
+		var inq1 = $('#service_inquiry1 :selected').text();
     	var inq2 = $('#service_inquiry2 :selected').text();
     	var inq3 = $('#service_inquiry3 :selected').text();
     	var city = $('#city').val();

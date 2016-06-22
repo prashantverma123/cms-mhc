@@ -73,7 +73,7 @@ if($pricelist_id > 0){
  							 <!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
  							 <span class="help-block" id="efburl_error"> </span> -->
  						 <select tabindex="1" class="large m-wrap" id="varianttype" name="varianttype">
- 							<?php echo $modelObj->optionsGenerator('variantMaster', 'varianttype', 'id',$data['id'], " where status='0'"); ?>
+ 							<?php echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['id'], " where status='0'"); ?>
  						 </select>
  						 </div>
  						</div>
