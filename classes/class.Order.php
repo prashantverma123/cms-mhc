@@ -213,7 +213,7 @@ class Order {
 	}// eof insertTable
 
 	public function updateTable($values, $whereArr) {
-		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName,false);
 		$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
 		return $response;
 	}// eof updatetable

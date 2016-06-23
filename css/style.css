@@ -5069,3 +5069,5 @@ Bootstrap Datepickers Restyle(in v1.2.4)
 .current{background-color: gray !important;color: white;}
 
 .invoicebtn{cursor: pointer;text-align: center;padding: 5px 4px !important;font-size:12px !important;}
+
+.payment_status{margin-top: 10px;}

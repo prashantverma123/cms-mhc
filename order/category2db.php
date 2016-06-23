@@ -127,7 +127,29 @@ switch($action){
 			$order_id =$_POST['deployment_orderid'];
 			$updateArr['deployment'] = $_POST['deployment'];
 			$whereArr = array('id' => $order_id );
-			$returnVal = $modelObj->updateTable($updateArr,$whereArr,true);
+			$returnVal = $modelObj->updateTable($updateArr,$whereArr);
+			if($returnVal):
+			$arrReturn['result'] = 'success';
+			else:
+			$arrReturn['result'] = 'failed';
+			endif;
+			break;
+			case 'updatePaymentMode':
+			$order_id =$_POST['order_id'];
+			$updateArr['payment_mode'] = $_POST['payment_mode'];
+			$whereArr = array('id' => $order_id );
+			$returnVal = $modelObj->updateTable($updateArr,$whereArr);
+			if($returnVal):
+			$arrReturn['result'] = 'success';
+			else:
+			$arrReturn['result'] = 'failed';
+			endif;
+			break;
+			case 'updatePaymentStatus':
+			$order_id =$_POST['order_id'];
+			$updateArr['payment_status'] = $_POST['payment_status'];
+			$whereArr = array('id' => $order_id );
+			$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 			if($returnVal):
 			$arrReturn['result'] = 'success';
 			else:

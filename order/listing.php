@@ -30,6 +30,7 @@ $userId = $session->get('UserId');
 				 <th class="hidden-480">Billing Amount</th>
 				 <th class="hidden-480">Job Updates</th>
 				 <th class="hidden-480">Generate Invoice</th>
+				 <th>Payment</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
 		   </thead>
@@ -85,15 +86,28 @@ $userId = $session->get('UserId');
 						<option value="">Please Select</option>
 						<option value="success">Success</option>
 						<option value="complaint" <?php if($key['job_status'] == 'complaint'): echo "selected"; else: ""; endif; ?>>Complaint</option>
-						</select>
+					</select>
 
 					<?php endif; endif; ?>
-					<button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="<?php print $key['id'];?>" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick='remarkPopup(<?php print $key['id'];?>)'>Remark</button>
-
-
+					<br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="<?php print $key['id'];?>" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick='remarkPopup(<?php print $key['id'];?>)'>Remark</button>
 				</td>
 				<td class="hidden-480">
 					<div type="button" class="btn-info invoicebtn btn-sm" data-id="<?php print $key['id'];?>">Send Invoice</div>
+				</td>
+				<td>
+					<select class="small m-wrap payment_mode" name="payment_mode"  id="paymentMode<?php print $key['id'];?>" onchange="changePaymentMode(<?php print $key['id'];?>,this.value)">
+						<option value="">Payment Mode</option>
+						<option value="online" <?php if($key['payment_mode'] == 'online'): echo "selected"; else: ""; endif; ?>>Online</option>
+						<option value="cheque" <?php if($key['payment_mode'] == 'cheque'): echo "selected"; else: ""; endif; ?>>Cheque</option>
+						<option value="cash" <?php if($key['payment_mode'] == 'cash'): echo "selected"; else: ""; endif; ?>>Cash</option>
+					</select>
+					<select class="small m-wrap payment_status" name="payment_status"  id="paymentStatus<?php print $key['id'];?>" onchange="changePaymentStatus(<?php print $key['id'];?>,this.value)">
+						<option value="">Payment Status</option>
+						<option value="pending" <?php if($key['payment_status'] == 'pending'): echo "selected"; else: ""; endif; ?>>Pending</option>
+						<option value="success" <?php if($key['payment_status'] == 'success'): echo "selected"; else: ""; endif; ?>>Success</option>
+						<option value="cancelled" <?php if($key['payment_status'] == 'cancelled'): echo "selected"; else: ""; endif; ?>>Cancelled</option>
+						<option value="failed" <?php if($key['payment_status'] == 'failed'): echo "selected"; else: ""; endif; ?>>Failed</option>
+					</select>
 				</td>
 				 <td>
 				 	<?php if(in_array('edit',$actionArr)): ?>
@@ -274,6 +288,43 @@ function remarkPopup(orderId){
 			}
 		});
 }
+
+function changePaymentMode(id,value){
+	$.ajax({
+		type: "POST",
+		url: "<?php print SITEPATH.'/order/category2db.php';?>",
+		data: 'action=updatePaymentMode&order_id='+id+'&payment_mode='+value,
+		success: function(res){
+			var obj = eval("("+res+")");
+			if(obj.result == 'success'){
+				alert("Payment mode updated!");
+			}else{
+				alert("Failed to update!");
+			}
+		},
+		error:function(){
+			alert("failure");
+		}
+	});
+}
+function changePaymentStatus(id,value){
+	$.ajax({
+		type: "POST",
+		url: "<?php print SITEPATH.'/order/category2db.php';?>",
+		data: 'action=updatePaymentStatus&order_id='+id+'&payment_status='+value,
+		success: function(res){
+			var obj = eval("("+res+")");
+			if(obj.result == 'success'){
+				alert("Payment status updated!");
+			}else{
+				alert("Failed to update!");
+			}
+		},
+		error:function(){
+			alert("failure");
+		}
+	});
+}
 	function send_invoice_email(id){
 		$.ajax({
 			type: "POST",
@@ -301,12 +352,12 @@ function remarkPopup(orderId){
 					data: 'action=update_jobinfo&order_id='+id+'&job_info='+job_info,
 					success: function(res){
 						if(job_info == 'job_start'){
-							$('.jobinfo'+id).html('<div class="checker"><span><input type="checkbox" name="job_info'+id+'" value="job_end" onchange="updateJobInfo('+id+')"></span></div>End<button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="'+id+'" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick="remarkPopup('+id+')">Remark</button>');
+							$('.jobinfo'+id).html('<div class="checker"><span><input type="checkbox" name="job_info'+id+'" value="job_end" onchange="updateJobInfo('+id+')"></span></div>End<br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="'+id+'" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick="remarkPopup('+id+')">Remark</button>');
 							$('#orderDeployment').modal('show');
 							$('#deployment_orderid').val(id);
 						}
 						else if(job_info == 'job_end'){
-							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" class="small m-wrap"><option value="">Please Select</option><option value="success">Success</option><option value="complaint">Complaint</option></select><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="'+id+'" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick="remarkPopup('+id+')">Remark</button>');
+							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" class="small m-wrap"><option value="">Please Select</option><option value="success">Success</option><option value="complaint">Complaint</option></select><br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="'+id+'" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick="remarkPopup('+id+')">Remark</button>');
 						}
 					},
 					error:function(){
