@@ -100,5 +100,39 @@ switch($action){
 			$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 			$arrReturn['result'] = 'success';
 			break;
+			case "getRemark":
+			 $result = $modelObj->get_remark($_POST['order_id']);
+			 $arrReturn['result'] = $result;
+			break;
+			case "addRemark":
+			if($_POST['remark_entry'] == 'insert'):
+				$insertArr = array();
+				$insertArr['order_id'] = $_POST['orderId'];
+				$insertArr['remark'] = $_POST['remark'];
+				$insertArr['insert_date'] = date('Y-m-d h:i:s');
+				$insertArr['inserted_by'] = $_SESSION['tmobi']['UserId'];
+				$result = $modelObj->insert_remark($insertArr);
+				$arrReturn['result'] = $result;
+			else:
+				$whereArr = array('order_id'=>$_POST['orderId']);
+				$remarks = $modelObj->get_remark($_POST['orderId']);
+				$updateArr['remark'] = $remarks.'<br />'.$_POST['remark'];
+				$updateArr['update_date'] = date('Y-m-d h:i:s');
+				$updateArr['updated_by'] = $_SESSION['tmobi']['UserId'];
+				$result = $modelObj->update_remark($updateArr,$whereArr);
+			 	$arrReturn['result'] = $result;
+			endif;
+			break;
+			case 'addDeployment':
+			$order_id =$_POST['deployment_orderid'];
+			$updateArr['deployment'] = $_POST['deployment'];
+			$whereArr = array('id' => $order_id );
+			$returnVal = $modelObj->updateTable($updateArr,$whereArr,true);
+			if($returnVal):
+			$arrReturn['result'] = 'success';
+			else:
+			$arrReturn['result'] = 'failed';
+			endif;
+			break;
 }
 echo json_encode($arrReturn);

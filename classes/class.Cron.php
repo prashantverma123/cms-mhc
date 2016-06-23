@@ -8,8 +8,9 @@ class Cron{
 
 	function create_tax_constant(){
 		$keyValueArray = array();
+		$whereArr = array();
 		$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
-		$file = fopen(SITEPATH."/lib/tax_constant.php", "w")or die("Unable to open file!");
+		$file = fopen("../lib/tax_constant.php", "w")or die("Unable to open file!");
 		$txt = "John Doe\n";
 		fwrite($file, $txt);
 		$txt = "Jane Doe\n";

@@ -577,7 +577,11 @@ $(document).ready(function(){
 			$('.serviceDateTime3').show();
 		}
 	});
-   $('#service1_time').timepicker();
+	$('#lead_stage').change(function(){
+		if($('#lead_stage').text() == 'Closed')
+   			$('#service1_time').timepicker();
+	});
+	
 
 	 $('#service2_date').datepicker({
 		 format:'yyyy/mm/dd'

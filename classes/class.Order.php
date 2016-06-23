@@ -592,6 +592,26 @@ Click to pay online
 			return false;
 		}
 	}
+	function get_remark($order_id){
+		$keyValueArray['order_id'] = $order_id;
+		$result = $this -> db -> getDataFromTable($keyValueArray, 'remarks', " * ", "", '', false);
+		if($result){
+			return $result[0]['remark'];
+		}else{
+			return false;
+		}
+	}
 
+	function insert_remark($values){
+		$response =  $this -> db -> insertDataIntoTable($values, 'remarks',false);
+		$this->logs->writelogs('remarks',"Insertion: ".json_encode($response));
+		return $response;
+	}
+
+	function update_remark($values,$whereArr){
+		$response = $this -> db -> updateDataIntoTable($values, $whereArr, 'remarks');
+		$this->logs->writelogs('remarks',"Update: ".json_encode($response));
+		return $response;
+	}
 }
 ?>

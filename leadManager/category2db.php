@@ -20,11 +20,16 @@ switch($action){
 				$insertArr['job_status']	= 'pending';
 				$insertArr['lead_stage']    = $_POST['lead_stage'];
 				$insertArr['reminder']    = $_POST['reminder'];
-				$insertArr['service1_date'] 		=  date("Y-m-d", strtotime($_POST['service1_date']));
-				$insertArr['service1_time'] 		= $_POST['service1_time'];
-				$insertArr['service2_date'] 		=  date("Y-m-d", strtotime($_POST['service2_date']));
+				if($_POST['service1_date'] != '1970-01-01'){
+					$insertArr['service1_date'] = date("Y-m-d", strtotime($_POST['service1_date']));
+				}
+				else{
+					$insertArr['service1_date'] = "";
+				}
+				$insertArr['service1_time'] 		=  $_POST['service1_time'];
+				$insertArr['service2_date'] 		=  isset($_POST['service2_date'])?date("Y-m-d", strtotime($_POST['service2_date'])):"";
 				$insertArr['service2_time'] 		= $_POST['service2_time'];
-				$insertArr['service3_date'] 		=  date("Y-m-d", strtotime($_POST['service3_date']));
+				$insertArr['service3_date'] 		=  isset($_POST['service3_date'])?date("Y-m-d", strtotime($_POST['service3_date'])):"";
 				$insertArr['service3_time'] 		= $_POST['service3_time'];
 
 				$insertArr['teamLeader_deployment'] 		= $_POST['teamLeader_deployment'];

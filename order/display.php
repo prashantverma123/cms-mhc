@@ -67,7 +67,7 @@ $titlename 		= 'Add Order Details';
             </div>
             <!-- END PAGE HEADER-->
             <!-- BEGIN PAGE CONTENT-->
-            <div class="span12" >
+            <!-- <div class="span12" >
               <button type="button" name="button" style="float:right;margin-right:40px;" onclick="refreshData()"> Refresh</button>
               <div class="form-group" style="float:right;margin-right:40px;">
                 <label for="usr" style="float:left">Filter By:</label>
@@ -77,7 +77,7 @@ $titlename 		= 'Add Order Details';
 
               </div>
 
-            </div>
+            </div> -->
             <div class="row-fluid">
 
                <div class="span12">

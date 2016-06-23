@@ -321,6 +321,7 @@ class LeadManager {
 				else {
 					$indx = 0;
 					foreach ($serviceArr as $key => $service) {
+						if($service != ''){
 						$indx = $indx +1;
 						$variant = array($value['varianttype'.$indx]);
 						$servicename = 'service'.$indx;
@@ -353,7 +354,7 @@ class LeadManager {
 						$values['ip']= getIP();
 
 						$response =  $this -> db -> insertDataIntoTable($values, 'order');
-						
+						}
 					}
 					//print_r($values);
 						// exit();

@@ -11,7 +11,7 @@ $userId = $session->get('UserId');
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
 	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>ASC</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>DESC</option></select>
 		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
-		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
+		<!--input type="hidden" name="p" value="<?php //echo $_GET['p']; ?>" /-->
 	<button type="submit">Submit</button>
 	</form>
 	<div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
@@ -19,13 +19,13 @@ $userId = $session->get('UserId');
 		   <thead>
 			  <tr>
 				 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
-				 <th>Name</th>
+				 <th>Client Info</th>
 				 <th class="hidden-480">Lead Source</th>
 				 <th class="hidden-480">Service</th>
 				 <th class="hidden-480">Service Date</th>
-				 <th class="hidden-480">Service Time</th>
-				 <th class="hidden-480">Contact No</th>
-				 <th class="hidden-480">Email Id</th>
+				<!--  <th class="hidden-480">Service Time</th> --><!-- 
+				 <th class="hidden-480">Contact No</th> -->
+				 <!-- <th class="hidden-480">Email Id</th> -->
 				 <th class="hidden-480"> Site Address</th>
 				 <th class="hidden-480">Billing Amount</th>
 				 <th class="hidden-480">Job Updates</th>
@@ -58,13 +58,15 @@ $userId = $session->get('UserId');
 		 ?>
 			  <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
 				<!-- <td><input type="checkbox" class="checkboxes" value="1" /></td>-->
-				 <td><?php print $key['name'];?></td>
+				 <td><?php print ucfirst($key['name']);
+				 if($key['mobile_no'] != '') echo '<br />'.$key['mobile_no'];
+				 if($key['email_id']) echo '<br />'.$key['email_id'];?></td>
 				 <td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				 <td class="hidden-480"><?php print $key['service'];?></td>
-				 <td class="hidden-480"><?php print $key['service_date'];?></td>
-				<td class="hidden-480"><?php print $key['service_time'];?></td>
-				 <td class="hidden-480"><?php print $key['mobile_no'];?></td>
-				 <td class="hidden-480"><?php print $key['email_id'];?></td>
+				 <td class="hidden-480"><?php print $key['service_date'].'<br />'.$key['service_time']; ?></td>
+				<!-- <td class="hidden-480"><?php //print $key['service_time'];?></td> -->
+				<!--  <td class="hidden-480"><?php //print $key['mobile_no'];?></td>
+				 <td class="hidden-480"><?php //print $key['email_id'];?></td> -->
 				<td class="hidden-480"><?php print $key['address'];?></td>
 				<td class="hidden-480"><?php print $key['taxed_cost'];?></td>
 
@@ -86,12 +88,12 @@ $userId = $session->get('UserId');
 						</select>
 
 					<?php endif; endif; ?>
-
+					<button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="<?php print $key['id'];?>" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick='remarkPopup(<?php print $key['id'];?>)'>Remark</button>
 
 
 				</td>
 				<td class="hidden-480">
-					<div type="button" class="btn btn-success invoicebtn" data-id="<?php print $key['id'];?>">Success</div>
+					<div type="button" class="btn-info invoicebtn btn-sm" data-id="<?php print $key['id'];?>">Send Invoice</div>
 				</td>
 				 <td>
 				 	<?php if(in_array('edit',$actionArr)): ?>
@@ -112,9 +114,57 @@ $userId = $session->get('UserId');
 		</div>
       </div>
    </div>
+<!----REMARK POPUP STARTS HERE------- -->
+ <div class="modal fade" id="remark" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"></button>
+          <h4 class="modal-title">Remark</h4>
+        </div>
+        <div class="modal-body">
+        	<div id="listRemarks"></div>
+        	<form name="frmOrderRemark" id="frmOrderRemark">
+          		<p>Add Remark: <textarea rows="3" cols="30" name="remark" id="remarkText"></textarea></p>
+          		<input type="hidden" name="orderId" id="orderId" /> 
+          		<input type="hidden" name="remark_entry" id="remarkEntry" /> 
+          		<input type="hidden" name="action" value="addRemark" /> 
+          		<button type="submit" class="btn btn-default" id="addRemark">Submit</button>
+        	</form>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+<!----REMARK POPUP ENDS HERE------- -->
+<!----DEPLOYMENT POPUP STARTS HERE------- -->
+ <div class="modal fade" id="orderDeployment" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"></button>
+          <h4 class="modal-title">Deployment</h4>
+        </div>
+        <div class="modal-body">
+        	<form name="frmOrderDeployment" id="frmOrderDeployment">
+          		<p>Add No. Of Deployment <input type="text" name="deployment" id="deployment"></p>
+          		<input type="hidden" name="deployment_orderid" id="deployment_orderid" />
+          		 <input type="hidden" name="action" value="addDeployment" /> 
+          		<button type="submit" class="btn btn-default" id="addDeployment">Submit</button>
+        	</form>
+        </div>
+       </div>
+    </div>
+  </div>
+<!----DEPLOYMENT POPUP ENDS HERE------- -->
 
 <script>
 $(document).ready(function () {
+	
 	(function($) {
 	    if (!$.curCSS) {
 	       $.curCSS = $.css;
@@ -140,11 +190,61 @@ $(document).ready(function () {
 			var y = 250;
 			jQuery("#dialog-modal").dialog('option', 'position', [x,y]);
             $('#dialog-modal').dialog('open');
-
-
-
     });
 
+    $('#addDeployment').click(function(){
+	    $('#frmOrderDeployment').validate({
+		rules:{
+			deployment:"required"
+		},
+		submitHandler: function() {
+			//var orderId = $(this).data('orderid');
+			var formDate = $('#frmOrderDeployment').serialize();
+			$('#deployment_orderid').val();
+			$.ajax({
+				type: "POST",
+				url: "<?php print SITEPATH.'/order/category2db.php';?>",
+				data: formDate,
+				success: function(res){
+					if(res){
+						$('#deployment').val('');
+						$('#orderDeployment').modal('toggle');
+					}
+				},
+				error:function(){
+					alert("failure");
+				}
+			});
+		}
+		});
+	});
+
+    $('#addRemark').click(function(){
+	    $('#frmOrderRemark').validate({
+		rules:{
+			remark:"required"
+		},
+		submitHandler: function() {
+			//var orderId = $(this).data('orderid');
+			var formDate = $('#frmOrderRemark').serialize();
+			$('#orderId').val();
+			$.ajax({
+				type: "POST",
+				url: "<?php print SITEPATH.'/order/category2db.php';?>",
+				data: formDate,
+				success: function(res){
+					if(res){
+						$('#remarkText').val('');
+						$('#remark').modal('toggle');
+					}
+				},
+				error:function(){
+					alert("failure");
+				}
+			});
+		}
+		});
+	});
      $(".invoicebtn").on('click',function(){
      	var id = $(this).attr("data-id");
      	send_invoice_email(id);
@@ -152,31 +252,34 @@ $(document).ready(function () {
     });
 
 });
-	/*function dele_order(d_id){ //alert(d_id);
-		if(d_id !=''){
-			$.ajax({
-				type: "POST",
-				url: "<?php print SITEPATH.'/order/category2db.php';?>",
-				data: 'action=delete_order&order_id='+d_id,
-				success: function(res){
-					$('#row_id_'+d_id).hide('slow');
-				},
-				//success: getData,
-				error:function(){
-					alert("failure");
-					//$("#result").html('there is error while submit');
-				}
 
-			});
-		}
-	}*/
+function remarkPopup(orderId){
+		$('#orderId').val(orderId);
+		$.ajax({
+			type: "POST",
+			url: "<?php print SITEPATH.'/order/category2db.php';?>",
+			data: 'action=getRemark&order_id='+orderId,
+			success: function(res){
+				var obj = eval("("+res+")");
+				if(obj.result){
+					$('#listRemarks').html(obj.result);
+					$('#remarkEntry').val('update');
+				}else{
+					$('#listRemarks').html('');
+					$('#remarkEntry').val('insert');
+				}
+			},
+			error:function(){
+				alert("failure");
+			}
+		});
+}
 	function send_invoice_email(id){
 		$.ajax({
 			type: "POST",
 			url: "<?php print SITEPATH.'/order/category2db.php';?>",
 			data: 'action=sendInvoiceMail&order_id='+id,
 			success: function(res){
-				console.log(res);
 				if(res){
 					console.log(res);
 				}
@@ -198,10 +301,12 @@ $(document).ready(function () {
 					data: 'action=update_jobinfo&order_id='+id+'&job_info='+job_info,
 					success: function(res){
 						if(job_info == 'job_start'){
-						$('.jobinfo'+id).html('<div class="checker"><span><input type="checkbox" name="job_info'+id+'" value="job_end" onchange="updateJobInfo('+id+')"></span></div>End');
+							$('.jobinfo'+id).html('<div class="checker"><span><input type="checkbox" name="job_info'+id+'" value="job_end" onchange="updateJobInfo('+id+')"></span></div>End<button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="'+id+'" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick="remarkPopup('+id+')">Remark</button>');
+							$('#orderDeployment').modal('show');
+							$('#deployment_orderid').val(id);
 						}
 						else if(job_info == 'job_end'){
-							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" class="small m-wrap"><option value="">Please Select</option><option value="success">Success</option><option value="complaint">Complaint</option></select>');
+							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" class="small m-wrap"><option value="">Please Select</option><option value="success">Success</option><option value="complaint">Complaint</option></select><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="'+id+'" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick="remarkPopup('+id+')">Remark</button>');
 						}
 					},
 					error:function(){
