@@ -156,5 +156,22 @@ switch($action){
 			$arrReturn['result'] = 'failed';
 			endif;
 			break;
+			case "cancel_order":
+				$whereArr = array('id'=>$_POST['id']);
+				$updateArr['status'] = '1';
+				$updateArr['update_date'] = date('Y-m-d h:i:s');
+				$updateArr['author_id'] = $_SESSION['tmobi']['UserId'];
+				$result = $modelObj->updateTable($updateArr,$whereArr);
+			 	$arrReturn['result'] = $result;
+			break;
+			case "reschedule_order":
+				$whereArr = array('id'=>$_POST['order_id']);
+				$updateArr['service_date'] = $_POST['service_date'];
+				$updateArr['status'] = '0';
+				$updateArr['update_date'] = date('Y-m-d h:i:s');
+				$updateArr['author_id'] = $_SESSION['tmobi']['UserId'];
+				$result = $modelObj->updateTable($updateArr,$whereArr);
+			 	$arrReturn['result'] = $result;
+			break;
 }
 echo json_encode($arrReturn);

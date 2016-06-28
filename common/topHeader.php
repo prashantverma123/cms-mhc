@@ -33,7 +33,7 @@ $userName = $session->get('AdminName');
                   </a>
                   <ul class="dropdown-menu">
                      <li><a href="#formPopup" data-toggle="modal"><i class="icon-user"></i> My Profile</a></li>
-                     <li><a href="inbox.html"><i class="icon-envelope"></i> My Inbox(3)</a></li>
+                     <!-- <li><a href="inbox.html"><i class="icon-envelope"></i> My Inbox(3)</a></li> -->
                      <li class="divider"></li>
                      <li><a href="<?php print SITEPATH?>/logout.php"><i class="icon-key"></i> Log Out</a></li>
                   </ul>

@@ -457,7 +457,7 @@ function replacespecialcharsurl($str){
 	function getModuleByRole($role){
 		$tablename = 'acl';
 		$db =  Database::Instance();
-		$dataArr = $db->getDataFromTable(array('role'=>$role,'module!'=>'dashboard'),$tablename,'module','','',false);
+		$dataArr = $db->getDataFromTable(array('role'=>$role,'module!'=>'dashboard'),$tablename,'module,menu_name','','',false);
 		return $dataArr;
 	}
 
@@ -497,6 +497,21 @@ function replacespecialcharsurl($str){
 		}else{
 			return false;
 		}
+    }
+
+    function optionsGenerator($optionsArr) {
+        $options_str = "";
+        //$stmt = "select distinct " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " order by " . $display_field;
+        //$this -> db ->query($stmt);
+        $options_str = "<option value=''>Please Select</option>";
+        foreach ($optionArr as $result) 
+		 {
+            $options_str.='<option value="' . $result['value'] . '"';
+            if ($selected_value != "" && $selected_value == $result['value'])
+                $options_str.=' selected ';
+            $options_str.='>' . $result['display'] . '</option>';
+        }
+        return $options_str;
     }
 
 ?>

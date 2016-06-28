@@ -26,5 +26,15 @@ class Dashboard {
 		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $table, "id,name,email_id,mobile_no,order_feedback,TIMESTAMPDIFF(HOUR,job_start, job_end) as duration", "", '', false);
 		return $dataArr;
 	}
+
+	public function memcacheData(){
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211) or die ("Could not connect");
+		$keyValueArray['status'] = '0';
+		//if(!$memcache->get('city')){
+			$cities = $this -> db -> getDataFromTable($keyValueArray, 'city', "distinct name as display, id as value", '', '', true);
+			$memcache->set('city',$cities);
+		//}
+	}
 }
 ?>

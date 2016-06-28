@@ -28,8 +28,8 @@ $actionArr = explode(',', $actions);?>
 				<li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
 					<a href="<?php print SITEPATH.'/'.$module["module"].'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst($module['module']); ?></a>
 				</li>
-				<!-- <li class="<?php if($flag == 'new'){ echo 'active'; } ?>" id="li_new" >
-					<a href="<?php print SITEPATH.'/'.$module["module"].'/display.php?flag=new';?>"><img src="../img/add.png" style="padding-right:10px;"/> Add New <?php echo ucfirst($module['module']); ?> </a>
+				<!-- <li class="<?php //if($flag == 'new'){ echo 'active'; } ?>" id="li_new" >
+					<a href="<?php //print SITEPATH.'/'.$module["module"].'/display.php?flag=new';?>"><img src="../img/add.png" style="padding-right:10px;"/> Add New <?php echo ucfirst($module['module']); ?> </a>
 				</li> -->
           <?php endif; ?>
 		<?php endforeach; ?>

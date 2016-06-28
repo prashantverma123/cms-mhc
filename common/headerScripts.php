@@ -17,6 +17,9 @@
 
    <script type="text/javascript" src="<?php print JSFILEPATH;?>/jquery.validate.js"></script>
    <script src="<?php print JSFILEPATH;?>/common.js" type="text/javascript"></script>   
+   <script type="text/javascript" src="<?php print JSFILEPATH;?>/jquery.datetimepicker.js"></script>
+   <link href="<?php print CSSFILEPATH;?>/datetimepicker.css" rel="stylesheet" type="text/css"/>
+   
    <!-- END GLOBAL MANDATORY STYLES -->
    <!-- BEGIN PAGE LEVEL STYLES --> 
    <link rel="stylesheet" type="text/css" href="<?php print JSFILEPATH;?>/select2/select2_metro.css" />

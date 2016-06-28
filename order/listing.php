@@ -29,7 +29,7 @@ $userId = $session->get('UserId');
 				 <th class="hidden-480"> Site Address</th>
 				 <th class="hidden-480">Billing Amount</th>
 				 <th class="hidden-480">Job Updates</th>
-				 <th class="hidden-480">Generate Invoice</th>
+				 <th class="hidden-480">Invoice</th>
 				 <th>Payment</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
@@ -64,7 +64,10 @@ $userId = $session->get('UserId');
 				 if($key['email_id']) echo '<br />'.$key['email_id'];?></td>
 				 <td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				 <td class="hidden-480"><?php print $key['service'];?></td>
-				 <td class="hidden-480"><?php print $key['service_date'].'<br />'.$key['service_time']; ?></td>
+				 <td class="hidden-480"><span><?php print date('d M Y h:s A',strtotime($key['service_date'])); ?></span>
+					<a href="javascript:void(0);" data-orderid="<?php print $key['id'];?>" id="reschedule_order<?php print $key['id'];?>" class="edit reschedule_order" title="Reschedule Order" style="color:#FFFFFF"><img src="../img/calendar.png" /> </a>
+					<!-- <input type="text" name="reschedule_order" id="reschedule_order" value="" />  -->
+				 </td>
 				<!-- <td class="hidden-480"><?php //print $key['service_time'];?></td> -->
 				<!--  <td class="hidden-480"><?php //print $key['mobile_no'];?></td>
 				 <td class="hidden-480"><?php //print $key['email_id'];?></td> -->
@@ -92,7 +95,7 @@ $userId = $session->get('UserId');
 					<br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="<?php print $key['id'];?>" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick='remarkPopup(<?php print $key['id'];?>)'>Remark</button>
 				</td>
 				<td class="hidden-480">
-					<div type="button" class="btn-info invoicebtn btn-sm" data-id="<?php print $key['id'];?>">Send Invoice</div>
+					<div type="button" class="btn-info invoicebtn btn-sm" data-id="<?php print $key['id'];?>">Send</div>
 				</td>
 				<td>
 					<select class="small m-wrap payment_mode" name="payment_mode"  id="paymentMode<?php print $key['id'];?>" onchange="changePaymentMode(<?php print $key['id'];?>,this.value)">
@@ -114,6 +117,11 @@ $userId = $session->get('UserId');
 					<span class="label label-success"><a href="<?php print SITEPATH.'/order/display.php?order_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<?php endif; if(in_array('delete',$actionArr)): ?>
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="deleteConfirm('order',<?php print $key['id'];?>,'delete_order','order_id')" class="edit" title="Delete" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
+					<?php endif; ?>
+					<?php if($key['status'] != '1'): ?>
+					<span class="label label-warning"><a href="javascript:void(0);" onclick="cancelOrder(<?php print $key['id'];?>)" class="edit" title="Cancel Order" style="color:#FFFFFF"><img src="../img/icon-color-close.png" /> </a></span>
+					<?php elseif($key['status'] == '1'): ?>
+					 <span>Order Cancelled</span>
 					<?php endif; ?>
 				</td>
 			  </tr>
@@ -262,11 +270,53 @@ $(document).ready(function () {
      $(".invoicebtn").on('click',function(){
      	var id = $(this).attr("data-id");
      	send_invoice_email(id);
-        alert(id);
     });
-
+   $(".reschedule_order").datetimepicker({
+    	 onSelectDate: function(dateText) {
+    	 	currentObj = $(".reschedule_order");
+    	 	orderId = $(".reschedule_order").data('orderid');
+    	 	month = dateText.getMonth() + 1
+    	 	tt = dateText.getFullYear()+'/'+(month)+ '/'+dateText.getDate()+' '+dateText.getHours()+':'+dateText.getMinutes();
+    		r = confirm("Are you sure you want to reschedule order?");
+    		if(r){
+    			rescheduleOrder(orderId,tt,currentObj,dateText);
+    		}
+    	},
+    	onSelectTime: function(t){
+    		currentObj = $(".reschedule_order");
+    		orderId = $(".reschedule_order").data('orderid');
+    		month = t.getMonth() + 1
+    	 	datetime = t.getFullYear()+'/'+(month)+ '/'+t.getDate()+' '+t.getHours()+':'+t.getMinutes();
+    		r = confirm("Are you sure you want to reschedule order?");
+    		if(r){
+    			rescheduleOrder(orderId,datetime,currentObj,t);
+    		}
+    	}
+    });
+   
 });
-
+function rescheduleOrder(orderId,datetime,currentObj,dateObj){
+	$.ajax({
+			type: "POST",
+			url: "<?php print SITEPATH.'/order/category2db.php';?>",
+			data: 'action=reschedule_order&order_id='+orderId+"&service_date="+datetime,
+			success: function(res){
+				var obj = eval("("+res+")");
+				if(obj.result){
+					//displayDate = "<?php print date('d M Y h:s A',strtotime(datetime)); ?>";
+					//console.log(displayDate);
+					//currentObj.append(displayDate);
+					//currentObj.parent('<span>').html(displayDate);
+					alert("Order rescheduled!")
+				}else{
+					alert("Failed to rescheduled!")
+				}
+			},
+			error:function(){
+				alert("failure");
+			}
+		});
+}
 function remarkPopup(orderId){
 		$('#orderId').val(orderId);
 		$.ajax({
@@ -393,7 +443,7 @@ function changePaymentStatus(id,value){
 		}
 	}
 	function saveOrderFeedback(id){
-		debugger;
+		//debugger;
 		if(id!=''){
 			var order_feedback = $('#order_feedback').val();
 			if(order_feedback){
@@ -409,6 +459,28 @@ function changePaymentStatus(id,value){
 					}
 				});
 			}
+		}
+	}
+	function cancelOrder(id){
+		var r = confirm("Are you sure you want to cancel this order?");
+		if(r == true){
+			$.ajax({
+				type: "POST",
+				url: "<?php print SITEPATH.'/order/category2db.php';?>",
+				data: 'action=cancel_order&id='+id,
+				success: function(res){
+					var obj = eval("("+res+")");
+					if(obj.result){
+						alert("Order Cancelled!");
+					}else{
+						alert("Failed to cancel");
+					}
+				},
+				error:function(){
+					alert("failure");
+				}
+
+			});
 		}
 	}
 </script>

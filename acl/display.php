@@ -1,13 +1,11 @@
 <?php
 include_once('../config.php');
 include_once('variable.php');
-$source_id   	= isset($_GET['source_id']) ? $_GET['source_id'] : '';
-$original_source_id =  decryptdata($source_id);
+$cmsuser_id   	= isset($_GET['cmsuser_id']) ? $_GET['cmsuser_id'] : '';
+$original_cmsuser_id =  decryptdata($cmsuser_id);
 $flag   		= isset($_GET['flag']) ? $_GET['flag'] : '';
 $filename 		= 'addForm.php';
-$titlename 		= 'Dashboard';
-$modelObj->memcacheData();
-
+$titlename 		= 'Access Control';
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -16,7 +14,7 @@ $modelObj->memcacheData();
 <!-- BEGIN HEAD -->
 <head>
    <meta charset="utf-8" />
-   <title>T- Lead Source Control Panel |  <?php print $titlename;?> </title>
+   <title>T- CMS User Control Panel |  <?php print $titlename;?> </title>
    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
    <meta content="" name="description" />
    <meta content="" name="author" />
@@ -37,6 +35,7 @@ $modelObj->memcacheData();
       <?php include_once(COMMONFILEPATH.'/leftMenu.php'); ?>
       <!-- END SIDEBAR -->
       <!-- BEGIN PAGE -->
+
       <div class="page-content">
          <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
          <div id="portlet-config" class="modal hide">
@@ -61,67 +60,36 @@ $modelObj->memcacheData();
 
                   <!-- END BEGIN STYLE CUSTOMIZER -->
                   <h3 class="page-title">
-                    Dashboard
+                    Access Control
                      <?php /*?><small>advance form layout samples</small><?php */?>
                   </h3>
 
                </div>
             </div>
             <!-- END PAGE HEADER-->
-            <?php $modules = getModuleByRole($_SESSION['tmobi']['role']); ?>
             <!-- BEGIN PAGE CONTENT-->
             <div class="row-fluid">
                <div class="span12">
                   <div class="tabbable tabbable-custom boxless">
-                    <div class="tab-content">
-                          <!-- <div class="header-stats-container" style="width:100%;height:100px;" >
-                         <?php //foreach ($modules as $module): ?>
-                         <div class="boxContainer statistics <?php //echo $module['module']; ?>">
-                           <h4 style="text-align:center;"><?php //echo $module['module']; ?></h4>
-                           <p style="text-align:center;"><?php //echo $modelObj->get_statistics($module['module']); ?></p>
-                         </div>
-                        <?php //endforeach; ?>
-                       </div> -->
-
-                      <div class="complaint">
-                        <div class="complaint-head"><h4>Order Complaints</h4></div>
-                         <div class="order-complaint">
-                        <div class="portlet-body">
-
-                          <div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
-                              <table class="table table-striped table-bordered table-hover" id="">
-                               <thead>
-
-                                <tr>
-                                 <th class="hidden-480">Name</th>
-                                 <th class="hidden-480">Email ID</th>
-                                  <th class="hidden-480">Mobile No</th>
-                                 <th class="hidden-480">Feedback</th>
-                                <th>Duration</th>
-                                </tr>
-                              </thead>
-                               <tbody>
-                              <?php $result_data = $modelObj->getOrderComplaint();
-                                if($result_data && count($result_data) > 0):
-                                foreach ($result_data as $key){
-                              ?>
-                                <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
-                                <td class="hidden-480"><?php print $key['name'];?></td>
-                                <td class="hidden-480"><?php print $key['email_id'];?></td>
-                                <td class="hidden-480"><?php print $key['mobile_no'];?></td>
-                                <td class="hidden-480"><?php print $key['order_feedback'];?></td>
-                                <td class="hidden-480"><?php print $key['duration'];?></td>
-                                </tr>
-                            <?php } endif; ?>
-                               </tbody>
-                            </table>
-                              </div>
-                           </div>
-                        </div>
-                      </div>
-                    </div>
-
-
+                     <ul class="nav nav-tabs">
+                        <li class="<?php if($cmsuser_id == '' || $cmsuser_id =='0'){ echo 'active'; } ?>"  id="li_pat0"><a data-toggle="tab" href="#tab_1" onClick="change_tab(0);">Access Control Listing</a></li>
+                      <?php if(in_array('add',$actionArr)): ?>
+                        <li class="<?php if($cmsuser_id > 0){ echo 'active'; } ?>"  id="li_pat1"><a data-toggle="tab" href="#tab_2"  onclick="change_tab(1);">Add/Edit Access Control</a></li>
+                      <?php endif; ?>
+                     </ul>
+                     <div class="tab-content">
+                        <!-- <div id="tab_1" class="tab-pane <?php if($cmsuser_id == '' || $cmsuser_id =='0'){ echo 'active'; } ?>">
+                           <?php //include_once('listing.php');?>
+                        </div> -->
+                        <?php include_once('listing.php');?>
+                        <!-- <div id="tab_2" class="tab-pane <?php if($cmsuser_id > 0){ echo 'active'; } ?>">
+						<?php
+							 $cmsuser_id   = decryptdata($cmsuser_id);
+							 //include_once($filename);
+							 $cmsuser_id   = encryptdata($cmsuser_id);
+						?>
+                        </div> -->
+                     </div>
                   </div>
                </div>
             </div>
@@ -134,7 +102,6 @@ $modelObj->memcacheData();
    <!-- END CONTAINER -->
    <!-- BEGIN FOOTER -->
    <?php include_once(COMMONFILEPATH.'/footer.php'); ?>
-
 </body>
 <!-- END BODY -->
 </html>
@@ -180,7 +147,7 @@ function isValidURL(url)
 	else
 	{
         return false;
-    }
+  }
 }
 function isValidEmail(emailid) {
 	var RegexpRule = new RegExp(/^(("[\w-+\s]+")|([\w-+]+(?:\.[\w-+]+)*)|("[\w-+\s]+")([\w-+]+(?:\.[\w-+]+)*))(@((?:[\w-+]+\.)*\w[\w-+]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
@@ -198,16 +165,4 @@ if($('#'+div_name).is(':visible')) {
 		$('#sponsor_image').attr('src', '<?php print IMAGEPATH;?>/min_blck.png');
     }
 }
-(function($){
-      $(window).load(function(){
-        
-        $(".order-complaint").mCustomScrollbar({
-          snapAmount:40,
-          scrollButtons:{enable:true},
-          keyboard:{scrollAmount:40},
-          mouseWheel:{deltaFactor:40},
-          scrollInertia:400
-        });
-      });
-    })(jQuery);
 </script>
