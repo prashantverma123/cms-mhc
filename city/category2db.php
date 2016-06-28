@@ -32,8 +32,6 @@ switch($action){
 			}else if($city_id > 0){ // edit the record
 				$updateArr['name'] 			= $_POST['city_name'];
 				$updateArr['city_tier'] 		= $_POST['city_tier'];
-
-
 				$whereArr = array('id' => $city_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 				$arrReturn['result'] = 'success';

@@ -206,7 +206,8 @@ public function query($sql, $debug=0, $ismongo=''){
 
 	$log_id = (($log_id != 0)?$log_id:(isset($whereClauseKeyValArray['id']) ? $whereClauseKeyValArray['id'] : $whereClauseKeyValArray['content_id']));
 	$this->trackLog($sql, $log_id, $res, $action);
-    return $rowCount;
+    //return $rowCount;
+    return $log_id;
   }
 
   public function getDataFromTable($keyValueArray, $table, $fields='*', $orderBy = "", $limit = "", $debug=false){

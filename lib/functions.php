@@ -501,10 +501,8 @@ function replacespecialcharsurl($str){
 
     function optionsGenerator($optionsArr) {
         $options_str = "";
-        //$stmt = "select distinct " . $display_field . " as display," . $value_field . " as value from " . $table . " " . $conditions . " order by " . $display_field;
-        //$this -> db ->query($stmt);
         $options_str = "<option value=''>Please Select</option>";
-        foreach ($optionArr as $result) 
+        foreach ($optionsArr as $result) 
 		 {
             $options_str.='<option value="' . $result['value'] . '"';
             if ($selected_value != "" && $selected_value == $result['value'])

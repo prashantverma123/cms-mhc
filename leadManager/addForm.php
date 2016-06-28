@@ -3,6 +3,9 @@ if($leadmanager_id > 0){
 	$returned_data = (array)json_decode($modelObj->getEditData($leadmanager_id));
 	$data = (array)$returned_data[0];
 	//echo'<pre>'; print_r($data);
+	$memcache = new Memcache;
+		$memcache->connect('localhost', 11211) or die ("Could not connect");
+	$optionsArr = $memcache->get('city');
 }
 ?>
 	<div class="portlet box green">
@@ -212,8 +215,12 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">City <span class="required">*</span></label>
 	 				 <div class="controls">
+	 				 	<?php $memcache = new Memcache;
+						$memcache->connect('localhost', 11211) or die ("Could not connect");
+						$t = $memcache->get('city');
+						?>
 							<select tabindex="16" class="medium m-wrap" id="city" name="city">
-						   <?php  echo $modelObj->optionsGenerator('city', 'name', 'id', $data['city']," where status='0'"); ?>
+						   <?php echo optionsGenerator($t); //echo $modelObj->optionsGenerator('city', 'name', 'id', $data['city']," where status='0'"); ?>
 							</select>
 							<span class="help-block" id="city_error"> </span>
 	 				 </div>

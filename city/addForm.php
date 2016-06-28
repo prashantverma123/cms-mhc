@@ -27,6 +27,7 @@ if($city_id > 0){
 						<label class="control-label">Name <span class="required">*</span></label>
 						<div class="controls">
 						   <input type="text" placeholder="Please Enter City Name" value="<?php echo isset($data)?$data['name']:''; ?>" id="city_name" name="city_name" class="m-wrap span12">
+						   <!-- <input type="hidden" name="old_name" value="<?php //echo isset($data)?$data['name']:''; ?>" /> -->
 						   <span class="help-block" id="city_name_error"> </span>
 						</div>
 					 </div>

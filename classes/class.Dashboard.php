@@ -31,10 +31,10 @@ class Dashboard {
 		$memcache = new Memcache;
 		$memcache->connect('localhost', 11211) or die ("Could not connect");
 		$keyValueArray['status'] = '0';
-		//if(!$memcache->get('city')){
+		if(!$memcache->get('city')){
 			$cities = $this -> db -> getDataFromTable($keyValueArray, 'city', "distinct name as display, id as value", '', '', true);
 			$memcache->set('city',$cities);
-		//}
+		}
 	}
 }
 ?>

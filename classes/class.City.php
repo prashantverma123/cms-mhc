@@ -4,6 +4,7 @@ class City {
 	private $db;
 	private $tableName;
 	public $className;
+
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
 		$this -> tableName = 'city';
@@ -11,6 +12,7 @@ class City {
 		$this -> folderName = "cityMaster";
 		$this -> db = Database::Instance();
 		checkRole('city');
+		
 	}
 
 
@@ -123,11 +125,32 @@ class City {
 	}
 
 	public function insertTable($values) {
-		return $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$id = $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211);
+		if($id){
+			$cityArr = $memcache->get('city');
+			$cityArr[] = array('value'=>$id,'display'=>$values['name']);
+			$cityArr = $memcache->set('city',$cityArr);
+		}
+		return $id;
 	}// eof insertTable
 
 	public function updateTable($values, $whereArr) {
-		return $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211);
+		$id = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		if($id){
+			$cityArr = $memcache->get('city');
+			foreach ($cityArr as $key =>$city) {
+				if($city['value'] == $id){
+					unset($cityArr[$key]);
+				}
+			}
+			$cityArr[] = array('value'=>$id,'display'=>$values['name']);
+			$cityArr = $memcache->set('city',$cityArr);
+		}
+		return $id;
 	}// eof updatetable
 
 	public function toggleTableStatus($val, $status) {
