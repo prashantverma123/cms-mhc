@@ -2,8 +2,9 @@
 if($employee_id > 0){
 	$returned_data = (array)json_decode($modelObj->getEditData($employee_id));
 	$data = (array)$returned_data[0];
-	//echo'<pre>'; print_r($data);
 }
+$cities = $memcache->get('city');
+$designation = $memcache->get('designation');
 ?>
 	<div class="portlet box green">
 	  <div class="portlet-title">
@@ -75,7 +76,7 @@ if($employee_id > 0){
  					 <label class="control-label">City <span class="required">*</span></label>
  					 <div class="controls">
  							<select tabindex="1" class="large m-wrap" id="city" name="city">
-						   <?php  echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city']," where status='0'"); ?>
+						   <?php echo optionsGenerator($cities,$data['city']);  //echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city']," where status='0'"); ?>
 							</select>
  							<span class="help-block" id="city_error"> </span>
 
@@ -94,7 +95,7 @@ if($employee_id > 0){
 	 				 <div class="controls">
 
 						<select tabindex="1" class="large m-wrap" id="designation" name="designation">
-						<?php  echo $modelObj->optionsGenerator('designation', 'name', 'id',$data['designation']," where status='0'"); ?>	
+						<?php  echo optionsGenerator($designation,$data['designation']); //echo $modelObj->optionsGenerator('designation', 'name', 'id',$data['designation']," where status='0'"); ?>	
 						</select>
 	 				 </div>
 	 				</div>

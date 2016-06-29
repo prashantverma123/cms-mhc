@@ -171,13 +171,35 @@ class Pricelist {
 	}
 
 	public function insertTable($values) {
-		$response =  $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$id = $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211);
+		if($id){
+			$arr = $memcache->get('pricelist');
+			$arr[] = array('value'=>$id,'display'=>$values['name']);
+			$memcache->set('pricelist',$arr);
+		}
+		$response =  $id;
 		$this->logs->writelogs($this->folderName,"Insertion: ".json_encode($response));
 		return $response;
 	}// eof insertTable
 
 	public function updateTable($values, $whereArr) {
-		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211);
+		$id = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		if($id){
+			$arr = $memcache->get('pricelist');
+			foreach ($arr as $key =>$val) {
+				if($val['value'] == $id){
+					unset($arr[$key]);
+				}
+			}
+			if($values['name'] != '')
+			$arr[] = array('value'=>$id,'display'=>$values['name']);
+			$memcache->set('pricelist',$arr);
+		}
+		$response = $id;
 		$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
 		return $response;
 	}// eof updatetable

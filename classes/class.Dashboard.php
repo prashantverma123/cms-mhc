@@ -47,6 +47,22 @@ class Dashboard {
 			$pricelists = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "distinct name as display, id as value", '', '');
 			$memcache->set('pricelist',$pricelists);
 		}
+		if(!$memcache->get('designation')){
+			$designation = $this -> db -> getDataFromTable($keyValueArray, 'designation', "distinct name as display, id as value", '', '');
+			$memcache->set('designation',$designation);
+		}
+		if(!$memcache->get('role')){
+			$role = $this -> db -> getDataFromTable(array(), 'role', "distinct name as display, role as value", '', '');
+			$memcache->set('role',$role);
+		}
+		if(!$memcache->get('category')){
+			$category = $this -> db -> getDataFromTable(array(), 'category', "distinct name as display, id as value", '', '');
+			$memcache->set('category',$category);
+		}
+		if(!$memcache->get('varianttype')){
+			$varianttype = $this -> db -> getDataFromTable(array(), 'variantmaster', "distinct varianttype as display, id as value", '', '');
+			$memcache->set('varianttype',$varianttype);
+		}
 	}
 }
 ?>

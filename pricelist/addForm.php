@@ -5,6 +5,9 @@ $returned_data = (array)json_decode($modelObj->getEditData($pricelist_id));
 $data = (array)$returned_data[0];
 }
 $leadsources = $memcache->get('leadsource');
+$categories = $memcache->get('category');
+$varianttype = $memcache->get('varianttype');
+$cities = $memcache->get('city');
 ?>
 	<div class="portlet box green">
 	  <div class="portlet-title">
@@ -55,11 +58,8 @@ $leadsources = $memcache->get('leadsource');
 				  <div class="span6 ">
 					 <div class="control-group">
 						<label class="control-label">Category <span class="required">*</span></label>
-							<!-- <div class="controls">
-							   <input type="text" id="category_type" name="category_type" value="<?php echo isset($data)?$data['category_type']:''; ?>" class="m-wrap span5">
-							</div> -->
 							<select tabindex="1" class="large m-wrap" id="category_type" name="category_type">
-							 <?php echo $modelObj->optionsGenerator('category', 'name', 'id',$data['id'], " where status='0'"); ?>
+							 <?php echo optionsGenerator($categories,$data['category_type']);//echo $modelObj->optionsGenerator('category', 'name', 'id',$data['id'], " where status='0'"); ?>
 							</select>
 					 </div>
 				  </div>
@@ -74,7 +74,7 @@ $leadsources = $memcache->get('leadsource');
  							 <!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
  							 <span class="help-block" id="efburl_error"> </span> -->
  						 <select tabindex="1" class="large m-wrap" id="varianttype" name="varianttype">
- 							<?php echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['id'], " where status='0'"); ?>
+ 							<?php echo optionsGenerator($varianttype,$data['varianttype']);//echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['id'], " where status='0'"); ?>
  						 </select>
  						 </div>
  						</div>
@@ -87,7 +87,7 @@ $leadsources = $memcache->get('leadsource');
 							<!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span> -->
 						<select tabindex="1" class="large m-wrap" id="city" name="city">
-						 <?php echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id'], " where status='0'"); ?>
+						 <?php echo optionsGenerator($cities,$data['city']); //echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id'], " where status='0'"); ?>
 						</select>
 						</div>
 					 </div>
