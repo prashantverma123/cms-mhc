@@ -32,8 +32,20 @@ class Dashboard {
 		$memcache->connect('localhost', 11211) or die ("Could not connect");
 		$keyValueArray['status'] = '0';
 		if(!$memcache->get('city')){
-			$cities = $this -> db -> getDataFromTable($keyValueArray, 'city', "distinct name as display, id as value", '', '', true);
+			$cities = $this -> db -> getDataFromTable($keyValueArray, 'city', "distinct name as display, id as value", '', '');
 			$memcache->set('city',$cities);
+		}
+		if(!$memcache->get('leadsource')){
+			$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadsource', "distinct name as display, id as value", '', '');
+			$memcache->set('leadsource',$leadsources);
+		}
+		if(!$memcache->get('leadstage')){
+			$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadstage', "distinct name as display, id as value", '', '');
+			$memcache->set('leadstage',$leadsources);
+		}
+		if(!$memcache->get('pricelist')){
+			$pricelists = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "distinct name as display, id as value", '', '');
+			$memcache->set('pricelist',$pricelists);
 		}
 	}
 }

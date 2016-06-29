@@ -499,7 +499,7 @@ function replacespecialcharsurl($str){
 		}
     }
 
-    function optionsGenerator($optionsArr) {
+    function optionsGenerator($optionsArr,$selected_value) {
         $options_str = "";
         $options_str = "<option value=''>Please Select</option>";
         foreach ($optionsArr as $result) 

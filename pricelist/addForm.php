@@ -1,9 +1,10 @@
 <?php
+
 if($pricelist_id > 0){
-	$returned_data = (array)json_decode($modelObj->getEditData($pricelist_id));
-	$data = (array)$returned_data[0];
-	//echo'<pre>'; print_r($data);
+$returned_data = (array)json_decode($modelObj->getEditData($pricelist_id));
+$data = (array)$returned_data[0];
 }
+$leadsources = $memcache->get('leadsource');
 ?>
 	<div class="portlet box green">
 	  <div class="portlet-title">
@@ -27,7 +28,7 @@ if($pricelist_id > 0){
 						<label class="control-label">Lead Source <span class="required">*</span></label>
 						<div class="controls">
 						 <select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
-						 <?php echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['id'], " where status='0'"); ?>
+						 <?php echo optionsGenerator($leadsources,$data['id']); //echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['id'], " where status='0'"); ?>
 						</select>
 						</div>
 					 </div>

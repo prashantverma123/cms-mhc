@@ -32,6 +32,8 @@ $dbdetails = array(
 		'user'		=> 'root',
 		'password'  => '')
 );
+$memcache = new Memcache;
+$memcache->connect('localhost', 11211);
 include_once(DOCUMENTROOT . '/lib/Util.class.php');
 include_once(DOCUMENTROOT . '/lib/session.php');
 define('FUNCTIONPATH',DOCUMENTROOT."/lib/functions.php");

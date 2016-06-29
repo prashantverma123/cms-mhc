@@ -3,6 +3,7 @@ $session = Session::getInstance();
 $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
+$leadstage = $memcache->get('leadstage');
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
@@ -70,7 +71,7 @@ $userId = $session->get('UserId');
 				<td class="hidden-480"><?php print $key['lead_owner'];?></td>
 				<td class="hidden-480">
 					<select class="small m-wrap lead_stage" name="lead_stage" id="leadstage<?php print $key['id'];?>" onchange="changeLeadStage(<?php print $key['id'];?>);">
-					<?php echo $modelObj->optionsGenerator('leadstage', 'name', 'id', $key['leadstage_id'], "where  status='0'"); ?>
+					<?php echo optionsGenerator($leadstage,$key['leadstage_id']); //echo $modelObj->optionsGenerator('leadstage', 'name', 'id', $key['leadstage_id'], "where  status='0'"); ?>
 					</select>
 					<div id="dialog-modal_<?php echo $key['id']; ?>" class="dialog-modal">
 						<label for="">Reminder:</label>

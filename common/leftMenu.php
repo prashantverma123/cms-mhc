@@ -2,7 +2,7 @@
     <!-- BEGIN SIDEBAR MENU -->
     <?php $modules = getModuleByRole($_SESSION['tmobi']['role']); 
     $actions = getActionByRoleAndModule($_SESSION['tmobi']['role'],$modelObj -> className);  
-$actionArr = explode(',', $actions);?>
+    $actionArr = explode(',', $actions);?>
     <ul>
 		<li>
 			<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
@@ -16,12 +16,14 @@ $actionArr = explode(',', $actions);?>
 			<!-- END RESPONSIVE QUICK SEARCH FORM -->
 		</li>
     <li class="active">
+      <?php if($_SESSION['tmobi']['role'] == 'admin'): ?>
       <a href="javascript:;">
         <i class="icon-table"></i>
         <span class="title"><?php echo ucfirst("admin"); ?></span>
         <span class="selected"></span>
         <span class="arrow open"></span>
       </a>
+    <?php endif; ?>
       <ul class="sub-menu">
 		<?php foreach ($modules as $module): ?>
       <?php if ($module["module"]!="leadmanager" && $module["module"]!="order"):?>

@@ -123,11 +123,35 @@ class LeadStage {
 	}
 
 	public function insertTable($values) {
-		return $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$id = $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211);
+		if($id){
+			$arr = $memcache->get('leadstage');
+			$arr[] = array('value'=>$id,'display'=>$values['name']);
+			$memcache->set('leadstage',$arr);
+		}
+		return $id;
+		
 	}// eof insertTable
 
 	public function updateTable($values, $whereArr) {
-		return $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211);
+		$id = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		if($id){
+			$arr = $memcache->get('leadstage');
+			foreach ($arr as $key =>$val) {
+				if($val['value'] == $id){
+					unset($arr[$key]);
+				}
+			}
+			if($values['name'] != '')
+			$arr[] = array('value'=>$id,'display'=>$values['name']);
+			$memcache->set('leadstage',$arr);
+		}
+		return $id;
+
 	}// eof updatetable
 
 	public function toggleTableStatus($val, $status) {

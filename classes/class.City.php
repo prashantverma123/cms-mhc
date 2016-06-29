@@ -131,7 +131,7 @@ class City {
 		if($id){
 			$cityArr = $memcache->get('city');
 			$cityArr[] = array('value'=>$id,'display'=>$values['name']);
-			$cityArr = $memcache->set('city',$cityArr);
+			$memcache->set('city',$cityArr);
 		}
 		return $id;
 	}// eof insertTable
@@ -147,8 +147,9 @@ class City {
 					unset($cityArr[$key]);
 				}
 			}
+			if($values['name'] != '')
 			$cityArr[] = array('value'=>$id,'display'=>$values['name']);
-			$cityArr = $memcache->set('city',$cityArr);
+			$memcache->set('city',$cityArr);
 		}
 		return $id;
 	}// eof updatetable

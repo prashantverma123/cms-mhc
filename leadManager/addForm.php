@@ -2,11 +2,16 @@
 if($leadmanager_id > 0){
 	$returned_data = (array)json_decode($modelObj->getEditData($leadmanager_id));
 	$data = (array)$returned_data[0];
-	//echo'<pre>'; print_r($data);
-	$memcache = new Memcache;
-		$memcache->connect('localhost', 11211) or die ("Could not connect");
-	$optionsArr = $memcache->get('city');
 }
+?>
+<?php 
+/*$memcache = new Memcache;
+$memcache->connect('localhost', 11211);
+*/
+$cities = $memcache->get('city');
+$leadsources = $memcache->get('leadsource');
+$leadstage = $memcache->get('leadstage');
+$pricelist = $memcache->get('pricelist');
 ?>
 	<div class="portlet box green">
 	  <div class="portlet-title">
@@ -30,7 +35,7 @@ if($leadmanager_id > 0){
 						<label class="control-label">Lead Source <span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
-						   <?php  echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $data['lead_source']," where status='0'"); ?>
+						   <?php echo optionsGenerator($leadsources,$data['lead_source']);  //echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $data['lead_source']," where status='0'"); ?>
 							</select>
 						</div>
 					 </div>
@@ -41,7 +46,7 @@ if($leadmanager_id > 0){
 						<label class="control-label">Lead Owner<span class="required">*</span></label>
 						<div class="controls">
 							<!-- <select tabindex="1" class="large m-wrap" id="category_id" name="category_id">
-						   <?php  echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $selected_value=""," where status='0'"); ?>
+						   <?php  //echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $selected_value=""," where status='0'"); ?>
 							</select> -->
 							<input tabindex="2" type="text" placeholder="Please Enter Lead Owner" value="<?php echo isset($data)?$data['lead_owner']:''; ?>" id="lead_owner" name="lead_owner" class="m-wrap span12">
  						   <span class="help-block" id="validity_error"> </span>
@@ -56,7 +61,7 @@ if($leadmanager_id > 0){
 						<label class="control-label">Lead Stage <span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="3" class="large m-wrap" id="lead_stage" name="lead_stage">
-						   <?php  echo $modelObj->optionsGenerator('leadstage', 'name', 'id',$data['lead_stage']," where status='0'"); ?>
+						   <?php echo optionsGenerator($leadstage,$data['lead_stage']); //echo $modelObj->optionsGenerator('leadstage', 'name', 'id',$data['lead_stage']," where status='0'"); ?>
 							</select>
 						</div>
 					 </div>
@@ -215,12 +220,9 @@ if($leadmanager_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">City <span class="required">*</span></label>
 	 				 <div class="controls">
-	 				 	<?php $memcache = new Memcache;
-						$memcache->connect('localhost', 11211) or die ("Could not connect");
-						$t = $memcache->get('city');
-						?>
+	 				 	
 							<select tabindex="16" class="medium m-wrap" id="city" name="city">
-						   <?php echo optionsGenerator($t); //echo $modelObj->optionsGenerator('city', 'name', 'id', $data['city']," where status='0'"); ?>
+						   <?php echo optionsGenerator($cities,$data['city']); //echo $modelObj->optionsGenerator('city', 'name', 'id', $data['city']," where status='0'"); ?>
 							</select>
 							<span class="help-block" id="city_error"> </span>
 	 				 </div>
@@ -263,7 +265,7 @@ if($leadmanager_id > 0){
 	 				 <label class="control-label">Service Inquiry1 <span class="required">*</span></label>
 	 				 <div class="controls">
 							<select tabindex="19" class="large m-wrap" id="service_inquiry1" name="service_inquiry1" onchange="getVaiantType(this.value,'varianttype1')">
-						   <?php  echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry1']," where status='0'"); ?>
+						   <?php echo optionsGenerator($pricelist); //echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry1']," where status='0'"); ?>
 							</select>
 	 						<span class="help-block" id="service_inquiry1_error"> </span>
 	 				 </div>
