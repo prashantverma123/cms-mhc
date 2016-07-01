@@ -299,7 +299,7 @@ class Order {
         return $options_str;
     }
 
-    	function send_invoice_email($id){
+    function send_invoice_email($id,$billArr){
 		$keyValueArray = array();
 		//$keyValueArray['leadmanager.order_id'] = $id;
 		$keyValueArray['order.id'] = $id;
@@ -312,7 +312,7 @@ class Order {
 		$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, 'order', "`order`.order_id,leadmanager.id,leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,leadmanager.client_mobile_no,p1.name as service1,p2.name as service2,p3.name as service3,`order`.invoice_id",'','',$joinArray,true);
 		//print_r($result);
 		$whereArr = array();
-		$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
+		/*$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
 		$total_tax = 0;
 		$total_tax_amount = 0;
 		$taxHtml = '';
@@ -332,17 +332,80 @@ class Order {
 				</tr>';
 			}
 		endif;
-		$total_amount = $result[0]['taxed_cost'] - $total_tax_amount;
+*/		
+		
+		
 
 		//$l = encryptdata($id);
 		$l = encryptdata($result[0]['id']);
 		$m = encryptdata($result[0]['order_id']);
-		if($result && $result[0]['client_email_id']!=''){
+
+		if($result && $billArr['billing_email']!=''){
 			$subject = "Mr Home Care- Invoice";
 			//$to = $result[0]['client_email_id'].';prashant.verma@mrhomecare.in';
 			$to ='pra0408@gmail.com'.';trushali.bahira@mrhomecare.in';
 			$from = 'Mr Home care-'.INVOICE_FROM_EMAILID;
-			$body  = '<div bgcolor="#f6f8f1"><table cellspacing="0" cellpadding="0" border="1" align="center" style="width:80%">
+			$body = '';
+			$taxArr = $this->getTax($billArr['billing_amount']);
+			$b_name=$billArr['billing_name'];
+			$b_add=$billArr['billing_address'];
+			$b_mobile=$result[0]['client_mobile_no'];
+			$b_amt=$billArr['billing_amount'];
+			$invoice_id=$result[0]['invoice_id'];
+			$services=$result[0]['invoice_id'];
+			$taxHtml = $taxArr['taxHtml'];
+			$total_amount = $billArr['billing_amount'] - $taxArr['total_tax_amount'];
+			$body = $this->getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amount);
+			$r = sendEmail($to,$from,$subject,$body);
+			if($billArr['isPartner'] == 1){
+				$body = '';
+				$to ='pra0408@gmail.com'.';trushali.bahira@mrhomecare.in';
+				$from = 'Mr Home care-'.INVOICE_FROM_EMAILID;
+				$total_amount =0;
+				$taxArr = $this->getTax($billArr['billing_amount2']);
+				$b_name=$billArr['billing_name2'];
+				$b_add=$billArr['billing_address2'];
+				$b_mobile=$result[0]['client_mobile_no'];
+				$b_amt=$billArr['billing_amount2'];
+				$taxHtml = $taxArr['taxHtml'];
+				$total_amount = $billArr['billing_amount2'] - $total_tax_amount;
+				$body = $this->getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amt);
+				$r = sendEmail($to,$from,$subject,$body);
+			}
+			if($r)
+				return true;
+			else
+				return false;
+		}else{
+			return false;
+		}
+	}
+	function getTax($bill_amount){
+		$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
+		$total_tax = 0;
+		$total_tax_amount = 0;
+		$taxHtml = '';
+		if($taxes):
+			foreach ($taxes as $tax) {
+				$tax_breakup = '';
+				$tax_breakup = $tax['name']. ' @ '.$tax['value'].' % '.date('Y').'-'.(date('y')+ 1).'<br />';
+				$tax_amount = ($bill_amount*$tax['value'])/100;
+				$total_tax_amount = $total_tax_amount + $tax_amount;
+				$taxHtml .= '<tr>
+				<td align="center">
+				</td>
+				<td align="left">'.$tax_breakup.'
+				</td>
+				<td></td><td></td>
+				<td align="center">'.$tax_amount.'</td>
+				</tr>';
+			}
+		endif;
+		$taxArr = array('taxHtml'=>$taxHtml,'total_tax_amount'=>$total_tax_amount);
+		return $taxArr;
+	}
+	function getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amt){
+		/*$body  = '<div bgcolor="#f6f8f1"><table cellspacing="0" cellpadding="0" border="1" align="center" style="width:80%">
 			<tbody>
 			<tr>
 			<td bgcolor="white" style="padding:20px 30px 80px 30px">
@@ -529,7 +592,264 @@ class Order {
 			</tr>
 			<tr>
 			<td colspan="2">CIN:AAJCM6704HSD001</td>
+			<td></td>
+			<td align="right" style="font-size:14px;padding:0 10px 0 0"></td>
+			<td>
+			<strong>
+			<p type="text" style="border:none;float:center;text-align:center;font-weight:700">
+			</p>
+			</strong>
+			</td>
+			</tr>
+			<tr>
+			<td colspan="2">Comapny PAN No:AAJCM6704H</td>
+			<td align="right" colspan="3">
+			<a target="_blank" style="padding:1%;border:1px solid #fec11f;color:white;background-color:#fec11f;text-decoration:none" href="'.SITEPATH."/payment/paynow.php?m=".$m."&l=".$l.'">
+			Click to pay online
+			</a>
+			</td>
+			</tr>
+			<tr>
+			<td colspan="4"></td>
+			<td>
+			</td>
+			</tr>
+			<tr>
+			<td colspan="4"></td>
+			<td>
+			</td>
+			</tr>
+			</tbody></table>
+			</td>
+			</tr>
+			</tbody>
+			</table>
+			<div class="" style="margin-left:20%;width:50%;">
+			  <p style=" text-decoration: underline">Declaration</p>
+			  <p> We declare that this invoice shows the actual price of the goods described and that al the particuars are true and correct</p>
+			</div>
+			<table width="60%" border="0" align="center">
+			<tbody><tr>
+			<td style="padding:20px 0 0px 0"></td>
+			<td>
+			</td>
+			</tr>
+			</tbody></table>
+			<table width="100%" border="0" align="center">
+			<tbody><tr>
+			<td>
+			<h2 align="center" width="100%" style="border-collapse:collapse;font-family:"Roboto",sans-serif;color:black;font-weight:300;font-size:14px" border="0">
+			</h2>
+			<table align="center">
+			<tbody><tr>
+			<td>
+			<a target="_blank" href="https://twitter.com/iammrhomecare">
+			<img alt="Twitter" src="'.SITEPATH.'/images/twitter.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
+			</a>
+			<a target="_blank" href="https://www.facebook.com/MisterHomecare/">
+			<img alt="Facebook" src="'.SITEPATH.'/images/facebook.png" style="width:20px;padding:2px 0 0 0;border:0;display:inline" class="CToWUd">
+			</a>
+			</td>
+			</tr>
+			</tbody></table>
+			<p align="center" style="font-family:"Roboto",sans-serif;color:black;font-weight:300;font-size:15px">
+			<i>Thanks for using our service!</i>
+			</p>
+			</td>
+			</tr>
+			</tbody></table>
+			</td>
+			</tr>
+			</tbody>
+			</table><div class="yj6qo"></div><div class="adL">
+			</div></div>';*/
+			$body  = '<div bgcolor="#f6f8f1"><table cellspacing="0" cellpadding="0" border="1" align="center" style="width:80%">
+			<tbody>
+			<tr>
+			<td bgcolor="white" style="padding:20px 30px 80px 30px">
+			<table cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" align="center" style="margin-top:10px;width:100%;max-width:600px;padding:50px 0 0px 0px">
+			<tbody>
+			<tr>
+			<td>
+			<table cellspacing="0" cellpadding="0" border="0" align="left" style="width:40%;padding:0px 0 0 0">
+			<tbody>
+			<tr>
+			<td style="padding:0 0 0px 5px;font-family:"Neris Light",arial;font-size:18px;min-height:auto;width:50px"></td>
+			<td>';
+			$body .= 'Hello <span style="padding:0px 0 0 0px;font-family:"Neris Semibold",arial;font-size:18px;width:50px;min-height:0px">
+			'.ucfirst($b_name).'
+			</span>
+			</td>
+			</tr>
+			</tbody>
+			</table>
+			<table border="0" align="right" style="width:50%;max-width:100%;float:right">
+			<tbody>
+			<tr>
+			<td align="right" style="padding:0px 0 0px 0px;font-family:"Neris Light",arial;font-size:12px">
+			INVOICE NO.
+			<span style="padding:0px 0 0px 0px;border:none;border-collapse:collapse;font-family:"Roboto",sans-serif;font-size:12px;font-weight:700;width:80px;text-align:right">
+			'.$invoice_id.'
+			</span>
+			<p align="right" valign="top" style="padding:0px 0 0px 0px;border:none;font-family:"Roboto",sans-serif;font-size:12px;width:100px;text-align:right"></p>
+			'.date('d M, Y',strtotime(date('Y-m-d'))).'
+			</td>
+			</tr>
+			</tbody>
+			</table>
+			</td>
+			</tr>
+			<tr>
+			<td style="padding:10px 0 10px 0">
+			<hr width="100%" size="1" color="#fec11f">
 
+			<div class="" style="width:30%;float:left">
+			  <a target="_blank" href="http://www.mrhomecare.in">
+			  <img width="90%" alt="Mr Home Care logo" src="https://www.mrhomecare.in/wp-content/themes/mrhomecare/mhc-lib/img/logo.png" class="CToWUd">
+
+			  </a>
+			  <p style="font-size:12px">
+			    <span style="font-weight:700">Mister Homecare Services Private Limited</span> <br>Gordhan Building, 2nd Floor,<br>
+			    Dr. Parekh Street, Prathana Samaj <br>Mumbai
+			  </p>
+			</div>
+
+			<table border="0" align="right" style="padding:0 65px 10px 20px;width:50%;max-width:50%">
+			<tbody><tr>
+			<td>
+			<table border="0" style="width:50%;max-width:100%;">
+			<tbody>
+			<tr>
+			<td valign="top" align="left" style="padding:0px 0 0px 10px;font-family:"Roboto",sans-serif;font-size:14px;font-weight:700;line-height:1em">
+			Bill to:
+			</td>
+			</tr>
+			</tbody>
+			</table>
+			<table border="0" style="" align="right" valign="top">
+			<tbody>
+			<tr>
+			<td style="padding:0 0 0px 0px">
+			<p align="left" style="padding:0px 0 0px 0px;border:none;overflow:hidden;font-family:"Roboto",sans-serif;font-size:13px;width:200px;min-height:120px">
+			<b>'.ucfirst($b_name).'</b>
+			<br>
+			<br>
+			'.$b_add.'
+			<br>
+			Phone - <a target="_blank" value="'.$b_mobile.'" href="tel:'.$b_mobile.'">'.$b_mobile.'</a>
+			<br>
+			</p>
+			</td>
+			</tr>
+			</tbody>
+			</table>
+			</td>
+			</tr>
+			</tbody></table>
+
+			<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:20px 0 0px 0">
+			<tbody><tr>
+			<td style="width:100px">
+			<hr width="100%" size="1px" color="#fec11f" align="left" style="display:inline-block">
+			</td>
+			<td style="width:50px !important;text-align:center !important;">
+			<h6 style="display:inline;color:#fec11f;font-size:18px;padding:0 0px 0 0px">Booking Details</h6>
+			</td>
+			<td style="width:100px">
+			<hr width="100%" size="1px" color="#fec11f" align="right" style="display:inline-block">
+			</td>
+			</tr>
+			</tbody></table>
+			<span style="font-family:"Neris Thin",arial;font-size:15px;font-weight:400;padding:0px 0 20px 20px">
+			<table border="0" style="color:black;font-size:14px;font-family:"Neris Thin",arial">
+			<tbody><tr>
+			<td>Service:</td>
+			<td>
+			<b>'.$services.'</b>
+			</td>
+			</tr>
+			<tr>
+			<td>Date:</td>
+			<td>
+			<b>'.date('d M, Y',strtotime(date('Y-m-d'))).'</b>
+			</td>
+			</tr>
+			<tr>
+			</tr>
+			</tbody></table>
+			</span>
+			<table width="100%" border="0" style="border-collapse:collapse;font-family:"Roboto",sans-serif;color:black;font-size:12px">
+			<tbody><tr width="100%" style="font-weight:500;font-size:14px;background:#fec11f;color:white;height:30px">
+			<td align="center" style="width:10px">
+			<strong>Sr.No.</strong>
+			</td>
+			<td align="center">
+			<strong>Service Breakup</strong>
+			</td>
+			<td align="center">
+			<strong>Quantity</strong>
+			</td>
+			<td align="center">
+			<strong>Rate</strong>
+			</td>
+			<td align="center">
+			<strong>Amount</strong>
+			</td>
+			</tr>
+			<tr cellpadding="1">
+			<td></td>
+			<td align="center" style="font-weight:700;font-size:14px;padding-top:1%;padding-bottom:1%" colspan="1">
+
+			</td>
+			</tr>
+			<tr>
+			<td align="center">
+			1
+			</td>
+			<td align="left">
+			'.$services.'<br />'.'
+			</td>
+			<td align="center">
+			1
+			</td>
+			<td align="center">
+			'.$total_amt.'
+			</td>
+			<td align="center">
+			'.$total_amt.'
+			</td>
+			</tr>'.$taxHtml.'<tr>
+			<td style="width:50px"></td>
+			<td></td>
+			</tr>
+			<tr style="border-bottom:1px solid #fec11f">
+			<td></td>
+			<td></td>
+			<td align="right" style="padding:0 10px 0 0" colspan="2">
+			</td>
+			<td>
+			<strong>
+			<p style="border:none;float:center;text-align:center">
+
+			</p>
+			</strong>
+			</td>
+			</tr>
+			<tr style="border-bottom:1px solid #fec11f">
+			<td></td>
+			<td></td>
+			<td></td>
+			<td align="right" style="padding:0 10px 0 0">
+			<strong>Net Payable</strong>
+			</td>
+			<td>
+			<p style="border:none;float:center;font-weight:700;text-align:center">
+			'.$b_amt.'
+			</p>
+			</td>
+			</tr>
+			<tr>
+			<td colspan="2">CIN:AAJCM6704HSD001</td>
 			<td></td>
 			<td align="right" style="font-size:14px;padding:0 10px 0 0"></td>
 			<td>
@@ -601,16 +921,9 @@ class Order {
 			</tbody>
 			</table><div class="yj6qo"></div><div class="adL">
 			</div></div>';
-
-			$r = sendEmail($to,$from,$subject,$body);
-			if($r)
-				return true;
-			else
-				return false;
-		}else{
-			return false;
-		}
+			return $body;
 	}
+
 	function get_remark($order_id){
 		$keyValueArray['order_id'] = $order_id;
 		$result = $this -> db -> getDataFromTable($keyValueArray, 'remarks', " * ", "", '', false);

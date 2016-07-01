@@ -43,10 +43,15 @@ class Dashboard {
 			$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadstage', "distinct name as display, id as value", '', '');
 			$memcache->set('leadstage',$leadsources);
 		}
-		if(!$memcache->get('pricelist')){
-			$pricelists = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "distinct name as display, id as value", '', '');
+		//if(!$memcache->get('pricelist')){
+			//$pricelists = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "name as display, id as value", '', '',true);
+			$stmt = "select distinct name as display,id as value from pricelist group by name";
+        	$this -> db ->query($stmt);
+        	while ($result = $this-> db ->fetch()) {
+            	$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+        	}	
 			$memcache->set('pricelist',$pricelists);
-		}
+		//}
 		if(!$memcache->get('designation')){
 			$designation = $this -> db -> getDataFromTable($keyValueArray, 'designation', "distinct name as display, id as value", '', '');
 			$memcache->set('designation',$designation);

@@ -91,7 +91,10 @@ switch($action){
 			$arrReturn['order_id'] = encryptdata($order_id);
 			break;
 			case "sendInvoiceMail":
-			$row = $modelObj->send_invoice_email($order_id);
+			$arr['b_add'] = $_POST['b_add'];
+			$arr['b_name'] = $_POST['b_name'];
+			$arr['b_name2'] = $_POST['b_name2'];
+			$row = $modelObj->send_invoice_email($order_id,$arr);
 			$arrReturn['result'] = $row;
 			break;
 			case "add_order_feedback":
@@ -125,7 +128,7 @@ switch($action){
 			break;
 			case 'addDeployment':
 			$order_id =$_POST['deployment_orderid'];
-			$updateArr['deployment'] = $_POST['deployment'];
+			$updateArr['deploymentsendInvoiceMail'] = $_POST['deployment'];
 			$whereArr = array('id' => $order_id );
 			$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 			if($returnVal):
@@ -168,6 +171,24 @@ switch($action){
 				$whereArr = array('id'=>$_POST['order_id']);
 				$updateArr['service_date'] = $_POST['service_date'];
 				$updateArr['status'] = '0';
+				$updateArr['update_date'] = date('Y-m-d h:i:s');
+				$updateArr['author_id'] = $_SESSION['tmobi']['UserId'];
+				$result = $modelObj->updateTable($updateArr,$whereArr);
+			 	$arrReturn['result'] = $result;
+			break;
+			case "addBillingDetails":
+				$whereArr = array('id'=>$_POST['order_id']);
+				$updateArr['billing_address'] = $_POST['billing_address'];
+				$updateArr['billing_name'] = $_POST['billing_name'];
+				$updateArr['billing_name2'] = $_POST['billing_name2'];
+				$updateArr['update_date'] = date('Y-m-d h:i:s');
+				$updateArr['author_id'] = $_SESSION['tmobi']['UserId'];
+				$result = $modelObj->updateTable($updateArr,$whereArr);
+			 	$arrReturn['result'] = $result;
+			break;
+			case "updatePaymentReceived":
+				$whereArr = array('id'=>$_POST['payment_orderid']);
+				$updateArr['received_amount'] = $_POST['received_amount'];
 				$updateArr['update_date'] = date('Y-m-d h:i:s');
 				$updateArr['author_id'] = $_SESSION['tmobi']['UserId'];
 				$result = $modelObj->updateTable($updateArr,$whereArr);

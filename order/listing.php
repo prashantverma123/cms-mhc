@@ -65,7 +65,7 @@ $userId = $session->get('UserId');
 				 <td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				 <td class="hidden-480"><?php print $key['service'];?></td>
 				 <td class="hidden-480"><span><?php print date('d M Y h:s A',strtotime($key['service_date'])); ?></span>
-					<a href="javascript:void(0);" data-orderid="<?php print $key['id'];?>" id="reschedule_order<?php print $key['id'];?>" class="edit reschedule_order" title="Reschedule Order" style="color:#FFFFFF"><img src="../img/calendar.png" /> </a>
+					<a href="javascript:void(0);" data-orderid="<?php print $key['id'];?>" onclick="getDatePickerId('reschedule_order<?php print $key['id'];?>',this);" id="reschedule_order<?php print $key['id'];?>" class="edit reschedule_order" title="Reschedule Order" style="color:#FFFFFF"><img src="../img/calendar.png" /> </a>
 					<!-- <input type="text" name="reschedule_order" id="reschedule_order" value="" />  -->
 				 </td>
 				<!-- <td class="hidden-480"><?php //print $key['service_time'];?></td> -->
@@ -95,7 +95,7 @@ $userId = $session->get('UserId');
 					<br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="<?php print $key['id'];?>" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick='remarkPopup(<?php print $key['id'];?>)'>Remark</button>
 				</td>
 				<td class="hidden-480">
-					<div type="button" class="btn-info invoicebtn btn-sm" data-id="<?php print $key['id'];?>">Send</div>
+					<button type="button" class="btn-info invoicebtn btn-sm" id="bill<?php print $key['id'];?>" onclick="generateInvoice('<?php print $key['id'];?>')" data-toggle="modal" data-target="#billing" data-id="<?php print $key['id'];?>" data-billingname="<?php print $key['billing_name'];?>" data-billingname2="<?php print $key['leadsource_name'];?>" data-billingemail="<?php print $key['email_id'];?>" data-billingemail2="<?php print $key['billing_email2'];?>" data-billingaddress="<?php print $key['billing_address'];?>" data-billingaddress2="<?php print $key['billing_address2'];?>" data-billingamount="<?php print $key['taxed_cost'];?>" data-billingamount2="<?php print $key['billing_amount2'];?>">Send</button>
 				</td>
 				<td>
 					<select class="small m-wrap payment_mode" name="payment_mode"  id="paymentMode<?php print $key['id'];?>" onchange="changePaymentMode(<?php print $key['id'];?>,this.value)">
@@ -107,6 +107,7 @@ $userId = $session->get('UserId');
 					<select class="small m-wrap payment_status" name="payment_status"  id="paymentStatus<?php print $key['id'];?>" onchange="changePaymentStatus(<?php print $key['id'];?>,this.value)">
 						<option value="">Payment Status</option>
 						<option value="pending" <?php if($key['payment_status'] == 'pending'): echo "selected"; else: ""; endif; ?>>Pending</option>
+						<option value="part_received" <?php if($key['payment_status'] == 'part_received'): echo "selected"; else: ""; endif; ?>>Part Received</option>
 						<option value="success" <?php if($key['payment_status'] == 'success'): echo "selected"; else: ""; endif; ?>>Success</option>
 						<option value="cancelled" <?php if($key['payment_status'] == 'cancelled'): echo "selected"; else: ""; endif; ?>>Cancelled</option>
 						<option value="failed" <?php if($key['payment_status'] == 'failed'): echo "selected"; else: ""; endif; ?>>Failed</option>
@@ -136,6 +137,38 @@ $userId = $session->get('UserId');
 		</div>
       </div>
    </div>
+<!----BILLING POPUP STARTS HERE------- -->
+ <div class="modal fade" id="billing" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"></button>
+          <h4 class="modal-title">Billing Details</h4>
+        </div>
+        <div class="modal-body">
+        	<form name="frmBilling" id="frmBilling">
+          		<p>Billing Name <input type="text" name="billing_name" id="billing_name"></p>
+          		<p>Email ID <input type="text" name="billing_email" id="billing_email"></p>
+          		<p>Billing Address <textarea name="billing_address" id="billing_address" ></textarea></p>
+          		<p>Billing Amount <input type="text" name="billing_amount" id="billing_amount" readonly></p>
+          		<input type="checkbox" name="isPartner" value="1" id="isPartner" >Is Partner 
+          		<div id="partnerBill">
+          			<p>Partner Name <input type="text" name="billing_name2" id="billing_name2"></p>
+          			<p>Partner Email ID <input type="text" name="billing_email2" id="billing_email2"></p>
+          			<p>Partner Address <textarea name="billing_address2" id="billing_address2" ></textarea></p>
+          			<p>Partner Bill Amount <input type="text" name="billing_amount2" id="billing_amount2" readonly></p>
+          		</div>
+          		<input type="hidden" name="order_id" id="order_id" />
+          		<input type="hidden" name="action" value="addBillingDetails" /> 
+          		<button type="submit" class="btn btn-default" id="addBillDetails">Submit</button>
+        	</form>
+        </div>
+       </div>
+    </div>
+</div>
+<!----BILLING POPUP ENDS HERE------- -->
+
 <!----REMARK POPUP STARTS HERE------- -->
  <div class="modal fade" id="remark" role="dialog">
     <div class="modal-dialog">
@@ -155,9 +188,6 @@ $userId = $session->get('UserId');
           		<button type="submit" class="btn btn-default" id="addRemark">Submit</button>
         	</form>
         </div>
-        <!-- <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div> -->
       </div>
     </div>
   </div>
@@ -184,6 +214,27 @@ $userId = $session->get('UserId');
   </div>
 <!----DEPLOYMENT POPUP ENDS HERE------- -->
 
+<!----PAYMENT RECEIVED POPUP STARTS HERE------- -->
+ <div class="modal fade" id="paymentReceived" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"></button>
+          <h4 class="modal-title">Payment Received</h4>
+        </div>
+        <div class="modal-body">
+        	<form name="frmPaymentReceived" id="frmPaymentReceived">
+          		<p>Received Amount: <input type="text" name="received_amount" id="received_amount"></p>
+          		<input type="hidden" name="payment_orderid" id="payment_orderid" />
+          		 <input type="hidden" name="action" value="updatePaymentReceived" /> 
+          		<button type="submit" class="btn btn-default" id="updatePaymentReceived">Submit</button>
+        	</form>
+        </div>
+       </div>
+    </div>
+  </div>
+<!----PAYMENT RECEIVED POPUP ENDS HERE------- -->
 <script>
 $(document).ready(function () {
 	
@@ -192,6 +243,7 @@ $(document).ready(function () {
 	       $.curCSS = $.css;
 	    }
 	})(jQuery);
+	$("#partnerBill").hide();
     $('#dialog-modal').dialog({
         modal: true,
         autoOpen: false,
@@ -204,7 +256,7 @@ $(document).ready(function () {
    maxWidth: "768px"
 
     });
-
+   
 
     $('.jobstatus').change(function () {
 
@@ -213,7 +265,53 @@ $(document).ready(function () {
 			jQuery("#dialog-modal").dialog('option', 'position', [x,y]);
             $('#dialog-modal').dialog('open');
     });
-
+     $("#isPartner").change(function(){
+    	if($("#isPartner").is(":checked"))
+    	{
+    		$('#partnerBill').show();
+    	}else{
+    		$('#partnerBill').hide();
+    	}
+    });
+    $("#addBillDetails").click(function(){
+    	$('#frmBilling').validate({
+		rules:{
+			billing_name:"required",
+			billing_address: "required",
+			billing_email:"required"
+		},
+		submitHandler: function() {
+			v = $('#frmBilling').serialize();
+			$.ajax({
+				type: "POST",
+				url: "<?php print SITEPATH.'/order/category2db.php';?>",
+				data: v,
+				success: function(res){
+					if(res){
+						var obj = eval("("+res+")");
+/*						v = $('#frmBilling').serializeArray();
+						console.log(v);return;
+*/						arr = Array();
+						arr.push('billing_email',v[1].value);
+						arr.push('billing_name',v[0].value);
+						arr.push('billing_address',v[2].value);
+						arr.push('billing_amount',v[3].value);
+						arr.push('isPartner',v[4].value);
+						arr.push('billing_name2',v[5].value);
+						arr.push('billing_email2',v[6].value);
+						arr.push('billing_address2',v[7].value);
+						arr.push('billing_amount2',v[8].value);
+						send_invoice_email(obj.result,arr);
+						$('#order_id').val('');
+					}
+				},
+				error:function(){
+					alert("failure");
+				}
+			});
+		}
+		});
+    })
     $('#addDeployment').click(function(){
 	    $('#frmOrderDeployment').validate({
 		rules:{
@@ -240,7 +338,33 @@ $(document).ready(function () {
 		}
 		});
 	});
+    $("#updatePaymentReceived").click(function(){
+    	 $('#frmPaymentReceived').validate({
+		rules:{
+			received_amount:"required"
+		},
+		submitHandler: function() {
+			//var orderId = $(this).data('orderid');
+			var formDate = $('#frmPaymentReceived').serialize();
+			$('#payment_orderid').val();
+			$.ajax({
+				type: "POST",
+				url: "<?php print SITEPATH.'/order/category2db.php';?>",
+				data: formDate,
+				success: function(res){
+					if(res){
+						$('#received_amount').val('');
+						$('#paymentReceived').modal('toggle');
+					}
+				},
+				error:function(){
+					alert("failure");
+				}
+			});
+		}
+		});
 
+    });
     $('#addRemark').click(function(){
 	    $('#frmOrderRemark').validate({
 		rules:{
@@ -267,34 +391,54 @@ $(document).ready(function () {
 		}
 		});
 	});
-     $(".invoicebtn").on('click',function(){
-     	var id = $(this).attr("data-id");
+    /* $(".invoicebtn").on('click',function(){
+     	/*var id = $(this).attr("data-id");
      	send_invoice_email(id);
-    });
-   $(".reschedule_order").datetimepicker({
+     	//$('#billing').modal('toggle');
+     	console.log($(this).data('billingaddress'));
+     	$("#billing_address").val($(this).data('billingaddress'));
+     	$("#billing_name").val($(this).data('billingname'));
+     	$("#billing_name2").val($(this).data('billingname2'));
+    });*/
+   
+   
+});
+function generateInvoice(current){
+	$("#order_id").val(current);
+ 	$("#billing_address").val($('#bill'+current).data('billingaddress'));
+ 	$("#billing_name").val($('#bill'+current).data('billingname'));
+ 	$("#billing_email").val($('#bill'+current).data('billingemail'));
+ 	$("#billing_amount").val($('#bill'+current).data('billingamount'));
+ 	$("#billing_name2").val($('#bill'+current).data('billingname2'));
+ 	$("#billing_address2").val($('#bill'+current).data('billingaddress2'));
+ 	$("#billing_email2").val($('#bill'+current).data('billingemail2'));
+ 	$("#billing_amount2").val($('#bill'+current).data('billingamount2'));
+}
+function getDatePickerId(id,current){
+$(current).datetimepicker({
     	 onSelectDate: function(dateText) {
-    	 	currentObj = $(".reschedule_order");
+    	 	//currentObj = $('.reschedule_order').attr('id');
     	 	orderId = $(".reschedule_order").data('orderid');
     	 	month = dateText.getMonth() + 1
     	 	tt = dateText.getFullYear()+'/'+(month)+ '/'+dateText.getDate()+' '+dateText.getHours()+':'+dateText.getMinutes();
     		r = confirm("Are you sure you want to reschedule order?");
     		if(r){
-    			rescheduleOrder(orderId,tt,currentObj,dateText);
+    			rescheduleOrder(orderId,tt,id,dateText);
     		}
     	},
     	onSelectTime: function(t){
-    		currentObj = $(".reschedule_order");
+    		//currentObj = $('.reschedule_order').attr('id');
     		orderId = $(".reschedule_order").data('orderid');
     		month = t.getMonth() + 1
     	 	datetime = t.getFullYear()+'/'+(month)+ '/'+t.getDate()+' '+t.getHours()+':'+t.getMinutes();
     		r = confirm("Are you sure you want to reschedule order?");
     		if(r){
-    			rescheduleOrder(orderId,datetime,currentObj,t);
+    			rescheduleOrder(orderId,datetime,id,t);
     		}
     	}
     });
-   
-});
+	
+}
 function rescheduleOrder(orderId,datetime,currentObj,dateObj){
 	$.ajax({
 			type: "POST",
@@ -303,10 +447,9 @@ function rescheduleOrder(orderId,datetime,currentObj,dateObj){
 			success: function(res){
 				var obj = eval("("+res+")");
 				if(obj.result){
-					//displayDate = "<?php print date('d M Y h:s A',strtotime(datetime)); ?>";
-					//console.log(displayDate);
-					//currentObj.append(displayDate);
-					//currentObj.parent('<span>').html(displayDate);
+					displayDate = moment(datetime).format('MMM Do YYYY h:mm a');
+					//console.log(currentObj);	
+					//console.log($("#"+currentObj).parent());
 					alert("Order rescheduled!")
 				}else{
 					alert("Failed to rescheduled!")
@@ -365,7 +508,12 @@ function changePaymentStatus(id,value){
 		success: function(res){
 			var obj = eval("("+res+")");
 			if(obj.result == 'success'){
-				alert("Payment status updated!");
+				if(value == 'part_received'){
+					$('#payment_orderid').val(id);
+					$('#paymentReceived').modal('toggle');
+				}else{
+					alert("Payment status updated!")
+				}
 			}else{
 				alert("Failed to update!");
 			}
@@ -375,11 +523,11 @@ function changePaymentStatus(id,value){
 		}
 	});
 }
-	function send_invoice_email(id){
+	function send_invoice_email(id,b_add,b_name,b_name2){
 		$.ajax({
 			type: "POST",
 			url: "<?php print SITEPATH.'/order/category2db.php';?>",
-			data: 'action=sendInvoiceMail&order_id='+id,
+			data: 'action=sendInvoiceMail&order_id='+id+"&b_add="+b_add+"&b_name="+b_name+"&b_name2="+b_name2,
 			success: function(res){
 				if(res){
 					console.log(res);
@@ -484,3 +632,4 @@ function changePaymentStatus(id,value){
 		}
 	}
 </script>
+<!--script src="<?php //print JSFILEPATH;?>/order.js" type="text/javascript"></script-->  
