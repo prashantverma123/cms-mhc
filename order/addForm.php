@@ -2,8 +2,9 @@
 if($order_id > 0){
 	$returned_data = (array)json_decode($modelObj->getEditData($order_id));
 	$data = (array)$returned_data[0];
-	//echo'<pre>'; print_r($data);
 }
+$leadsources = $memcache->get('leadsource');
+$cities = $memcache->get('city');
 ?>
 	<div class="portlet box green">
 	  <div class="portlet-title">
@@ -27,7 +28,12 @@ if($order_id > 0){
 						<label class="control-label">Lead Source <span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap lead_source" id="lead_source" name="lead_source">
-									<?php echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['lead_source'], " where status='0'"); ?>
+							<?php 
+							if($leadstage != '')
+						   		echo optionsGenerator($leadsources,$data['lead_source']); 
+						   else
+						    	echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['lead_source'], " where status='0'");
+							 ?>
 							</select>
 						</div>
 					 </div>
@@ -56,12 +62,12 @@ if($order_id > 0){
 				  <!--/span-->
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label" >Mobile No<span class="required">*</span></label>
+						<label class="control-label" >Mobile No<!-- <span class="required">*</span> --></label>
 							<div class="controls">
-							   <input type="tel" maxlength="10" pattern="[0-9]{10}" id="mobile_no" name="mobile_no" value="<?php echo isset($data)?$data['mobile_no']:''; ?>" class="m-wrap span5 form-group.required" required>
+							   <input type="tel" maxlength="10" pattern="[0-9]{10}" id="mobile_no" name="mobile_no" value="<?php echo isset($data)?$data['mobile_no']:''; ?>" class="m-wrap span5">
 								 <div id="mobile_no_error"class=" alert alert-danger" style="display:none" >
 								 Please Enter Correct Mobile No
-							</div>
+								</div>
 							</div>
 					 </div>
 				  </div>
@@ -135,7 +141,11 @@ if($order_id > 0){
 						<div class="controls">
 
 						<select tabindex="1" class="large m-wrap" id="city" name="city">
-								<?php echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city'], " where status='0'"); ?>
+							<?php 
+							if($cities != '')
+								echo optionsGenerator($cities,$data['city']); 
+							else
+								echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city'], " where status='0'"); ?>
 						</select>
 						</div>
 					 </div>
@@ -165,19 +175,16 @@ if($order_id > 0){
 				 <!--/span-->
 				</div>
 			   <div class="row-fluid">
-				  <div class="span6 ">
+				<!--   <div class="span6 ">
 					 <div class="control-group">
 						<label class="control-label">Service<span class="required">*</span></label>
 						<div class="controls">
-							<!-- <input type="text" id="service" name="service" value="<?php echo isset($data)?$data['service']:''; ?>" class="m-wrap span12">
-							<span class="help-block" id="efburl_error"> </span> -->
-							<?php //print_r(unserialize($data['service'])); ?>
 							<select tabindex="1" class="large m-wrap" id="service" name="service[]" multiple>
-							<?php echo $modelObj->multipleOptionsGenerator('pricelist', 'name', 'id',unserialize($data['service']), " where status='0'"); ?>
+							<?php //echo $modelObj->multipleOptionsGenerator('pricelist', 'name', 'id',unserialize($data['service']), " where status='0'"); ?>
 							</select>
 						</div>
 					 </div>
-				  </div>
+				  </div> -->
 					<div class="span6 ">
 					 <div class="control-group">
 						<label class="control-label">Price<span class="required">*</span></label>
@@ -196,14 +203,13 @@ if($order_id > 0){
 				  <!--/span-->
 
 			   </div>
-				 <div class="row-fluid">
+				<div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
 						<label class="control-label">Commission</label>
 						<div class="controls">
 							<input type="text" id="commission" name="commission" value="<?php
 							$arVal = $modelObj->getPrice();
-							//echo '<pre>'; print_r($arVal[0]['commission']); echo '</pre>';
 							$data['commission']=$arVal[0]['commission'];
 							echo isset($data)?$data['commission']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span>
@@ -212,7 +218,7 @@ if($order_id > 0){
 				  </div>
 					<div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Inclusive of Tax</label>
+						<label class="control-label">Billing Amount</label>
 						<div class="controls">
 							<input type="text" id="taxed_cost" name="taxed_cost" value="<?php echo isset($data)?$data['taxed_cost']=$data['price']+$data['price']*0.145 + $data['price']*0.1 :''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span>
@@ -220,8 +226,47 @@ if($order_id > 0){
 					 </div>
 				  </div>
 				  <!--/span-->
-
 			   </div>
+			<div class="row-fluid">
+				<div class="span6 ">
+					<div class="control-group">
+						<label class="control-label">Remark</label>
+						<div class="controls">
+							<textarea rows="4" cols="50" id="remark" name="remark"><?php echo isset($data)?$data['remark']:''; ?></textarea>
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					</div>
+				</div>
+				<div class="span6 ">
+					<div class="control-group">
+						<label class="control-label">Order Feedback</label>
+						<div class="controls">
+							<textarea rows="4" cols="50" id="order_feedback" name="order_feedback"><?php echo isset($data)?$data['order_feedback']:''; ?></textarea>
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span6 ">
+					<div class="control-group">
+						<label class="control-label">Received Amount</label>
+						<div class="controls">
+							<input type="text" id="received_amount" value="<?php echo isset($data)?$data['received_amount']:''; ?>" name="received_amount" />
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					</div>
+				</div>
+				<div class="span6 ">
+					<div class="control-group">
+						<label class="control-label">Payment Info</label>
+						<div class="controls">
+							<textarea rows="4" cols="50" id="payment_info" name="payment_info"><?php echo isset($data)?$data['payment_info']:''; ?></textarea>
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					</div>
+				</div>
+			</div>
 
 			<div class="form-actions">
 				<span style="color:#FF0000;margin-bottom:20px;display:none;" id="record_modified">
@@ -313,12 +358,9 @@ function saveData(frm_id, action){
 	    		price:"required",
 	    		name:"required",
 	    		address:"required",
-	    		mobile_no:{
-	    			required:true
-	    		},
-					email_id:{
-						required:true
-					}
+	    		email_id:{
+					required:true
+				}
 	    	},
 	    	submitHandler: function() {
 
@@ -329,19 +371,19 @@ function saveData(frm_id, action){
 
 				if (data.name===""){
 						$('#name_error').css('display', 'block');
-						$('#mobile_no_error').css('display', 'block');
-						$('#email_error').css('display', 'block');
+						//$('#mobile_no_error').css('display', 'block');
+						//$('#email_error').css('display', 'block');
 					return false;
 				}
-				if(data.mobile_no.length!==10 || data.mobile_no===""){
+				/*if(data.mobile_no.length!==10 || data.mobile_no===""){
 					$('#mobile_no_error').css('display', 'block');
 						$('#email_error').css('display', 'block');
 						return false;
-				}
-				if(data.email_id.indexOf('@') === -1 || data.email_id===""){
+				}*/
+				/*if(data.email_id.indexOf('@') === -1 || data.email_id===""){
 						$('#email_error').css('display', 'block');
 						return false;
-				}
+				}*/
 				//debugger;
         $('.error').hide();
         var flag=0;

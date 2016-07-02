@@ -35,7 +35,11 @@ $pricelist = $memcache->get('pricelist');
 						<label class="control-label">Lead Source <span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
-						   <?php echo optionsGenerator($leadsources,$data['lead_source']);  //echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $data['lead_source']," where status='0'"); ?>
+						   <?php 
+						   if($leadstage != '')
+						   	echo optionsGenerator($leadsources,$data['lead_source']); 
+						   else
+						    echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $data['lead_source']," where status='0'"); ?>
 							</select>
 						</div>
 					 </div>
@@ -265,7 +269,7 @@ $pricelist = $memcache->get('pricelist');
 	 				 <label class="control-label">Service Inquiry1 <span class="required">*</span></label>
 	 				 <div class="controls">
 							<select tabindex="19" class="large m-wrap" id="service_inquiry1" name="service_inquiry1" onchange="getVaiantType(this.value,'varianttype1')">
-						   <?php echo optionsGenerator($pricelist); //echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry1']," where status='0'"); ?>
+						   <?php echo optionsGenerator($pricelist,$data['service_inquiry1']); //echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry1']," where status='0'"); ?>
 							</select>
 	 						<span class="help-block" id="service_inquiry1_error"> </span>
 	 				 </div>

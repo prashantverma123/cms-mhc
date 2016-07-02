@@ -29,38 +29,52 @@ class Order {
 	    $main_sql = '1=1';
 
 			if (count($filterData)>0) {
-					$main_sql .= ' and ';
-				foreach ($filterData as $key => $value) {
 
-					$main_sql .= '`order`.'.$key." like '%".$value."%'";
+					//$main_sql .= ' and ';
+					$k = 1;
+				foreach ($filterData as $key => $value) {
+					if($_SESSION['tmobi']['role'] =="admin")
+					{
+						if($key == 'city'){ //to skip the city 
+							$k++;
+							continue;	
+						}
+					}
+					if($key == 'service_date'){
+						$keyValueArray['DATE(service_date)'] = $value;
+					}else{
+						$main_sql .= '`order`.'.$key." like '%".$value."%' ";
+					}
+					
+					if($k < count($filterData)){
+						$main_sql .= " OR ";
+					}
+					$k++;
 				}
 
 			}
 		if(count($searchData)>0){
-			/*if(array_key_exists('name',$searchData)) {
-					$main_sql .= ' and name like \''.$searchData['event_name'].'%\'';
-			}
-			//print_r($searchData);
-			foreach($searchData as $key=>$val){
-				$keyValueArray[$key]=$val;
-			}*/
 			if($search){
+				if($searchData['filter']!='')
 				$main_sql .= ' and ';
 				$fields = explode(',',$search);
 
 				$j = 1;
 				foreach ($fields as $field) {
-					$main_sql .= '`order`.'.$field." like '%".$searchData['filter']."%'";
-					if($j < count($fields)){
-						$main_sql .= " OR ";
+					if($searchData['filter']!=''){
+						$main_sql .= '`order`.'.$field." like '%".$searchData['filter']."%'";
+						if($j < count($fields)){
+							$main_sql .= " OR ";
+						}
+						$j++;
 					}
-					$j++;
 				}
 			}
 			if(array_key_exists('parent_id',$searchData)) {
 		    	$keyValueArray['parentid'] = $searchData['parent_id'];
 			}
 		}
+
 		if ($search == 'byname') {
 			$keyValueArray['sqlclause'] = "`order`.name like '$searchData%'";
 		}else if ($search == 'integer') {
@@ -75,10 +89,11 @@ class Order {
 			$sort =  '`'.$this -> tableName.'`.insert_date DESC';
 		}
 		$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=order.lead_source');
+		$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=order.city');
 		$joinArray[] = array('type'=>'left','table'=>'pricelist','condition'=>'pricelist.id=order.service');
 		//$joinArray[] = array('type'=>'left','table'=>'pricelist','condition'=>"pricelist.id = SUBSTRING_INDEX(SUBSTRING_INDEX(`order`.service, ',', FIND_IN_SET(pricelist.id,`order`.service)), ',', -1)");
 		//$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,leadsource.name as leadsource_name,GROUP_CONCAT(pricelist.name ORDER BY pricelist.id SEPARATOR '|') as 'services'", $sort, $limit,$joinArray, true);
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,leadsource.name as leadsource_name,pricelist.name as service", $sort, $limit,$joinArray, false);
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,leadsource.name as leadsource_name,city.name as cityname,pricelist.name as service", $sort, $limit,$joinArray, false);
 
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
@@ -196,8 +211,10 @@ class Order {
 	public function getEditData($id) {
 		if (intval($id)) {
 			$keyValueArray = array();
-			$keyValueArray['id'] = intval($id);
-			$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, "*");
+			$keyValueArray['`order`.id'] = intval($id);
+			$joinArray[] = array('type'=>'left','table'=>'remarks','condition'=>'remarks.order_id=`order`.id');
+			$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,remarks.remark as remark", '','',$joinArray, false);
+			//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, "*");
 			if (count($dataArr)) {
 				$json = json_encode($dataArr);
 			}
@@ -299,8 +316,9 @@ class Order {
         return $options_str;
     }
 
-    function send_invoice_email($id,$billArr){
+    function send_invoice_email($billArr){
 		$keyValueArray = array();
+		$id = $billArr['order_id'];
 		//$keyValueArray['leadmanager.order_id'] = $id;
 		$keyValueArray['order.id'] = $id;
 		$joinArray[] = array('type'=>'left','table'=>'`leadmanager`','condition'=>'`leadmanager`.order_id=`order`.order_id');
@@ -333,9 +351,6 @@ class Order {
 			}
 		endif;
 */		
-		
-		
-
 		//$l = encryptdata($id);
 		$l = encryptdata($result[0]['id']);
 		$m = encryptdata($result[0]['order_id']);
@@ -352,7 +367,7 @@ class Order {
 			$b_mobile=$result[0]['client_mobile_no'];
 			$b_amt=$billArr['billing_amount'];
 			$invoice_id=$result[0]['invoice_id'];
-			$services=$result[0]['invoice_id'];
+			$services=$result[0]['service1']."<br />".$result[0]['service2']."<br />".$result[0]['service3'];
 			$taxHtml = $taxArr['taxHtml'];
 			$total_amount = $billArr['billing_amount'] - $taxArr['total_tax_amount'];
 			$body = $this->getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amount);
@@ -368,8 +383,8 @@ class Order {
 				$b_mobile=$result[0]['client_mobile_no'];
 				$b_amt=$billArr['billing_amount2'];
 				$taxHtml = $taxArr['taxHtml'];
-				$total_amount = $billArr['billing_amount2'] - $total_tax_amount;
-				$body = $this->getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amt);
+				$total_amt = $billArr['billing_amount2'] - $taxArr['total_tax_amount'];
+				$body = $this->getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amt,$m,$l);
 				$r = sendEmail($to,$from,$subject,$body);
 			}
 			if($r)
@@ -404,7 +419,7 @@ class Order {
 		$taxArr = array('taxHtml'=>$taxHtml,'total_tax_amount'=>$total_tax_amount);
 		return $taxArr;
 	}
-	function getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amt){
+	function getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amt,$m,$l){
 		/*$body  = '<div bgcolor="#f6f8f1"><table cellspacing="0" cellpadding="0" border="1" align="center" style="width:80%">
 			<tbody>
 			<tr>
@@ -849,7 +864,7 @@ class Order {
 			</td>
 			</tr>
 			<tr>
-			<td colspan="2">CIN:AAJCM6704HSD001</td>
+			<td colspan="2">MHC ST No. :AAJCM6704HSD001</td>
 			<td></td>
 			<td align="right" style="font-size:14px;padding:0 10px 0 0"></td>
 			<td>

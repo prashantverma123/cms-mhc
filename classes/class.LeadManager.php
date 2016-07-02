@@ -306,6 +306,7 @@ class LeadManager {
 				$values['price'] = $value['price'];
 				$values['commission'] = $value['commission'];
 				$values['taxed_cost'] = $value['taxed_cost'];
+				$values['billing_amount2'] = $value['partner_amount'];
 				$values['order_id'] = $value['order_id'];
 				$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($value['service1'],$value['service2'],$value['service3']),$value['city_name'],$id);
  				$values['author_id'] = $_SESSION['tmobi']['UserId'];

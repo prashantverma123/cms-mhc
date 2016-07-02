@@ -11,18 +11,19 @@ $userId = $session->get('UserId');
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
 	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>ASC</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>DESC</option></select>
 		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
+		<input type="text" name="filter_date" id="filter_date" value="<?php if($_GET['filter_date'] != ''): echo $_GET['filter_date']; else: ''; endif; ?>" placeholder="Select a Order Date" />
 		<!--input type="hidden" name="p" value="<?php //echo $_GET['p']; ?>" /-->
 	<button type="submit">Submit</button>
 	</form>
-	<div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
+	<div role="grid" class="dataTables_wrapper form-inline" style="width:96%;height:80%;overflow: auto" id="sample_3_wrapper">
     	<table class="table table-striped table-bordered table-hover" id="">
 		   <thead>
 			  <tr>
 				 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
 				 <th>Client Info</th>
-				 <th class="hidden-480">Lead Source</th>
+				 <th class="hidden-480">Source</th>
 				 <th class="hidden-480">Service</th>
-				 <th class="hidden-480">Service Date</th>
+				 <th class="hidden-480" style="width:10%">Service Date</th>
 				<!--  <th class="hidden-480">Service Time</th> --><!-- 
 				 <th class="hidden-480">Contact No</th> -->
 				 <!-- <th class="hidden-480">Email Id</th> -->
@@ -30,7 +31,8 @@ $userId = $session->get('UserId');
 				 <th class="hidden-480">Billing Amount</th>
 				 <th class="hidden-480">Job Updates</th>
 				 <th class="hidden-480">Invoice</th>
-				 <th>Payment</th>
+				 <th class="hidden-480">Payment Mode</th>
+				 <th class="hidden-480">Payment Status</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
 		   </thead>
@@ -45,9 +47,17 @@ $userId = $session->get('UserId');
 		   		$searchData['filter'] = $_GET['filter'];
 		   		$sort = $_GET['sort'];
 		   }
-			 $filterData = array('city' =>$_SESSION['tmobi']['city']);
+
+		   if(isset($_GET['filter_date'])){
+		   		//$filter_date = $_GET['filter_date'];
+		   		$filterData['service_date'] = $_GET['filter_date'];
+ 		   }
+ 		   //$filterData['service_date']
+ 		   if($_SESSION['tmobi']['city'] != '')
+ 			$filterData['city'] = $_SESSION['tmobi']['city'];
+
 		   $recperpage=PER_PAGE_ROWS;
-			$result_data = $modelObj->getListingData('lead_source,name,city', $page,$recperpage,$searchData,$filterData,$sort);
+			$result_data = $modelObj->getListingData('lead_source,name,city', $page,$recperpage,$searchData,$filterData,0,$sort);
 
 
 			foreach ($result_data['rows'] as $key){
@@ -64,7 +74,7 @@ $userId = $session->get('UserId');
 				 if($key['email_id']) echo '<br />'.$key['email_id'];?></td>
 				 <td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				 <td class="hidden-480"><?php print $key['service'];?></td>
-				 <td class="hidden-480"><span><?php print date('d M Y h:s A',strtotime($key['service_date'])); ?></span>
+				 <td class="hidden-480" style="width:10%"><span><?php print date('d M Y h:i A',strtotime($key['service_date'])); ?></span>
 					<a href="javascript:void(0);" data-orderid="<?php print $key['id'];?>" onclick="getDatePickerId('reschedule_order<?php print $key['id'];?>',this);" id="reschedule_order<?php print $key['id'];?>" class="edit reschedule_order" title="Reschedule Order" style="color:#FFFFFF"><img src="../img/calendar.png" /> </a>
 					<!-- <input type="text" name="reschedule_order" id="reschedule_order" value="" />  -->
 				 </td>
@@ -83,14 +93,17 @@ $userId = $session->get('UserId');
 					<?php else:
 						if($key['job_status'] == 'success'):
 					?>
-						<span>Success</span>
+						<select class="small m-wrap jobstatus" name="job_status"  id="jobstatus<?php print $key['id'];?>" onchange="saveJobStatus(<?php print $key['id'];?>)">
+						<option value="">Please Select</option>
+						<option value="success" <?php if($key['job_status'] == 'success'): echo "selected"; else: ""; endif; ?>>Success</option>
+						<option value="complaint">Complaint</option>
+					</select>
 					<?php else: ?>
 					<select class="small m-wrap jobstatus" name="job_status"  id="jobstatus<?php print $key['id'];?>" onchange="saveJobStatus(<?php print $key['id'];?>)">
 						<option value="">Please Select</option>
 						<option value="success">Success</option>
 						<option value="complaint" <?php if($key['job_status'] == 'complaint'): echo "selected"; else: ""; endif; ?>>Complaint</option>
 					</select>
-
 					<?php endif; endif; ?>
 					<br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="<?php print $key['id'];?>" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick='remarkPopup(<?php print $key['id'];?>)'>Remark</button>
 				</td>
@@ -104,6 +117,9 @@ $userId = $session->get('UserId');
 						<option value="cheque" <?php if($key['payment_mode'] == 'cheque'): echo "selected"; else: ""; endif; ?>>Cheque</option>
 						<option value="cash" <?php if($key['payment_mode'] == 'cash'): echo "selected"; else: ""; endif; ?>>Cash</option>
 					</select>
+					
+				</td>
+				<td>
 					<select class="small m-wrap payment_status" name="payment_status"  id="paymentStatus<?php print $key['id'];?>" onchange="changePaymentStatus(<?php print $key['id'];?>,this.value)">
 						<option value="">Payment Status</option>
 						<option value="pending" <?php if($key['payment_status'] == 'pending'): echo "selected"; else: ""; endif; ?>>Pending</option>
@@ -113,17 +129,20 @@ $userId = $session->get('UserId');
 						<option value="failed" <?php if($key['payment_status'] == 'failed'): echo "selected"; else: ""; endif; ?>>Failed</option>
 					</select>
 				</td>
+
 				 <td>
 				 	<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/order/display.php?order_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
 					<?php endif; if(in_array('delete',$actionArr)): ?>
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="deleteConfirm('order',<?php print $key['id'];?>,'delete_order','order_id')" class="edit" title="Delete" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
 					<?php endif; ?>
+					<span class="label label"><a href="javascript:void(0);" class="edit" onclick="printWorkOrder('<?php echo htmlspecialchars(json_encode($key)); ?>');" title="Print Work Order" style="color:#FFFFFF"><img src="../img/print.png"/> </a></span> &nbsp;
 					<?php if($key['status'] != '1'): ?>
 					<span class="label label-warning"><a href="javascript:void(0);" onclick="cancelOrder(<?php print $key['id'];?>)" class="edit" title="Cancel Order" style="color:#FFFFFF"><img src="../img/icon-color-close.png" /> </a></span>
 					<?php elseif($key['status'] == '1'): ?>
 					 <span>Order Cancelled</span>
 					<?php endif; ?>
+
 				</td>
 			  </tr>
 		<?php } ?>
@@ -192,6 +211,27 @@ $userId = $session->get('UserId');
     </div>
   </div>
 <!----REMARK POPUP ENDS HERE------- -->
+<!----PAYMENT MODE POPUP STARTS HERE------- -->
+ <div class="modal fade" id="pay_mode" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"></button>
+          <h4 class="modal-title">Payment Info</h4>
+        </div>
+        <div class="modal-body">
+        	<form name="frmPaymentInfo" id="frmPaymentInfo">
+          		<p>Payment Info: <textarea rows="3" cols="30" name="payment_info" id="payment_info"></textarea></p>
+          		<input type="hidden" name="action" value="addPaymentInfo" /> 
+          		<input type="hidden" name="paymodeorderid" id="paymodeorderid" />
+          		<button type="submit" class="btn btn-default" id="addPaymentInfo">Submit</button>
+        	</form>
+        </div>
+      </div>
+    </div>
+  </div>
+<!----PAYMENT MODE POPUP ENDS HERE------- -->
 <!----DEPLOYMENT POPUP STARTS HERE------- -->
  <div class="modal fade" id="orderDeployment" role="dialog">
     <div class="modal-dialog">
@@ -256,7 +296,9 @@ $(document).ready(function () {
    maxWidth: "768px"
 
     });
-   
+   $("#filter_date").datepicker({
+   	dateFormat:"yy/mm/dd"
+   });
 
     $('.jobstatus').change(function () {
 
@@ -281,27 +323,30 @@ $(document).ready(function () {
 			billing_email:"required"
 		},
 		submitHandler: function() {
-			v = $('#frmBilling').serialize();
+			formdata = $('#frmBilling').serialize();
+
 			$.ajax({
 				type: "POST",
 				url: "<?php print SITEPATH.'/order/category2db.php';?>",
-				data: v,
+				data: formdata,
 				success: function(res){
 					if(res){
 						var obj = eval("("+res+")");
+						v = $('#frmBilling').serializeArray();
 /*						v = $('#frmBilling').serializeArray();
 						console.log(v);return;
-*/						arr = Array();
-						arr.push('billing_email',v[1].value);
-						arr.push('billing_name',v[0].value);
-						arr.push('billing_address',v[2].value);
-						arr.push('billing_amount',v[3].value);
-						arr.push('isPartner',v[4].value);
-						arr.push('billing_name2',v[5].value);
-						arr.push('billing_email2',v[6].value);
-						arr.push('billing_address2',v[7].value);
-						arr.push('billing_amount2',v[8].value);
-						send_invoice_email(obj.result,arr);
+*/						arr = [];
+						arr['billing_email'] = v[1].value;
+						arr['billing_name'] = v[0].value;
+						arr['billing_address']=v[2].value;
+						arr['billing_amount']=v[3].value;
+						arr['isPartner']=v[4].value;
+						arr['billing_name2']= v[5].value;
+						arr['billing_email2']=v[6].value;
+						arr['billing_address2']=v[7].value;
+						arr['billing_amount2']=v[8].value;
+						console.log(arr);
+						send_invoice_email(formdata);
 						$('#order_id').val('');
 					}
 				},
@@ -382,6 +427,32 @@ $(document).ready(function () {
 					if(res){
 						$('#remarkText').val('');
 						$('#remark').modal('toggle');
+					}
+				},
+				error:function(){
+					alert("failure");
+				}
+			});
+		}
+		});
+	});
+	$("#addPaymentInfo").click(function(){
+		 $('#frmPaymentInfo').validate({
+		rules:{
+			payment_info:"required"
+		},
+		submitHandler: function() {
+			//var orderId = $(this).data('orderid');
+			var formDate = $('#frmPaymentInfo').serialize();
+			//$('#orderId').val();
+			$.ajax({
+				type: "POST",
+				url: "<?php print SITEPATH.'/order/category2db.php';?>",
+				data: formDate,
+				success: function(res){
+					if(res){
+						$('#payment_info').val('');
+						$('#pay_mode').modal('toggle');
 					}
 				},
 				error:function(){
@@ -489,6 +560,10 @@ function changePaymentMode(id,value){
 		data: 'action=updatePaymentMode&order_id='+id+'&payment_mode='+value,
 		success: function(res){
 			var obj = eval("("+res+")");
+			if(value=="cheque"){
+				$("#paymodeorderid").val(id);
+				$('#pay_mode').modal('toggle');
+			}
 			if(obj.result == 'success'){
 				alert("Payment mode updated!");
 			}else{
@@ -523,11 +598,11 @@ function changePaymentStatus(id,value){
 		}
 	});
 }
-	function send_invoice_email(id,b_add,b_name,b_name2){
+	function send_invoice_email(b_details){
 		$.ajax({
 			type: "POST",
 			url: "<?php print SITEPATH.'/order/category2db.php';?>",
-			data: 'action=sendInvoiceMail&order_id='+id+"&b_add="+b_add+"&b_name="+b_name+"&b_name2="+b_name2,
+			data: b_details+"&action=sendInvoiceMail",
 			success: function(res){
 				if(res){
 					console.log(res);
@@ -577,7 +652,7 @@ function changePaymentStatus(id,value){
 					data: 'action=update_jobstatus&order_id='+id+'&job_status='+job_status,
 					success: function(res){
 						if(job_status == 'success'){
-							$('.jobinfo'+id).html('Success');
+							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" class="small m-wrap"><option value="">Please Select</option><option value="success" selected="selected">Success</option><option value="complaint">Complaint</option></select>');
 						}
 						else{
 							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" class="small m-wrap"><option value="">Please Select</option><option value="success">Success</option><option selected="selected" value="complaint">Complaint</option></select>');
@@ -631,5 +706,25 @@ function changePaymentStatus(id,value){
 			});
 		}
 	}
+    function printWorkOrder(work_order) {  
+    	//console.log(work_order);  
+    	wo = JSON.parse(work_order);
+    	var html = "<div><table>";
+    	html += "<tr><td>name: </td><td>"+wo.name+"</td></tr>";
+    	html += "<tr><td>Address: </td><td>"+wo.address+"</td></tr>";
+    	html += "<tr><td>Landmark: </td><td>"+wo.landmark+"</td></tr>";
+    	html += "<tr><td>Location: </td><td>"+wo.location+"</td></tr>";
+    	html += "<tr><td>City: </td><td>"+wo.cityname+"</td></tr>";
+    	html += "<tr><td>Pincode: </td><td>"+wo.pincode+"</td></tr>";
+    	html += "<tr><td>Service: </td><td>"+wo.service+"</td></tr>";
+    	html += "<tr><td>Service Date: </td><td>"+moment(wo.service_date).format('MMM Do YYYY h:mm a')+"</td></tr>";
+    	html += "<tr><td>Lead Source: </td><td>"+wo.leadsource_name+"</td></tr>";
+    	html += "</table></div>";
+       var divToPrint = html;//document.getElementById('divToPrint');
+       var popupWin = window.open('', '_blank', 'width=300,height=400');
+       popupWin.document.open();
+       popupWin.document.write('<html><body onload="window.print()">' + divToPrint + '</html>');
+       popupWin.document.close();
+    }
 </script>
 <!--script src="<?php //print JSFILEPATH;?>/order.js" type="text/javascript"></script-->  
