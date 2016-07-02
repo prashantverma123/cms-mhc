@@ -28,10 +28,10 @@
 		<?php foreach ($modules as $module): ?>
       <?php if ($module["module"]!="leadmanager" && $module["module"]!="order"):?>
 				<li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
-					<a href="<?php print SITEPATH.'/'.$module["module"].'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst($module['module']); ?></a>
+					<a href="<?php print SITEPATH.'/'.$module["module"].'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst($module['display_name']); ?></a>
 				</li>
 				<!-- <li class="<?php //if($flag == 'new'){ echo 'active'; } ?>" id="li_new" >
-					<a href="<?php //print SITEPATH.'/'.$module["module"].'/display.php?flag=new';?>"><img src="../img/add.png" style="padding-right:10px;"/> Add New <?php echo ucfirst($module['module']); ?> </a>
+					<a href="<?php //print SITEPATH.'/'.$module["module"].'/display.php?flag=new';?>"><img src="../img/add.png" style="padding-right:10px;"/> Add New <?php //echo ucfirst($module['module']); ?> </a>
 				</li> -->
           <?php endif; ?>
 		<?php endforeach; ?>
@@ -46,7 +46,7 @@
         </a>
         <ul class="sub-menu">
           <li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
-  					<a href="<?php print SITEPATH.'/'."leadmanager".'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst("leadmanager"); ?></a>
+  					<a href="<?php print SITEPATH.'/'."leadmanager".'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst("Lead Manager"); ?></a>
   				</li>
         </ul>
           </li>
@@ -59,7 +59,7 @@
             </a>
             <ul class="sub-menu">
               <li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
-                <a href="<?php print SITEPATH.'/'."order".'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst("orders"); ?></a>
+                <a href="<?php print SITEPATH.'/'."order".'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst("Order"); ?></a>
               </li>
             </ul>
               </li>

@@ -457,7 +457,9 @@ function replacespecialcharsurl($str){
 	function getModuleByRole($role){
 		$tablename = 'acl';
 		$db =  Database::Instance();
-		$dataArr = $db->getDataFromTable(array('role'=>$role,'module!'=>'dashboard'),$tablename,'module,menu_name','','',false);
+		$joinArray[] = array('type'=>'left','table'=>'modules','condition'=>'modules.name=acl.module');
+		$dataArr = $db->getAssociatedDataFromTable(array('role'=>$role,'module!'=>'dashboard'), $tablename, "module,menu_name,modules.display_name", '','',$joinArray, false);
+		//$dataArr = $db->getDataFromTable(array('role'=>$role,'module!'=>'dashboard'),$tablename,'module,menu_name','','',false);
 		return $dataArr;
 	}
 
