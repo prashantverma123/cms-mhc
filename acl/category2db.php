@@ -10,7 +10,8 @@
 	$call 			= isset($_POST['call']) ? $_POST['call'] : '';
 switch($action){
 	case "add_update_acl":
-		if($_POST['task'] == 'insert'):
+		$row = $modelObj->getAccessControl(array('module'=>$_POST['module'],'role'=>$_POST['role']));
+		if(count($row['rows']) <= 0):
 			$insertArr['module'] 	= $_POST['module'];
 			$insertArr['role'] 		= $_POST['role'];
 			$insertArr['action'] = $_POST['values']; 

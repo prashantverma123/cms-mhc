@@ -157,6 +157,7 @@ public function query($sql, $debug=0, $ismongo=''){
   }
 
   public function updateDataIntoTable($keyValueArray, $whereClauseKeyValArray, $table, $debug=false){
+   
    $countTableData = count($keyValueArray);
     $sql = "UPDATE `{$table}` SET ";
     $i=0;
@@ -198,6 +199,9 @@ public function query($sql, $debug=0, $ismongo=''){
 		case 'polloptions':
 				$log_id = $keyValueArray['pollquestion_id'];
 				break;
+    case 'acl':
+      $log_id = 1;
+    break;
 	}
 	$action = '';
 	if($_POST['action'] == 'p' && $keyValueArray['status'] == '0'){

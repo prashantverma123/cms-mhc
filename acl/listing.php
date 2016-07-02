@@ -88,8 +88,9 @@ $roles = $modelObj->getRole();
 			url: "<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
 			data: 'action=add_update_acl&module='+module+'&role='+role+'&task='+action+'&values='+values,
 			success: function(res){
-				if(res){
-					//alert("");
+				var obj = eval("("+res+")");
+				if(obj.result == 'success'){
+					alert("Access Control Updated!");
 				}else{
 					alert("Failed to update");
 				}

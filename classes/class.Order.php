@@ -29,8 +29,8 @@ class Order {
 	    $main_sql = '1=1';
 
 			if (count($filterData)>0) {
-
-					//$main_sql .= ' and ';
+					if($_SESSION['tmobi']['role'] !="admin")
+					$main_sql .= ' and ';
 					$k = 1;
 				foreach ($filterData as $key => $value) {
 					if($_SESSION['tmobi']['role'] =="admin")
@@ -89,11 +89,12 @@ class Order {
 			$sort =  '`'.$this -> tableName.'`.insert_date DESC';
 		}
 		$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=order.lead_source');
+		$joinArray[] = array('type'=>'left','table'=>'remarks','condition'=>'remarks.order_id=order.id');
 		$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=order.city');
 		$joinArray[] = array('type'=>'left','table'=>'pricelist','condition'=>'pricelist.id=order.service');
 		//$joinArray[] = array('type'=>'left','table'=>'pricelist','condition'=>"pricelist.id = SUBSTRING_INDEX(SUBSTRING_INDEX(`order`.service, ',', FIND_IN_SET(pricelist.id,`order`.service)), ',', -1)");
 		//$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,leadsource.name as leadsource_name,GROUP_CONCAT(pricelist.name ORDER BY pricelist.id SEPARATOR '|') as 'services'", $sort, $limit,$joinArray, true);
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,leadsource.name as leadsource_name,city.name as cityname,pricelist.name as service", $sort, $limit,$joinArray, false);
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,leadsource.name as leadsource_name,remarks.remark,city.name as cityname,pricelist.name as service", $sort, $limit,$joinArray, false);
 
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);

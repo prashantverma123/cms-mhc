@@ -74,8 +74,8 @@ class Acl {
 		return $dataArr;
 	}
 
-	function getAccessControl(){
-		$keyValueArray = array();
+	function getAccessControl($keyValueArray=array()){
+		//$keyValueArray = array();
 		$joinArray[] = array('type'=>'left','table'=>'acl as access','condition'=>'access.module=modules.name');
 		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "access.module,access.role,access.action", '', '',$joinArray, false);
 		if (count($dataArr) > 0) {
@@ -134,9 +134,9 @@ class Acl {
 	}// eof insertTable
 
 	public function updateTable($values, $whereArr) {
-		$response = $this -> db -> updateDataIntoTable($values, $whereArr, 'acl');
-		$this->logs->writelogs($this->folderName,"Update: ".$response);
-		return $response;
+		$r = $this -> db -> updateDataIntoTable($values, $whereArr, 'acl');
+		//$this->logs->writelogs($this->folderName,"Update: ".$response);
+		return $r;
 
 	}// eof updatetable
 

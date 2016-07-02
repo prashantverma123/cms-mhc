@@ -719,6 +719,7 @@ function changePaymentStatus(id,value){
     	html += "<tr><td>Service: </td><td>"+wo.service+"</td></tr>";
     	html += "<tr><td>Service Date: </td><td>"+moment(wo.service_date).format('MMM Do YYYY h:mm a')+"</td></tr>";
     	html += "<tr><td>Lead Source: </td><td>"+wo.leadsource_name+"</td></tr>";
+    	html += "<tr><td>Remark: </td><td>"+wo.remark+"</td></tr>";
     	html += "</table></div>";
        var divToPrint = html;//document.getElementById('divToPrint');
        var popupWin = window.open('', '_blank', 'width=300,height=400');
