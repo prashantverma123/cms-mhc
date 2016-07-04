@@ -18,11 +18,11 @@ $userId = $session->get('UserId');
 				 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
 
 				 <th class="hidden-480">Name</th>
-				 <th class="hidden-480">Email Id</th>
+				 <th class="hidden-480">Email ID</th>
 				 <th class="hidden-480">Mobile No</th>
 				 <th class="hidden-480">City</th>
 				 <th class="hidden-480">Designation</th>
-				 <th class="hidden-480">Experties</th>
+				 <th class="hidden-480">Expertise</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
 		   </thead>

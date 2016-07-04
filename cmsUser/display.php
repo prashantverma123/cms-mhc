@@ -60,7 +60,7 @@ $titlename 		= 'Add CMS User';
 
                   <!-- END BEGIN STYLE CUSTOMIZER -->
                   <h3 class="page-title">
-                    CMS User
+                    Customer Management System User
                      <?php /*?><small>advance form layout samples</small><?php */?>
                   </h3>
 

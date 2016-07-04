@@ -25,9 +25,11 @@
       </a>
     <?php endif; ?>
       <ul class="sub-menu">
-		<?php foreach ($modules as $module): ?>
-      <?php if ($module["module"]!="leadmanager" && $module["module"]!="order"):?>
-				<li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
+		<?php 
+    $urlArr = explode("/",$_SERVER['REQUEST_URI']);
+     foreach ($modules as $module): ?>
+      <?php if ($module["module"]!="leadmanager" && $module["module"]!="order"): ?>
+				<li class="<?php if(in_array($module['module'], $urlArr)){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
 					<a href="<?php print SITEPATH.'/'.$module["module"].'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst($module['display_name']); ?></a>
 				</li>
 				<!-- <li class="<?php //if($flag == 'new'){ echo 'active'; } ?>" id="li_new" >
@@ -45,7 +47,7 @@
           <span class="arrow open"></span>
         </a>
         <ul class="sub-menu">
-          <li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
+          <li class="<?php if(in_array($module['module'], $urlArr)){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
   					<a href="<?php print SITEPATH.'/'."leadmanager".'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst("Lead Manager"); ?></a>
   				</li>
         </ul>
@@ -58,7 +60,7 @@
               <span class="arrow open"></span>
             </a>
             <ul class="sub-menu">
-              <li class="<?php if($flag == ''){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
+              <li class="<?php if(in_array($module['module'], $urlArr)){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
                 <a href="<?php print SITEPATH.'/'."order".'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst("Order"); ?></a>
               </li>
             </ul>

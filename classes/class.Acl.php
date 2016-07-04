@@ -49,6 +49,7 @@ class Acl {
 		}
 
 		$keyValueArray['name!'] = 'dashboard';
+		$keyValueArray['name!'] = 'acl';
 		//$joinArray[] = array('type'=>'left','table'=>'acl as access','condition'=>'access.module=modules.name');
 		$dataArr = $this -> db ->getDataFromTable($keyValueArray, $this -> tableName, "modules.name", $sort, $limit,false);
 
