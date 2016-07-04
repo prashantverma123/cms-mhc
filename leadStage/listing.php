@@ -6,7 +6,7 @@ $userId = $session->get('UserId');
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
-	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>ASC</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>DESC</option></select>
+	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>Ascending</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>Descending</option></select>
 		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
 		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
 	<button type="submit">Submit</button>
@@ -16,7 +16,7 @@ $userId = $session->get('UserId');
 		   <thead>
 			  <tr>
 				 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
-				 <th class="hidden-480">Lead Id</th>
+				 <th class="hidden-480">Lead ID</th>
 				 <th>Lead Name</th>
 				 <th class="hidden-480">Lead Order</th>
 				<th class="hidden-480">Action</th>

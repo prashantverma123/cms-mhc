@@ -6,9 +6,9 @@ $userId = $session->get('UserId');
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
-	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>ASC</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>DESC</option></select>
+	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>Ascending</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>Descending</option></select>
 		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
-		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
+		<!--input type="hidden" name="p" value="<?php //echo $_GET['p']; ?>" /-->
 	<button type="submit">Submit</button>
 	</form>
 	<div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
@@ -16,9 +16,10 @@ $userId = $session->get('UserId');
 		   <thead>
 			  <tr>
 				 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
-				 <th>source name</th>
-				 <th class="hidden-480">Source Url</th>
+				 <th>Source Name</th>
+				 <th class="hidden-480">Source URL</th>
 				 <th class="hidden-480">Source Phone</th>
+				 <th class="hidden-480">Source Email ID</th>
 				 <th class="hidden-480">Source Address</th>
 				 <th class="hidden-480">Commission Type</th>
 				 <th class="hidden-480">Action</th>
@@ -50,6 +51,7 @@ $userId = $session->get('UserId');
 				 <td><?php print $key['name'];?></td>
 				 <td class="hidden-480"><?php print $key['source_url'];?></td>
 				 <td class="hidden-480"><?php print $key['source_phone'];?></td>
+				 <td class="hidden-480"><?php print $key['source_email_id'];?></td>
 				 <td class="hidden-480"><?php print $key['source_address'];?></td>
 				 <td class="hidden-480"><?php print $key['commission_type'];?></td>
 				  <td class="hidden-480">

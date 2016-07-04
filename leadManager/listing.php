@@ -7,7 +7,7 @@ $leadstage = $memcache->get('leadstage');
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
-	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>ASC</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>DESC</option></select>
+	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>Ascending</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>Descending</option></select>
 	<select name="filterby">
 		<option value="leadsource.name" <?php if($_GET['filterby'] == 'leadsource.name'): echo 'selected';else: ''; endif; ?>>Lead Source</option>
 		<option value="leadstage.name" <?php if($_GET['filterby'] == 'leadstage.name'): echo 'selected';else: ''; endif; ?>>Lead Stage</option>
@@ -20,11 +20,12 @@ $leadstage = $memcache->get('leadstage');
 		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
 	<button type="submit">Submit</button>
 	</form>
-	<div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
-    	<table class="table table-striped table-bordered table-hover" id="">
+	<div role="grid" class="dataTables_wrapper form-inline " id="sample_3_wrapper" style="width:96%;height:80%;overflow: auto">
+    	<table class="table table-striped table-bordered table-hover leadmanagergrid" id="leadmanagergrid" style="" >
 		   <thead>
 			  <tr>
 				 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
+				 <th class="hidden-480">Job Id</th>
 				 <th class="hidden-480">Lead Source</th>
 				 <th class="hidden-480">Lead Owner</th>
 				  <th class="hidden-480">Lead Stage</th>
@@ -32,7 +33,7 @@ $leadstage = $memcache->get('leadstage');
 				  <th class="hidden-480">Client Mobile No</th>
 				 <th class="hidden-480">Service Date</th>
 				 <th class="hidden-480">Service Time</th>
-				 <th class="hidden-480">Job Status</th>
+				 <th class="hidden-480">Order Status</th>
 				 <th class="hidden-480">Inquiry Date/time</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
@@ -67,6 +68,7 @@ $leadstage = $memcache->get('leadstage');
 			  <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
 				<!-- <td><input type="checkbox" class="checkboxes" value="1" /></td>-->
 				<!-- <td><?php //print $key['category_id'];?></td> -->
+				<td class="hidden-480"><?php print 'J'.$key['id'];?></td>
 				<td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				<td class="hidden-480"><?php print $key['lead_owner'];?></td>
 				<td class="hidden-480">
@@ -75,7 +77,11 @@ $leadstage = $memcache->get('leadstage');
 					</select>
 					<div id="dialog-modal_<?php echo $key['id']; ?>" class="dialog-modal">
 						<label for="">Reminder:</label>
-						<select name="reminder<?php echo $key['id']; ?>" id="reminder<?php echo $key['id']; ?>" tabindex="1" class="medium m-wrap leadstage" onchange="" data-id="<?php echo $key['id']; ?>">
+						<input id="datePicker<?php echo $key['id']; ?>" class="datePicker" type="date" />
+						<input type="button" class="test" value="Set" data-id="<?php echo $key['id']; ?>"/>
+						
+						
+						<!-- <select name="reminder<?php echo $key['id']; ?>" id="reminder<?php echo $key['id']; ?>" tabindex="1" class="medium m-wrap leadstage" onchange="" data-id="<?php echo $key['id']; ?>">
 							<option value="1D" <?php if($key['reminder']=='1D'): echo "selected"; else: echo "";endif; ?>>1D</option>
 							<option value='3D' <?php if($key['reminder']=='3D'): echo "selected"; else: echo "";endif; ?>>3D</option>
 							<option value='5D' <?php if($key['reminder']=='5D'): echo "selected"; else: echo "";endif; ?>>5D</option>
@@ -83,13 +89,14 @@ $leadstage = $memcache->get('leadstage');
 							<option value='2W' <?php if($key['reminder']=='2W'): echo "selected"; else: echo "";endif; ?>>2W</option>
 							<option value='3W' <?php if($key['reminder']=='3W'): echo "selected"; else: echo "";endif; ?>>3W</option>
 							<option value='1M' <?php if($key['reminder']=='1M'): echo "selected"; else: echo "";endif; ?>>1M</option>
-						</select>
+							<option value='3M' <?php if($key['reminder']=='1M'): echo "selected"; else: echo "";endif; ?>>3M</option>
+						</select> -->
 					</div>
 				</td>
 				<td class="hidden-480"><?php print $key['client_firstname'];?></td>
 				<td class="hidden-480"><?php print $key['client_mobile_no'];?></td>
-				<td class="hidden-480"><?php print $key['service1_date'];?></td>
-				<td class="hidden-480"><?php print $key['service1_time'];?></td>
+				<td class="hidden-480"><?php print date('d M Y',strtotime($key['service1_date']));?></td>
+				<td class="hidden-480"><?php print date('h:i A',strtotime($key['service1_time']));?></td>
 				 <td id="confirmed<?php echo $key['id']; ?>">
 				 	<?php if($key['job_status']=='confirmed'):
 				 	echo "Confirmed";
@@ -101,7 +108,7 @@ $leadstage = $memcache->get('leadstage');
 				 	</select>
 				 <?php endif; ?>
 				</td>
-				<td><?php echo $key['insert_date']; ?></td>
+				<td><?php echo date('d M Y h:i A',strtotime($key['insert_date'])); ?></td>
 				<td>
 					<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/'.$modelObj->folderName.'/display.php?leadmanager_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
@@ -116,9 +123,32 @@ $leadstage = $memcache->get('leadstage');
 		<?php echo $modelObj->pagination($recperpage,$page,$result_data['count']); ?>
       </div>
    </div>
+ <script src="<?php print JSFILEPATH;?>/jquery.mCustomScrollbar.js" type="text/javascript"></script> 
 <script>
 var x = 450;var y = 250;
 $(document).ready(function () {
+	
+	var topOffset = parseInt($(".leadmanagergrid table thead").css('top'));
+
+(function($){
+      $(window).load(function(){
+        
+        $(".leadmanagergrid").mCustomScrollbar({
+          snapAmount:40,
+          scrollButtons:{enable:true},
+          keyboard:{scrollAmount:40},
+          mouseWheel:{deltaFactor:40},
+          scrollInertia:400,
+           advanced:{
+     autoScrollOnFocus: false,
+     updateOnContentResize: true
+   }      	
+        });
+      });
+    })(jQuery);
+
+
+	
 	(function($) {
 	    if (!$.curCSS) {
 	       $.curCSS = $.css;
@@ -136,6 +166,8 @@ $(document).ready(function () {
   var myid =  $(this).attr("data-id");
  	 set_reminder(myid);
 	});
+
+  
 
 });
 
@@ -235,8 +267,11 @@ $(document).ready(function () {
 
 	function set_reminder(id){
 
+		
+
 		if(id !=''){
-			var reminder = $('#reminder'+id).val();
+			//var reminder = $('#reminder'+id).val();
+			var reminder =  $('#datePicker'+id).val();
 			$.ajax({
 				type: "POST",
 				url: "<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
@@ -255,5 +290,52 @@ $(document).ready(function () {
 			});
 		}
 	}
+
+	function getDatePickerId(id,current){
+$(current).datetimepicker({
+    	 onSelectDate: function(dateText) {
+    	 	//currentObj = $('.reschedule_order').attr('id');
+    	 	orderId = $(".reschedule_order").data('orderid');
+    	 	month = dateText.getMonth() + 1
+    	 	tt = dateText.getFullYear()+'/'+(month)+ '/'+dateText.getDate()+' '+dateText.getHours()+':'+dateText.getMinutes();
+    		r = confirm("Are you sure you want to reschedule order?");
+    		if(r){
+    			set_reminder(id);
+    		}
+    	},
+    	onSelectTime: function(t){
+    		//currentObj = $('.reschedule_order').attr('id');
+    		orderId = $(".reschedule_order").data('orderid');
+    		month = t.getMonth() + 1
+    	 	datetime = t.getFullYear()+'/'+(month)+ '/'+t.getDate()+' '+t.getHours()+':'+t.getMinutes();
+    		r = confirm("Are you sure you want to reschedule order?");
+    		if(r){
+    			set_reminder(id);
+    		}
+    	}
+    });
+	
+}
+
+$(document).ready( function() {
+    var now = new Date();
+ 
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+    var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+
+   $('.datePicker').val(today);
+    
+    $('.test').click(function(){
+    	var dataId = $(this).attr('data-id');
+    	debugger;
+        
+        set_reminder(dataId);
+        
+    });
+});
+
 
 </script>

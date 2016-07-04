@@ -17,6 +17,7 @@ switch($action){
 				$insertArr['name'] 	= $_POST['source_name'];
 				$insertArr['source_url'] 			= $_POST['source_url'];
 				$insertArr['source_phone'] 		= $_POST['source_phone'];
+				$insertArr['source_email_id'] 		= $_POST['source_email_id'];
 				$insertArr['source_address'] 			= $_POST['source_address'];
 				$insertArr['commission_type'] 			= $_POST['commission_type'];
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
@@ -36,6 +37,7 @@ switch($action){
 				$updateArr['name'] 			= $_POST['source_name'];
 				$updateArr['source_url'] 		= $_POST['source_url'];
 				$updateArr['source_phone'] 	= $_POST['source_phone'];
+				$updateArr['source_email_id'] 	= $_POST['source_email_id'];
 				$updateArr['source_address'] 		= $_POST['source_address'];
 				$updateArr['commission_type'] 		= $_POST['commission_type'];
 

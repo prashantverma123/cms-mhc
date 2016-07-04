@@ -35,11 +35,7 @@ $pricelist = $memcache->get('pricelist');
 						<label class="control-label">Lead Source <span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
-						   <?php 
-						   if($leadstage != '')
-						   	echo optionsGenerator($leadsources,$data['lead_source']); 
-						   else
-						    echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $data['lead_source']," where status='0'"); ?>
+						   <?php echo optionsGenerator($leadsources,$data['lead_source']);  //echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $data['lead_source']," where status='0'"); ?>
 							</select>
 						</div>
 					 </div>
@@ -75,42 +71,7 @@ $pricelist = $memcache->get('pricelist');
 
 
 
-				<div class="row-fluid">
-					<div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label"> 	Team Leader </label>
-	 				 <div class="controls">
-						 <select tabindex="4" class="medium m-wrap" id="teamLeader_deployment" name="teamLeader_deployment">
-							<?php  echo $modelObj->optionsGeneratorByIndex(5); ?>
-						 </select>
-
-	 						<span class="help-block" id="teamLeader_deployment_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
-				 <div class="span6 ">
-				 <div class="control-group">
-					<label class="control-label"> Supervisor  </label>
-					<div class="controls">
-						<select tabindex="5" class="medium m-wrap" id="supervisor_deployment" name="supervisor_deployment">
-						<?php  echo $modelObj->optionsGeneratorByIndex(5); ?>
-					 </select>
-						 <span class="help-block" id="supervisor_deployment_error"> </span>
-					</div>
-				 </div>
-				</div>
-				<div class="span6 ">
-				<div class="control-group">
-				 <label class="control-label"> 	Janitor/Technician </label>
-				 <div class="controls">
-					 <select tabindex="6" class="medium m-wrap" id="janitor_deployment" name="janitor_deployment">
-						<?php  echo $modelObj->optionsGeneratorByIndex(10); ?>
-					 </select>
-						<span class="help-block" id="janitor_deployment_error"> </span>
-				 </div>
-				</div>
-			 </div>
-				</div>
+				
 
 				<div>
 					<div class="row-fluid" style="background-color:#6d6d6d;margin-bottom:15px;">
@@ -121,7 +82,13 @@ $pricelist = $memcache->get('pricelist');
 	 				<div class="control-group">
 	 				 <label class="control-label"> Salutation <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input tabindex="7" type="text" placeholder="Please Enter Salutation" value="<?php echo isset($data)?$data['client_salutation']:''; ?>" id="client_salutation" name="client_salutation" class="m-wrap span12">
+	 						<!-- <input tabindex="7" type="text" placeholder="Please Enter Salutation" value="<?php //echo isset($data)?$data['client_salutation']:''; ?>" id="client_salutation" name="client_salutation" class="m-wrap span12"> -->
+	 						<select id="client_salutation" name="client_salutation" class="m-wrap span12">
+	 							<option>Please Select Salutation</option>
+	 							<option value="Mr" <?php if($data['client_salutation'] == 'Mr'): echo "selected"; else: ""; endif; ?>>Mr.</option>
+	 							<option value="Ms" <?php if($data['client_salutation'] == 'Ms'): echo "selected"; else: ""; endif; ?>>Ms.</option>
+	 							<option value="Dr" <?php if($data['client_salutation'] == 'Dr'): echo "selected"; else: ""; endif; ?>>Dr.</option>
+	 						</select>
 	 						<span class="help-block" id="client_salutation_error"> </span>
 	 				 </div>
 	 				</div>
@@ -237,9 +204,53 @@ $pricelist = $memcache->get('pricelist');
 				<div class="row-fluid">
 					<div class="span6 ">
 	 				<div class="control-group">
-	 				 <label class="control-label">State <span class="required">*</span></label>
+	 				 <label class="control-label">State <!-- <span class="required">*</span> --></label>
 	 				 <div class="controls">
-	 						<input tabindex="17" type="text" placeholder="Please Enter state" value="<?php echo isset($data)?$data['state']:''; ?>" id="state" name="state" class="m-wrap span12">
+	 				 	<?php $indian_all_states  = array (
+	 				 		''=>'Please Select',
+ 'AP' => 'Andhra Pradesh',
+ 'AR' => 'Arunachal Pradesh',
+ 'AS' => 'Assam',
+ 'BR' => 'Bihar',
+ 'CT' => 'Chhattisgarh',
+ 'GA' => 'Goa',
+ 'GJ' => 'Gujarat',
+ 'HR' => 'Haryana',
+ 'HP' => 'Himachal Pradesh',
+ 'JK' => 'Jammu & Kashmir',
+ 'JH' => 'Jharkhand',
+ 'KA' => 'Karnataka',
+ 'KL' => 'Kerala',
+ 'MP' => 'Madhya Pradesh',
+ 'MH' => 'Maharashtra',
+ 'MN' => 'Manipur',
+ 'ML' => 'Meghalaya',
+ 'MZ' => 'Mizoram',
+ 'NL' => 'Nagaland',
+ 'OR' => 'Odisha',
+ 'PB' => 'Punjab',
+ 'RJ' => 'Rajasthan',
+ 'SK' => 'Sikkim',
+ 'TN' => 'Tamil Nadu',
+ 'TR' => 'Tripura',
+ 'UK' => 'Uttarakhand',
+ 'UP' => 'Uttar Pradesh',
+ 'WB' => 'West Bengal',
+ 'AN' => 'Andaman & Nicobar',
+ 'CH' => 'Chandigarh',
+ 'DN' => 'Dadra and Nagar Haveli',
+ 'DD' => 'Daman & Diu',
+ 'DL' => 'Delhi',
+ 'LD' => 'Lakshadweep',
+ 'PY' => 'Puducherry',
+); ?>
+<select id="state" name="state" class="m-wrap span12">
+<?php foreach ($indian_all_states as $k=>$states) { ?>
+	<option value="<?php echo $k; ?>" <?php if($data['state'] == $k): echo "selected"; else: ""; endif; ?>><?php echo $states; ?></option>
+<?php } ?>
+<?php ?>
+</select>
+	 						<!-- <input tabindex="17" type="text" placeholder="Please Enter state" value="<?php //echo isset($data)?$data['state']:''; ?>" > -->
 	 						<span class="help-block" id="state_error"> </span>
 	 				 </div>
 	 				</div>
@@ -322,6 +333,16 @@ $pricelist = $memcache->get('pricelist');
 	 				 </div>
 	 				</div>
 	 			 </div>
+	 			 <div class="span6 ">
+	 				<div class="control-group">
+	 				 <label class="control-label">Additional Variant 1 </label>
+	 				 <div class="controls">
+	 						<input tabindex="25" type="text" placeholder="Please Enter Variant" value="<?php echo isset($data)?$data['sqft1']:''; ?>" id="sqft1" name="sqft1" class="m-wrap span12">
+	 						<span class="help-block" id="sqft1_error"> </span>
+	 				 </div>
+	 				</div>
+	 			 </div>
+	 			 
 				</div>
 				<div class="row-fluid">
 					<div class="span6 ">
@@ -376,6 +397,15 @@ $pricelist = $memcache->get('pricelist');
 	 						<label class="checkbox-inline"><input tabindex="29" type="radio" id="inquiry11" name="service_inquiry2_booked" value="yes" <?php if($data['service_inquiry2_booked']=='yes'): echo "checked"; else: ""; endif; ?>/>Yes</label>
 	 						<label class="checkbox-inline"><input tabindex="30" type="radio" id="inquiry12" name="service_inquiry2_booked" value="no" <?php if($data['service_inquiry2_booked']=='no'): echo "checked"; else: ""; endif; ?>/>No</label>
 	 						<span class="help-block" id="service_inquiry2_booked_error"> </span>
+	 				 </div>
+	 				</div>
+	 			 </div>
+	 			  <div class="span6 ">
+	 				<div class="control-group">
+	 				 <label class="control-label">Additional Variant 2 </label>
+	 				 <div class="controls">
+	 						<input tabindex="25" type="text" placeholder="Please Enter Variant" value="<?php echo isset($data)?$data['sqft2']:''; ?>" id="sqft2" name="sqft2" class="m-wrap span12">
+	 						<span class="help-block" id="sqft1_error"> </span>
 	 				 </div>
 	 				</div>
 	 			 </div>
@@ -436,6 +466,15 @@ $pricelist = $memcache->get('pricelist');
 	 				 </div>
 	 				</div>
 	 			 </div>
+	 			  <div class="span6 ">
+	 				<div class="control-group">
+	 				 <label class="control-label">Additional Variant 3 </label>
+	 				 <div class="controls">
+	 						<input tabindex="25" type="text" placeholder="Please Enter Variant" value="<?php echo isset($data)?$data['sqft3']:''; ?>" id="sqft3" name="sqft3" class="m-wrap span12">
+	 						<span class="help-block" id="sqft1_error"> </span>
+	 				 </div>
+	 				</div>
+	 			 </div>
 				</div>
 				<div class="row-fluid">
 					<div class="span6 ">
@@ -448,6 +487,42 @@ $pricelist = $memcache->get('pricelist');
 	 				 </div>
 	 				</div>
 	 			 </div>
+				</div>
+				<div class="row-fluid">
+					<div class="span6 ">
+	 				<div class="control-group">
+	 				 <label class="control-label"> 	Team Leader </label>
+	 				 <div class="controls">
+						 <select tabindex="4" class="medium m-wrap" id="teamLeader_deployment" name="teamLeader_deployment">
+							<?php  echo $modelObj->optionsGeneratorByIndex(5); ?>
+						 </select>
+
+	 						<span class="help-block" id="teamLeader_deployment_error"> </span>
+	 				 </div>
+	 				</div>
+	 			 </div>
+				 <div class="span6 ">
+				 <div class="control-group">
+					<label class="control-label"> Supervisor  </label>
+					<div class="controls">
+						<select tabindex="5" class="medium m-wrap" id="supervisor_deployment" name="supervisor_deployment">
+						<?php  echo $modelObj->optionsGeneratorByIndex(5); ?>
+					 </select>
+						 <span class="help-block" id="supervisor_deployment_error"> </span>
+					</div>
+				 </div>
+				</div>
+				<div class="span6 ">
+				<div class="control-group">
+				 <label class="control-label"> 	Janitor/Technician </label>
+				 <div class="controls">
+					 <select tabindex="6" class="medium m-wrap" id="janitor_deployment" name="janitor_deployment">
+						<?php  echo $modelObj->optionsGeneratorByIndex(10); ?>
+					 </select>
+						<span class="help-block" id="janitor_deployment_error"> </span>
+				 </div>
+				</div>
+			 </div>
 				</div>
 
 				<div class="row-fluid">
@@ -551,7 +626,7 @@ $pricelist = $memcache->get('pricelist');
 				</span>
 			    <button class="btn blue" type="submit" onClick="return saveData('frm_lead_manager','saveLeadManager');"><i class="icon-ok"></i> Save</button>
 			    <?php /*?><!-- <a href="<?php print SITEPATH;?>/category/display.php" ><button class="btn" type="button">Cancel</button></a>--><?php */?>
-			  	<a  href="javascript:void();" onclick="window.location.href='<?php print SITEPATH;?>/leadManager/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
+			  	<a  href="javascript:void();" onclick="window.location.href='<?php print SITEPATH;?>/leadmanager/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
 			</div>
 		 </form>
 		 <!-- END FORM-->

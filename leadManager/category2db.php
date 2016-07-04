@@ -50,11 +50,14 @@ switch($action){
 				$insertArr['pincode'] 	= $_POST['pincode'];
 				$insertArr['additional_note'] 	= $_POST['additional_note'];
 				$insertArr['service_inquiry1'] 	= $_POST['service_inquiry1'];
+				$insertArr['sqft1'] 	= $_POST['sqft1'];
 				$insertArr['service_inquiry1_booked'] 	= $_POST['service_inquiry1_booked'];
 
 				$insertArr['service_inquiry2'] 	= $_POST['service_inquiry2'];
+				$insertArr['sqft2'] 	= $_POST['sqft2'];
 				$insertArr['service_inquiry2_booked'] 	= $_POST['service_inquiry2_booked'];
 				$insertArr['service_inquiry3'] 	= $_POST['service_inquiry3'];
+				$insertArr['sqft3'] 	= $_POST['sqft3'];
 				$insertArr['service_inquiry3_booked'] 	= $_POST['service_inquiry3_booked'];
 				$insertArr['promo_code'] 	= $_POST['promo_code'];
 				$insertArr['discount'] 	= $_POST['discount'];
@@ -116,8 +119,10 @@ switch($action){
 				$updateArr['pincode'] 	= $_POST['pincode'];
 				$updateArr['additional_note'] 	= $_POST['additional_note'];
 				$updateArr['service_inquiry1'] 	= $_POST['service_inquiry1'];
+				$updateArr['sqft1'] 	= $_POST['sqft1'];
 				$updateArr['service_inquiry1_booked'] 	= $_POST['service_inquiry1_booked'];
-
+				$updateArr['sqft2'] 	= $_POST['sqft2'];
+				$updateArr['sqft3'] 	= $_POST['sqft3'];
 				$updateArr['service_inquiry2'] 	= $_POST['service_inquiry2'];
 				$updateArr['service_inquiry2_booked'] 	= $_POST['service_inquiry2_booked'];
 				$updateArr['service_inquiry3'] 	= $_POST['service_inquiry3'];

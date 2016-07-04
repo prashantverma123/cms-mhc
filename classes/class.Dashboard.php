@@ -35,10 +35,10 @@ class Dashboard {
 			$cities = $this -> db -> getDataFromTable($keyValueArray, 'city', "distinct name as display, id as value", '', '');
 			$memcache->set('city',$cities);
 		}
-		if(!$memcache->get('leadsource')){
-			$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadsource', "distinct name as display, id as value", '', '');
+		//if(!$memcache->get('leadsource')){
+			$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadsource', "distinct name as display, id as value", 'name ASC', '');
 			$memcache->set('leadsource',$leadsources);
-		}
+		//}
 		if(!$memcache->get('leadstage')){
 			$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadstage', "distinct name as display, id as value", '', '');
 			$memcache->set('leadstage',$leadsources);
@@ -56,10 +56,10 @@ class Dashboard {
 			$designation = $this -> db -> getDataFromTable($keyValueArray, 'designation', "distinct name as display, id as value", '', '');
 			$memcache->set('designation',$designation);
 		}
-		if(!$memcache->get('role')){
+		//if(!$memcache->get('role')){
 			$role = $this -> db -> getDataFromTable(array(), 'role', "distinct name as display, role as value", '', '');
 			$memcache->set('role',$role);
-		}
+		//}
 		if(!$memcache->get('category')){
 			$category = $this -> db -> getDataFromTable(array(), 'category', "distinct name as display, id as value", '', '');
 			$memcache->set('category',$category);

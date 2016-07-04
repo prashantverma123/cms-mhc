@@ -33,6 +33,7 @@ function pay_page ( $params, $salt )
 	$db = Database::Instance();
 	$modelObj = new Pay();
 	$leadmanagerObj = new Leadmanager();
+	$orderObj = new Order();
 	if ( count( $_POST ) && isset( $_POST['mihpayid'] ) && ! empty( $_POST['mihpayid'] ) ) {
 		$_POST['surl'] = $params['surl'];
 		$_POST['furl'] = $params['furl'];
@@ -40,11 +41,12 @@ function pay_page ( $params, $salt )
 		$modelObj->insertTable($insertArr);
 		if($_POST['status'] == 'success'){
 			$updateArr['payment_status'] 	= 'success';
+			$updateArr['payment_mode'] 	= 'hdfc';
 		}else{
 			$updateArr['payment_status'] 	= 'failed';
 		}
-		$whereArr = array('id' => $_POST['udf2'] );
-		$leadmanagerObj->updateTable($updateArr,$whereArr);
+		$whereArr = array('order_id' => $_POST['udf1'] );
+		$orderObj->updateTable($updateArr,$whereArr);
 
 
 		$result = response( $_POST, $salt );

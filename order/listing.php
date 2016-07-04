@@ -9,7 +9,7 @@ $userId = $session->get('UserId');
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
-	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>ASC</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>DESC</option></select>
+	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>Ascending</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>Descending</option></select>
 		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
 		<input type="text" name="filter_date" id="filter_date" value="<?php if($_GET['filter_date'] != ''): echo $_GET['filter_date']; else: ''; endif; ?>" placeholder="Select a Order Date" />
 		<!--input type="hidden" name="p" value="<?php //echo $_GET['p']; ?>" /-->
@@ -113,7 +113,8 @@ $userId = $session->get('UserId');
 				<td>
 					<select class="small m-wrap payment_mode" name="payment_mode"  id="paymentMode<?php print $key['id'];?>" onchange="changePaymentMode(<?php print $key['id'];?>,this.value)">
 						<option value="">Payment Mode</option>
-						<option value="online" <?php if($key['payment_mode'] == 'online'): echo "selected"; else: ""; endif; ?>>Online</option>
+						<option value="online" <?php if($key['payment_mode'] == 'instamojo'): echo "selected"; else: ""; endif; ?>>Instamojo</option>
+						<option value="online" <?php if($key['payment_mode'] == 'hdfc'): echo "selected"; else: ""; endif; ?>>HDFC</option>
 						<option value="cheque" <?php if($key['payment_mode'] == 'cheque'): echo "selected"; else: ""; endif; ?>>Cheque</option>
 						<option value="cash" <?php if($key['payment_mode'] == 'cash'): echo "selected"; else: ""; endif; ?>>Cash</option>
 					</select>

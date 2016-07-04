@@ -52,7 +52,7 @@ class Pricelist {
 
 				$j = 1;
 				foreach ($fields as $field) {
-					$main_sql .= $field." like '%".$searchData['filter']."%'";
+					$main_sql .= $this -> tableName.'.'.$field." like '%".$searchData['filter']."%'";
 					if($j < count($fields)){
 						$main_sql .= " OR ";
 					}

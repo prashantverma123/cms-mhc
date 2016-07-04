@@ -24,9 +24,9 @@ if($source_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Source <span class="required">*</span></label>
+						<label class="control-label">Source Name<span class="required">*</span></label>
 						<div class="controls">
-						   <input type="text" placeholder="Please Enter Lead Source Name" value="<?php echo isset($data)?$data['name']:''; ?>" id="source_name" name="source_name" class="m-wrap span12">
+						   <input type="text" placeholder="Please enter lead source name" value="<?php echo isset($data)?$data['name']:''; ?>" id="source_name" name="source_name" class="m-wrap span12">
 						   <span class="help-block" id="source_name_error"> </span>
 						</div>
 					 </div>
@@ -38,9 +38,9 @@ if($source_id > 0){
 			   <div class="row-fluid">
 					 <div class="span6 ">
  					 <div class="control-group">
- 						<label class="control-label">Source Url <span class="required">*</span></label>
+ 						<label class="control-label">Source URL <span class="required">*</span></label>
  						<div class="controls">
- 						   <input type="text" placeholder="Please Enter Lead source Url" value="<?php echo isset($data)?$data['source_url']:''; ?>" id="source_url" name="source_url" class="m-wrap span12">
+ 						   <input type="text" placeholder="Please enter lead source URL" value="<?php echo isset($data)?$data['source_url']:''; ?>" id="source_url" name="source_url" class="m-wrap span12">
  						   <span class="help-block" id="source_url_error"> </span>
  						</div>
  					 </div>
@@ -57,14 +57,22 @@ if($source_id > 0){
 	 				<div class="control-group">
 	 				 <label class="control-label">Contact No <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
-	 						<input type="text" placeholder="Please Enter Lead source Phone" value="<?php echo isset($data)?$data['source_phone']:''; ?>" id="source_phone" name="source_phone" class="m-wrap span12">
+	 						<input type="text" placeholder="Please enter lead source phone" value="<?php echo isset($data)?$data['source_phone']:''; ?>" id="source_phone" name="source_phone" class="m-wrap span12">
 	 						<span class="help-block" id="source_phone_error"> </span>
 	 				 </div>
 	 				</div>
 	 			 </div>
-				  <!--/span-->
-
-				  <!--/span-->
+			   </div>
+			   <div class="row-fluid">
+					<div class="span6 ">
+	 				<div class="control-group">
+	 				 <label class="control-label">Contact Email ID<!--<span class="required">*</span>--></label>
+	 				 <div class="controls">
+	 						<input type="text" placeholder="Please enter contact Email ID" value="<?php echo isset($data)?$data['source_email_id']:''; ?>" id="source_email_id" name="source_email_id" class="m-wrap span12">
+	 						<span class="help-block" id="source_email_id_error"> </span>
+	 				 </div>
+	 				</div>
+	 			 </div>
 			   </div>
 
 			   <div class="row-fluid">
@@ -125,6 +133,7 @@ function saveData(frm_id, action){
          $('#frm_lead_source').validate({
 		rules:{
 			source_name:"required",
+			source_email_id:"email",
 			source_url:{
 				required:true,
 				url:true

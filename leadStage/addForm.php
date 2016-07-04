@@ -7,7 +7,7 @@ if($lead_id > 0){
 ?>
 	<div class="portlet box green">
 	  <div class="portlet-title">
-		 <div class="caption"><i class="icon-reorder"></i>About Cities</div>
+		 <div class="caption"><i class="icon-reorder"></i>About Lead Stage</div>
 		 <div class="tools">
 			<a class="collapse" href="javascript:;"></a>
 			<!--<a class="config" data-toggle="modal" href="#portlet-config"></a>-->

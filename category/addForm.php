@@ -42,7 +42,7 @@ if($category_id > 0){
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-					   <label class="control-label">Select Parent Categorgy</label>
+					   <label class="control-label">Select Parent Category</label>
 					   <div class="controls">
 						  <select tabindex="1" class="large m-wrap" id="parent_id" name="parent_id">
 							 <option value="0" >Is Parent</option>

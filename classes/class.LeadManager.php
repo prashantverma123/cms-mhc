@@ -289,7 +289,7 @@ class LeadManager {
 				$serviceArr[] = $value['service_inquiry1'];
 				$serviceArr[] = $value['service_inquiry2'];
 				$serviceArr[] = $value['service_inquiry3'];
-				if ($value['invoice_type']==-1) {
+				if ($value['invoice_type']==0) {
 
 				$values['name'] = $value['client_firstname'];
 				$values['lead_source'] = $value['lead_source'];
