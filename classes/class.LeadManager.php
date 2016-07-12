@@ -29,48 +29,67 @@ class LeadManager {
 	    $main_sql = '1=1';
 
 			if (count($filterData)>0) {
+				if($_SESSION['tmobi']['role'] !="admin")
 					$main_sql .= ' and ';
+					$k =1;
 				foreach ($filterData as $key => $value) {
-
-					$main_sql .= $key." like '%".$value."%'";
+					if($_SESSION['tmobi']['role'] =="admin")
+					{
+						if($key == 'city'){ //to skip the city 
+							$k++;
+							continue;	
+						}
+					}
+					if($key == 'service_date'){
+						$keyValueArray['DATE(service1_date)'] = $value;
+						//$keyValueArray['DATE(service2_date)'] = $value;
+						//$keyValueArray['DATE(service3_date)'] = $value;
+					}else{
+						$main_sql .= 'leadmanager.'.$key." like '%".$value."%' ";
+					}
+					
+					if($k < count($filterData)){
+						$main_sql .= " OR ";
+					}
+					$k++;
+					
 				}
 
 			}
+
 		if(count($searchData)>0){
-			/*if(array_key_exists('name',$searchData)) {
-					$main_sql .= ' and name like \''.$searchData['event_name'].'%\'';
-			}
-			//print_r($searchData);
-			foreach($searchData as $key=>$val){
-				$keyValueArray[$key]=$val;
-			}*/
 			if($search){
+				if($searchData['filter']!='')
 				$main_sql .= ' and ';
 				$fields = explode(',',$search);
 
 				$j = 1;
 				foreach ($fields as $field) {
-					if($field == 'client_firstname'){
-						$name = explode(' ',$searchData['filter']);
-						//print_r($name);
-						if($name[0]){
-						$main_sql .= 'client_firstname'." like '%".$name[0]."%' ";
+					if($searchData['filter']!=''){
+						if($field == 'client_firstname'){
+							$name = explode(' ',$searchData['filter']);
+							//print_r($name);
+							if($name[0]){
+							$main_sql .= 'client_firstname'." like '%".$name[0]."%' ";
+							}
+							if(count($name) > 2){
+							$main_sql .= 'client_lastname'." like '%".$name[1]."%' ";
+							}
+						}else
+						$main_sql .= $field." like '%".$searchData['filter']."%'";
+						
+						if($j < count($fields)){
+							$main_sql .= " OR ";
 						}
-						if(count($name) > 2){
-						$main_sql .= 'client_lastname'." like '%".$name[1]."%' ";
-						}
-					}else
-					$main_sql .= $field." like '%".$searchData['filter']."%'";
-					if($j < count($fields)){
-						$main_sql .= " OR ";
+						$j++;
 					}
-					$j++;
 				}
 			}
 			if(array_key_exists('parent_id',$searchData)) {
 		    	$keyValueArray['parentid'] = $searchData['parent_id'];
 			}
 		}
+
 		if ($search == 'byname') {
 			$keyValueArray['sqlclause'] = "client_firstname like '$searchData%'";
 		}else if ($search == 'integer') {
@@ -80,7 +99,7 @@ class LeadManager {
 		$keyValueArray['sqlclause'] = $main_sql;
 		$limit = $offset . "," . $recperpage;
 		if($sort != '') {
-			$sort = 'client_firstname '.$sort;
+			$sort = 'leadsource.name '.$sort;
 		}else{
 			$sort = 'leadmanager.insert_date DESC';
 		}
@@ -88,7 +107,10 @@ class LeadManager {
 
 		$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
 		$joinArray[] = array('type'=>'left','table'=>'leadstage','condition'=>'leadstage.id=leadmanager.lead_stage');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*,leadsource.name as leadsource_name,leadstage.name as leadstage_name,leadstage.id as leadstage_id ", $sort, $limit,$joinArray, false);
+		$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
+		$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
+		$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*,leadsource.name as leadsource_name,leadstage.name as leadstage_name,leadstage.id as leadstage_id,p1.name as service1,p2.name as service2,p3.name as service3", $sort, $limit,$joinArray, false);
 
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
@@ -98,7 +120,7 @@ class LeadManager {
 			}
 		}
 		//$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " client_firstname ASC ", '', false);
-		$countAll = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, " * ", " client_firstname ASC ", '',$joinArray, false);
+		$countAll = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, " * ", "", '',$joinArray, false);
 		$result['rows'] = $this -> finalData;
 		$result['count'] = count($countAll);
 		//echo '<pre>'; print_r($result);
@@ -158,7 +180,7 @@ class LeadManager {
 	}
 
 	public function insertTable($values) {
-		$response =  $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$response =  $this -> db -> insertDataIntoTable($values, $this -> tableName,false);
 		$this->logs->writelogs($this->folderName,"Insertion: ".json_encode($response));
 		return $response;
 
@@ -166,7 +188,7 @@ class LeadManager {
 
 	public function updateTable($values, $whereArr) {
 		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
-		$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
+		//$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
 		return $response;
 	}// eof updatetable
 
@@ -289,7 +311,7 @@ class LeadManager {
 				$serviceArr[] = $value['service_inquiry1'];
 				$serviceArr[] = $value['service_inquiry2'];
 				$serviceArr[] = $value['service_inquiry3'];
-				if ($value['invoice_type']==0) {
+				if ($value['invoice_type']==-1) {
 
 				$values['name'] = $value['client_firstname'];
 				$values['lead_source'] = $value['lead_source'];
@@ -708,6 +730,77 @@ Click to pay online
 		$joinArray[] = array('type'=>'left','table'=>'variantmaster','condition'=>'variantmaster.id=pricelist.varianttype');
 		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, 'pricelist', " variantmaster.varianttype,variantmaster.id", '', '',$joinArray, false);
 		return $dataArr;
+	}
+
+	function get_client_firstname($client_firstname){
+		$keyValueArray['sqlclause'] = 'client_firstname like "%'.$client_firstname.'%"';
+		$dataArr = $this -> db ->getDataFromTable($keyValueArray, 'mhcclient', " client_firstname", '', '', false);
+		foreach ($dataArr as $value) {
+			$t[] = $value['client_firstname'];
+		}
+		return $t;
+	}
+
+	function get_client_lastname($client_lastname){
+		$keyValueArray['sqlclause'] = 'client_lastname like "%'.$client_firstname.'%"';
+		$dataArr = $this -> db ->getDataFromTable($keyValueArray, 'mhcclient', " client_lastname", '', '', false);
+		foreach ($dataArr as $value) {
+			$t[] = $value['client_lastname'];
+		}
+		return $t;
+	}
+	function get_mhcclient($id){
+		$keyValueArray['id'] = $id;
+		$dataArr = $this -> db ->getDataFromTable($keyValueArray, 'mhcclient', "*", '', '', false);
+		return $dataArr;
+	}
+	function get_mhcclient_mobile($mobile){
+		$keyValueArray['client_mobile_no'] = $mobile;
+		$dataArr = $this -> db ->getDataFromTable($keyValueArray, 'mhcclient', "*", '', '', false);
+		return $dataArr;
+	}
+
+	public function insertClientTable($values) {
+		$tablename = 'mhcclient';
+		$response =  $this -> db -> insertDataIntoTable($values, $tablename);
+		//$this->logs->writelogs($this->folderName,"Insertion: ".json_encode($response));
+		return $response;
+	}
+
+	public function updateClientTable($values, $whereArr) {
+		$tablename = "mhcclient";
+		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $tablename);
+		//$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
+		return $response;
+	}
+
+	public function insertAddressTable($values) {
+		$tablename = 'addressmaster';
+		$response =  $this -> db -> insertDataIntoTable($values, $tablename);
+		//$this->logs->writelogs($this->folderName,"Insertion: ".json_encode($response));
+		return $response;
+	}
+
+	public function updateAddressTable($values, $whereArr) {
+		$tablename = "addressmaster";
+		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $tablename);
+		//$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
+		return $response;
+	}
+
+	public function deleteAddressTable($whereArr) {
+		$tablename = "addressmaster";
+		$response = $this -> db -> deleteDataFromTable($whereArr, $tablename);
+		//$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
+		return $response;
+	}
+
+	public function getAddressTable($id) {
+		$tablename = "addressmaster";
+		$whereArr = array('mhcclient_id'=>$id);
+		$response = $this -> db -> getDataFromTable($whereArr, $tablename,"address");
+		//$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
+		return $response;
 	}
 }
 ?>

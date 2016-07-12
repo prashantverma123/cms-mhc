@@ -3,6 +3,7 @@ $session = Session::getInstance();
 $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
+$cities = $memcache->get('city');
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
@@ -41,7 +42,6 @@ $userId = $session->get('UserId');
 			 $filterData = array('city' =>$_SESSION['tmobi']['city']);
 			$result_data = $modelObj->getListingData('name,category_type,lead_source', $page,$recperpage,$searchData,$filterData,$sort);
 
-
 			foreach ($result_data['rows'] as $key){
 				if($key['parent_id'] == 0){
 					$is_parent_val = 'Yes';
@@ -54,7 +54,7 @@ $userId = $session->get('UserId');
 				 <td><?php print $key['name'];?></td>
 				 <td class="hidden-480"><?php print $key['leadsourceName'];?></td>
 				 <td class="hidden-480"><?php print $key['categoryName'];?></td>
-				 <td class="hidden-480"><?php print $key['cityName'];?></td>
+				 <td class="hidden-480"><?php print $cities[$key['city']];?></td>
 				 <td class="hidden-480"><?php print $key['price'];?></td>
 				 <td class="hidden-480"><?php print $key['commission'];?></td>
 				 <td class="hidden-480"><?php print $key['taxed_cost'];?></td>

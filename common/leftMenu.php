@@ -15,6 +15,19 @@
 			</form>
 			<!-- END RESPONSIVE QUICK SEARCH FORM -->
 		</li>
+     <li class="active">
+        <a href="javascript:;">
+          <i class="icon-table"></i>
+          <span class="title"><?php echo ucfirst("dashboard"); ?></span>
+          <span class="selected"></span>
+          <span class="arrow open"></span>
+        </a>
+        <ul class="sub-menu">
+          <li class="<?php if(in_array($module['module'], $urlArr)){ echo 'active'; } ?>" id="li_0" onclick="change_tab(0);">
+            <a href="<?php print SITEPATH.'/'."dashboard".'/display.php';?>"><img src="../img/list_bullets.png" style="padding-right:15px;" height="16" width="16"/><?php echo ucfirst("dashboard"); ?></a>
+          </li>
+        </ul>
+          </li>
     <li class="active">
       <?php if($_SESSION['tmobi']['role'] == 'admin'): ?>
       <a href="javascript:;">

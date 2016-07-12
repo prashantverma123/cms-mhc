@@ -74,8 +74,9 @@ $userId = $session->get('UserId');
 				 if($key['email_id']) echo '<br />'.$key['email_id'];?></td>
 				 <td class="hidden-480"><?php print $key['leadsource_name'];?></td>
 				 <td class="hidden-480"><?php print $key['service'];?></td>
-				 <td class="hidden-480" style="width:10%"><span><?php print date('d M Y h:i A',strtotime($key['service_date'])); ?></span>
-					<a href="javascript:void(0);" data-orderid="<?php print $key['id'];?>" onclick="getDatePickerId('reschedule_order<?php print $key['id'];?>',this);" id="reschedule_order<?php print $key['id'];?>" class="edit reschedule_order" title="Reschedule Order" style="color:#FFFFFF"><img src="../img/calendar.png" /> </a>
+				 <td class="hidden-480" style="width:10%" id="reschedule_td<?php print $key['id'];?>"><div class="reschedule-date<?php print $key['id'];?>"><?php print date('d M Y h:i A',strtotime($key['service_date'])); ?></div>
+
+					<a href="javascript:void(0);" data-orderid="<?php print $key['id'];?>" id="reschedule_order<?php print $key['id'];?>" class="edit reschedule_order" title="Reschedule Order" style="color:#FFFFFF"><img src="../img/calendar.png" /> </a>
 					<!-- <input type="text" name="reschedule_order" id="reschedule_order" value="" />  -->
 				 </td>
 				<!-- <td class="hidden-480"><?php //print $key['service_time'];?></td> -->
@@ -346,10 +347,9 @@ $(document).ready(function () {
 						arr['billing_email2']=v[6].value;
 						arr['billing_address2']=v[7].value;
 						arr['billing_amount2']=v[8].value;
-						//console.log(arr);
+						console.log(arr);
 						send_invoice_email(formdata);
 						$('#order_id').val('');
-						$('#billing').modal('toggle');
 					}
 				},
 				error:function(){
@@ -474,7 +474,30 @@ $(document).ready(function () {
      	$("#billing_name2").val($(this).data('billingname2'));
     });*/
    
-   
+   $('.reschedule_order').datetimepicker({
+    	 onSelectDate: function(dateText) {
+    	 	currentObj = $('.reschedule_order').attr('id');
+    	 	console.log(currentObj);
+    	 	//orderId = $(".reschedule_order").data('orderid');
+    	 	orderId = $("#"+currentObj).data('orderid');
+    	 	month = dateText.getMonth() + 1
+    	 	tt = dateText.getFullYear()+'/'+(month)+ '/'+dateText.getDate()+' '+dateText.getHours()+':'+dateText.getMinutes();
+    		r = confirm("Are you sure you want to reschedule order?");
+    		if(r){
+    			rescheduleOrder(orderId,tt,currentObj,dateText);
+    		}
+    	},
+    	onSelectTime: function(t){
+    		//currentObj = $('.reschedule_order').attr('id');
+    		orderId = $(".reschedule_order").data('orderid');
+    		month = t.getMonth() + 1
+    	 	datetime = t.getFullYear()+'/'+(month)+ '/'+t.getDate()+' '+t.getHours()+':'+t.getMinutes();
+    		r = confirm("Are you sure you want to reschedule order?");
+    		if(r){
+    			rescheduleOrder(orderId,datetime,id,t);
+    		}
+    	}
+    });
 });
 function generateInvoice(current){
 	$("#order_id").val(current);
@@ -488,7 +511,8 @@ function generateInvoice(current){
  	$("#billing_amount2").val($('#bill'+current).data('billingamount2'));
 }
 function getDatePickerId(id,current){
-$(current).datetimepicker({
+
+	$(current).datetimepicker({
     	 onSelectDate: function(dateText) {
     	 	//currentObj = $('.reschedule_order').attr('id');
     	 	orderId = $(".reschedule_order").data('orderid');
@@ -510,7 +534,6 @@ $(current).datetimepicker({
     		}
     	}
     });
-	
 }
 function rescheduleOrder(orderId,datetime,currentObj,dateObj){
 	$.ajax({
@@ -522,8 +545,10 @@ function rescheduleOrder(orderId,datetime,currentObj,dateObj){
 				if(obj.result){
 					displayDate = moment(datetime).format('MMM Do YYYY h:mm a');
 					//console.log(currentObj);	
-					//console.log($("#"+currentObj).parent());
-					alert("Order rescheduled!")
+					//$("#"+currentObj).parent(".reschedule-date").css( "background", "yellow" );
+					//console.log($("#"+currentObj).parent().eq(0));
+					//$("#"+currentObj).parent('div').html(displayDate);
+					//alert("Order rescheduled!")
 				}else{
 					alert("Failed to rescheduled!")
 				}

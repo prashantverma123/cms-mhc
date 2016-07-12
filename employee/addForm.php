@@ -76,7 +76,7 @@ $designation = $memcache->get('designation');
  					 <label class="control-label">City <span class="required">*</span></label>
  					 <div class="controls">
  							<select tabindex="1" class="large m-wrap" id="city" name="city">
-						   <?php echo optionsGenerator($cities,$data['city']);  //echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city']," where status='0'"); ?>
+						   <?php echo optionsGeneratorNew($cities,$data['city']);  //echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city']," where status='0'"); ?>
 							</select>
  							<span class="help-block" id="city_error"> </span>
 
@@ -95,7 +95,7 @@ $designation = $memcache->get('designation');
 	 				 <div class="controls">
 
 						<select tabindex="1" class="large m-wrap" id="designation" name="designation">
-						<?php  echo optionsGenerator($designation,$data['designation']); //echo $modelObj->optionsGenerator('designation', 'name', 'id',$data['designation']," where status='0'"); ?>	
+						<?php  echo optionsGeneratorNew($designation,$data['designation']); //echo $modelObj->optionsGenerator('designation', 'name', 'id',$data['designation']," where status='0'"); ?>	
 						</select>
 	 				 </div>
 	 				</div>
@@ -230,7 +230,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($employee_id =='' || $employee_id == 0){ ?>
-		window.location.href = "<?php echo SITEPATH;?>/employee/display.php?employee_id="+res_employee_id+"&flag=t";
+		window.location.href = "<?php echo SITEPATH;?>/employee/display.php";
 		<?php } ?>
     }
 </script>

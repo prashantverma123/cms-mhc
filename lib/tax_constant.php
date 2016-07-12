@@ -1,2 +1,2 @@
-John Doe
-Jane Doe
+<?php 
+define('taxes',Array); ?>

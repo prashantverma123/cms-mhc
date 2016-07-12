@@ -3,6 +3,9 @@ $session = Session::getInstance();
 $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
+$cities = $memcache->get('city');
+$designation = $memcache->get('designation');
+
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
@@ -54,10 +57,10 @@ $userId = $session->get('UserId');
 				<td class="hidden-480"><?php print $key['name'];?></td>
 				<td class="hidden-480"><?php print $key['email'];?></td>
 				<td class="hidden-480"><?php print $key['mobile_no'];?></td>
-				<td class="hidden-480"><?php print $key['cityName'];?></td>
-				<td class="hidden-480"><?php print $key['designationName'];?></td>
+				<td class="hidden-480"><?php print $cities[$key['city']];?></td>
+				<td class="hidden-480"><?php print $designation[$key['designation']];?></td>
 				<td class="hidden-480"><?php print $key['experties'];?></td>
-				<!-- <td class="hidden-480"><?php print $key['experties'];?></td> -->
+				<!-- <td class="hidden-480"><?php //print $key['experties'];?></td> -->
 				 <td>
 				 	<!--a href="javascript:void(0);" onclick="attendance(<?php print $key['id'];?>)" class="" title="Edit" style="color:#FFFFFF"><img src="../img/attendance.png"/> </a-->
 				 	<span class="label"><input type="checkbox" name="attendance<?php echo $j; ?>" value="1" title="Attendance" onchange="attendance(<?php print $key['id'];?>,<?php echo $j; ?>)" <?php if($key['attendance']=='0'): echo "checked"; else: echo ""; endif; ?> /></span> &nbsp;

@@ -127,7 +127,7 @@ $role=$memcache->get('role');
 				</span>
 			    <button class="btn blue" type="submit" onClick="return saveData('frm_about_cmsuser','saveCmsuser');"><i class="icon-ok"></i> Save</button>
 			    <?php /*?><!-- <a href="<?php print SITEPATH;?>/cmsUser/display.php" ><button class="btn" type="button">Cancel</button></a>--><?php */?>
-			  	<a  href="javascript:void();" onclick="window.location.href='<?php print SITEPATH;?>/cmsUser/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
+			  	<a  href="javascript:void();" onclick="window.location.href='<?php print SITEPATH;?>/cmsuser/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
 			</div>
 		 </form>
 		 <!-- END FORM-->

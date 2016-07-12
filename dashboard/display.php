@@ -116,6 +116,61 @@ $modelObj->memcacheData();
                                </tbody>
                             </table>
                               </div>
+
+                           </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </div>
+               </div>
+
+               <div class="span12">
+                  <div class="tabbable tabbable-custom boxless">
+                    <div class="tab-content">
+                          <!-- <div class="header-stats-container" style="width:100%;height:100px;" >
+                         <?php //foreach ($modules as $module): ?>
+                         <div class="boxContainer statistics <?php //echo $module['module']; ?>">
+                           <h4 style="text-align:center;"><?php //echo $module['module']; ?></h4>
+                           <p style="text-align:center;"><?php //echo $modelObj->get_statistics($module['module']); ?></p>
+                         </div>
+                        <?php //endforeach; ?>
+                       </div> -->
+
+                      <div class="complaint">
+                        <div class="complaint-head"><h4>1 Day Followups</h4></div>
+                         <div class="order-complaint">
+                        <div class="portlet-body">
+
+                          <div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
+                              <table class="table table-striped table-bordered table-hover" id="">
+                               <thead>
+
+                                <tr>                                 
+                                 <th class="hidden-480">Lead Owner</th>
+                                  <th class="hidden-480">Name</th>
+                                 <th class="hidden-480">Mobile No</th>
+                                 <th class="hidden-480">Email Id</th>
+                                
+                                </tr>
+                              </thead>
+                               <tbody>
+                              <?php $result_data = $modelObj->get1dayfollowups();
+                                if($result_data && count($result_data) > 0):
+                                foreach ($result_data as $key){
+                              ?>
+                                <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
+                                <td class="hidden-480"><?php print $key['lead_owner'];?></td>
+                                <td class="hidden-480"><?php print $key['client_firstname'];?></td>
+                                <td class="hidden-480"><?php print $key['client_mobile_no'];?></td>
+                                <td class="hidden-480"><?php print $key['client_email_id'];?></td>                                
+                                </tr>
+                            <?php } endif; ?>
+                               </tbody>
+                            </table>
+                              </div>
+                              
                            </div>
                         </div>
                       </div>

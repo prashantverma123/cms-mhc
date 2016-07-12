@@ -130,7 +130,8 @@ class City {
 		$memcache->connect('localhost', 11211);
 		if($id){
 			$cityArr = $memcache->get('city');
-			$cityArr[] = array('value'=>$id,'display'=>$values['name']);
+			//$cityArr[] = array('value'=>$id,'display'=>$values['name']);
+			$cityArr['value'] = $values['name'];
 			$memcache->set('city',$cityArr);
 		}
 		return $id;
@@ -143,12 +144,20 @@ class City {
 		if($id){
 			$cityArr = $memcache->get('city');
 			foreach ($cityArr as $key =>$city) {
-				if($city['value'] == $id){
+				/*if($city['value'] == $id){
+					unset($cityArr[$key]);
+				}*/
+				if($key == $id){
 					unset($cityArr[$key]);
 				}
 			}
 			if($values['name'] != '')
-			$cityArr[] = array('value'=>$id,'display'=>$values['name']);
+				$cityArr['value'] = $values['name'];
+
+			if($values['status']){
+				unset($cityArr[$key]);
+			}
+			//$cityArr[] = array('value'=>$id,'display'=>$values['name']);
 			$memcache->set('city',$cityArr);
 		}
 		return $id;

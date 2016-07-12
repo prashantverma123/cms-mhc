@@ -27,23 +27,42 @@ class Dashboard {
 		return $dataArr;
 	}
 
+	public function get1dayfollowups(){
+		$table = 'leadmanager';
+		/*if($_SESSION['tmobi']['city'] != '')
+			$keyValueArray['city'] = $_SESSION['tmobi']['city'];*/
+		$keyValueArray['status'] = '0';
+		$keyValueArray['reminder'] = date('Y-m-d strtotime("+1 day")');
+
+		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $table, "id,name,email_id,mobile_no,order_feedback,TIMESTAMPDIFF(HOUR,job_start, job_end) as duration", "", '', false);
+		return $dataArr;
+	}
+
 	public function memcacheData(){
 		$memcache = new Memcache;
 		$memcache->connect('localhost', 11211) or die ("Could not connect");
 		$keyValueArray['status'] = '0';
 		if(!$memcache->get('city')){
 			$cities = $this -> db -> getDataFromTable($keyValueArray, 'city', "distinct name as display, id as value", '', '');
-			$memcache->set('city',$cities);
+			foreach ($cities as $city) {
+				$cityarr[$city['value']] =  $city['display'];
+			}
+			//$cityarr = $this->city();
+			$memcache->set('city',$cityarr);
 		}
+		
 		//if(!$memcache->get('leadsource')){
 			$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadsource', "distinct name as display, id as value", 'name ASC', '');
-			$memcache->set('leadsource',$leadsources);
+			foreach ($leadsources as $leadsource) {
+				$sourcearr[$leadsource['value']] =  $leadsource['display'];
+			}
+			$memcache->set('leadsource',$sourcearr);
 		//}
 		if(!$memcache->get('leadstage')){
 			$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadstage', "distinct name as display, id as value", '', '');
 			$memcache->set('leadstage',$leadsources);
 		}
-		//if(!$memcache->get('pricelist')){
+		if(!$memcache->get('pricelist')){
 			//$pricelists = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "name as display, id as value", '', '',true);
 			$stmt = "select distinct name as display,id as value from pricelist group by name";
         	$this -> db ->query($stmt);
@@ -51,23 +70,51 @@ class Dashboard {
             	$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
         	}	
 			$memcache->set('pricelist',$pricelists);
-		//}
-		if(!$memcache->get('designation')){
-			$designation = $this -> db -> getDataFromTable($keyValueArray, 'designation', "distinct name as display, id as value", '', '');
-			$memcache->set('designation',$designation);
 		}
-		//if(!$memcache->get('role')){
+		//if(!$memcache->get('designation')){
+			$designations = $this -> db -> getDataFromTable($keyValueArray, 'designation', "distinct name as display, id as value", '', '');
+			foreach ($designations as $designation) {
+				$designationarr[$designation['value']] =  $designation['display'];
+			}
+			$memcache->set('designation',$designationarr);
+		//}
+		if(!$memcache->get('role')){
 			$role = $this -> db -> getDataFromTable(array(), 'role', "distinct name as display, role as value", '', '');
 			$memcache->set('role',$role);
-		//}
+		}
 		if(!$memcache->get('category')){
 			$category = $this -> db -> getDataFromTable(array(), 'category', "distinct name as display, id as value", '', '');
 			$memcache->set('category',$category);
 		}
 		if(!$memcache->get('varianttype')){
 			$varianttype = $this -> db -> getDataFromTable(array(), 'variantmaster', "distinct varianttype as display, id as value", '', '');
-			$memcache->set('varianttype',$varianttype);
+			foreach ($varianttype as $value) {
+				$arr[$value['value']] =  $value['display'];
+			}
+			$memcache->set('varianttype',$arr);
 		}
+
+		if(!$memcache->get('taxes')){
+			$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
+			$memcache->set('taxes',$taxes);
+		}
+
+		if(!$memcache->get('mhcclient')){
+			$mhcclients = $this -> db -> getDataFromTable($whereArr, 'mhcclient', "*", "", '', false);
+			foreach ($mhcclients as $mhcclient) {
+				$mhcclientarr[$mhcclient['id']] =  array('client_firstname'=>$mhcclient['client_firstname'],'client_lastname'=>$mhcclient['client_lastname'],'client_mobile_no'=>$mhcclient['client_mobile_no'],'address'=>$mhcclient['address']);
+			}
+			$memcache->set('mhcclient',$mhcclientarr);
+		}
+		
+	}
+
+	function city(){
+		$cities = $this -> db -> getDataFromTable($keyValueArray, 'city', "distinct name as display, id as value", '', '');
+		foreach ($cities as $city) {
+			$cityarr[$city['value']] =  $city['display'];
+		}
+		return $cityarr;
 	}
 }
 ?>

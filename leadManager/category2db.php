@@ -3,7 +3,9 @@
 	include_once('../config.php');
 	include_once('variable.php');
 	$action   		= isset($_POST['action']) ? $_POST['action'] : '';
-	$leadmanager_id 	= isset($_POST['leadmanager_id']) ? $_POST['leadmanager_id'] : '';
+	if(!$action)
+	$action   		= isset($_GET['action']) ? $_GET['action'] : '';
+	$leadmanager_id = isset($_POST['leadmanager_id']) ? $_POST['leadmanager_id'] : '';
 	$call 			= isset($_POST['call']) ? $_POST['call'] : '';
 switch($action){
 	case 'delete_leadmanager':
@@ -13,14 +15,60 @@ switch($action){
 
 	break;
 	case 'saveLeadManager':
-			if($leadmanager_id == '' ){ //add new record
+
+			if($_POST['mhcclient_id'] == ''){
+				$clientArr['client_salutation'] 	= $_POST['client_salutation'];
+				$clientArr['client_firstname'] 		= $_POST['client_firstname'];
+				$clientArr['client_lastname'] 		= $_POST['client_lastname'];
+				$clientArr['client_mobile_no'] 		= $_POST['client_mobile_no'];
+				$clientArr['alternate_no'] 			= $_POST['alternate_no'];
+				$clientArr['client_email_id'] 		= $_POST['client_email_id'];
+				$clientArr['address'] 				= $_POST['address'];
+				$clientArr['landmark'] 				= $_POST['landmark'];
+				$clientArr['location'] 				= $_POST['location'];
+				$clientArr['city'] 					= $_POST['city'];
+				$clientArr['state'] 				= $_POST['state'];
+				$clientArr['pincode'] 				= $_POST['pincode'];
+				$mhcclientid = $modelObj->insertClientTable($clientArr);
+	
+			}else{
+				$clientArr['client_salutation'] = $_POST['client_salutation'];
+				$clientArr['client_firstname'] 	= $_POST['client_firstname'];
+				$clientArr['client_lastname'] 	= $_POST['client_lastname'];
+				$clientArr['client_mobile_no'] 	= $_POST['client_mobile_no'];
+				$clientArr['alternate_no'] 		= $_POST['alternate_no'];
+				$clientArr['client_email_id'] 	= $_POST['client_email_id'];
+				$clientArr['address'] 			= $_POST['address'];
+				$clientArr['landmark'] 			= $_POST['landmark'];
+				$clientArr['location'] 			= $_POST['location'];
+				$clientArr['city'] 				= $_POST['city'];
+				$clientArr['state'] 			= $_POST['state'];
+				$clientArr['pincode'] 			= $_POST['pincode'];
+				$where 							= array('id'=>$_POST['mhcclient_id']);
+				$mhcclientid	= $modelObj->updateClientTable($clientArr,$where);
+			}
+			if($mhcclientid){
+				//$deletewhere = array('mhcclient_id'=>$mhcclientid);
+				//$modelObj->deleteAddressTable($deletewhere);
+				if(count($_POST['address1']) > 0){
+					foreach ($_POST['address1'] as $address) {
+						if($address != ''){
+							$addressArr = array('mhcclient_id'=>$mhcclientid,'address'=>$address);
+							$mhcclientid = $modelObj->insertAddressTable($addressArr);
+						}
+					}
+				}
+			}
+
+		if($leadmanager_id == '' ){ //add new record
+			//print_r($_POST);
 				$insertArr['lead_source'] 	= $_POST['lead_source'];
 				$insertArr['lead_owner'] 	= $_POST['lead_owner'];
 				$insertArr['followup_by'] 	= $_POST['followup_by'];
 				$insertArr['job_status']	= 'pending';
 				$insertArr['lead_stage']    = $_POST['lead_stage'];
-				$insertArr['reminder']    = $_POST['reminder'];
-				if($_POST['service1_date'] != '1970-01-01'){
+				$insertArr['reminder']    	= $_POST['reminder'];
+				if($_POST['service1_date'] 	!= ' '){
 					$insertArr['service1_date'] = date("Y-m-d", strtotime($_POST['service1_date']));
 				}
 				else{
@@ -35,19 +83,7 @@ switch($action){
 				$insertArr['teamLeader_deployment'] 		= $_POST['teamLeader_deployment'];
 				$insertArr['supervisor_deployment'] 		= $_POST['supervisor_deployment'];
 				$insertArr['janitor_deployment'] 		= $_POST['janitor_deployment'];
-				$insertArr['client_salutation'] 		= $_POST['client_salutation'];
-				$insertArr['client_firstname'] 		= $_POST['client_firstname'];
-				$insertArr['client_lastname'] 		= $_POST['client_lastname'];
-				$insertArr['client_mobile_no'] 		= $_POST['client_mobile_no'];
-				$insertArr['alternate_no'] 		= $_POST['alternate_no'];
-				$insertArr['client_email_id'] 		= $_POST['client_email_id'];
-
-				$insertArr['address'] 	= $_POST['address'];
-				$insertArr['landmark'] 	= $_POST['landmark'];
-				$insertArr['location'] 	= $_POST['location'];
-				$insertArr['city'] 	= $_POST['city'];
-				$insertArr['state'] 	= $_POST['state'];
-				$insertArr['pincode'] 	= $_POST['pincode'];
+				
 				$insertArr['additional_note'] 	= $_POST['additional_note'];
 				$insertArr['service_inquiry1'] 	= $_POST['service_inquiry1'];
 				$insertArr['sqft1'] 	= $_POST['sqft1'];
@@ -71,15 +107,17 @@ switch($action){
 				$insertArr['varianttype1'] = $_POST['varianttype1'];
 				$insertArr['varianttype2'] = $_POST['varianttype2'];
 				$insertArr['varianttype3'] = $_POST['varianttype3'];
-
+				$insertArr['is_reminder']    = $_POST['is_reminder'];
 				$insertArr['order_id'] = uniqid ('MHC'.rand(0,9));;
 
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
-				$insertArr['author_name']			= "Prashant";
+				$insertArr['author_name']		= $_SESSION['tmobi']['AdminName'];
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
-				$insertArr['update_date']		= date('Y-m-d H:i:s');
+				//$insertArr['update_date']		= date('Y-m-d H:i:s');
 				$insertArr['status']= 0;
 				$insertArr['ip']= getIP();
+				$insertArr['mhcclient_id'] = $mhcclientid;
+				//print_r($insertArr);exit;
 				$returnVal = $modelObj->insertTable($insertArr);
 				//die;
 				$arrReturn['result'] = 'success';
@@ -88,12 +126,13 @@ switch($action){
 				$arrReturn['leadmanager_id'] = encryptdata($returnVal);
 
 			}else if($leadmanager_id > 0){ // edit the record
+				$updateArr['mhcclient_id'] = $mhcclientid;
 				$updateArr['lead_source'] 	= $_POST['lead_source'];
 				$updateArr['lead_owner'] 	= $_POST['lead_owner'];
 				$updateArr['followup_by'] 	= $_POST['followup_by'];
 				$updateArr['job_status']	= $_POST['job_status'];
 				$updateArr['lead_stage']    = $_POST['lead_stage'];
-				$updateArr['reminder']    = $_POST['reminder'];
+				$updateArr['reminder']    	= $_POST['reminder'];
 				$updateArr['service1_date'] 		=  date("Y-m-d", strtotime($_POST['service1_date']));
 				$updateArr['service1_time'] 		= $_POST['service1_time'];
 				$updateArr['service2_date'] 		=  date("Y-m-d", strtotime($_POST['service2_date']));
@@ -104,19 +143,7 @@ switch($action){
 				$updateArr['teamLeader_deployment'] 		= $_POST['teamLeader_deployment'];
 				$updateArr['supervisor_deployment'] 		= $_POST['supervisor_deployment'];
 				$updateArr['janitor_deployment'] 		= $_POST['janitor_deployment'];
-				$updateArr['client_salutation'] 		= $_POST['client_salutation'];
-				$updateArr['client_firstname'] 		= $_POST['client_firstname'];
-				$updateArr['client_lastname'] 		= $_POST['client_lastname'];
-				$updateArr['client_mobile_no'] 		= $_POST['client_mobile_no'];
-				$updateArr['alternate_no'] 		= $_POST['alternate_no'];
-				$updateArr['client_email_id'] 		= $_POST['client_email_id'];
-
-				$updateArr['address'] 	= $_POST['address'];
-				$updateArr['landmark'] 	= $_POST['landmark'];
-				$updateArr['location'] 	= $_POST['location'];
-				$updateArr['city'] 	= $_POST['city'];
-				$updateArr['state'] 	= $_POST['state'];
-				$updateArr['pincode'] 	= $_POST['pincode'];
+				
 				$updateArr['additional_note'] 	= $_POST['additional_note'];
 				$updateArr['service_inquiry1'] 	= $_POST['service_inquiry1'];
 				$updateArr['sqft1'] 	= $_POST['sqft1'];
@@ -139,7 +166,9 @@ switch($action){
 				$updateArr['varianttype1'] = $_POST['varianttype1'];
 				$updateArr['varianttype2'] = $_POST['varianttype2'];
 				$updateArr['varianttype3'] = $_POST['varianttype3'];
-
+				$updateArr['is_reminder']    = $_POST['is_reminder'];
+				$updateArr['update_date']		= date('Y-m-d H:i:s');
+				//print_r($updateArr);exit;
 				$whereArr = array('id' => $leadmanager_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 				$arrReturn['result'] = 'success';
@@ -190,6 +219,22 @@ switch($action){
 		case "getVaiantType":
 		$row = $modelObj->get_variant_type($_POST['id']);
 		$arrReturn['result'] = $row;
+		break;
+		case "getClientFirstname":
+		$row = $modelObj->get_client_firstname($_GET['term']);
+		$arrReturn = $row;
+		break;
+		case "getClientLastname":
+		$row = $modelObj->get_client_lastname($_GET['term']);
+		$arrReturn = $row;
+		break;
+		case "getClientMobile":
+		$row = $modelObj->get_mhcclient_mobile($_POST['mobile_no']);
+		$arrReturn = $row;
+		break;
+		case "getAddress":
+		$row = $modelObj->getAddressTable($_POST['mhcclient_id']);
+		$arrReturn = $row;
 		break;
 }
 echo json_encode($arrReturn);

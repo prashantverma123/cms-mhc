@@ -37,7 +37,7 @@ function pay_page ( $params, $salt )
 	if ( count( $_POST ) && isset( $_POST['mihpayid'] ) && ! empty( $_POST['mihpayid'] ) ) {
 		$_POST['surl'] = $params['surl'];
 		$_POST['furl'] = $params['furl'];
-		$insertArr = array('transaction_id'=>$_post['txnid'],'firstname'=>$_POST['firstname'],'lastname'=>$_POST['lastname'],'city'=>$_POST['city'],'zipcode'=>$_POST['zipcode'],'email'=>$_POST['email'],'net_amount_debit'=>$_POST['net_amount_debit'],'bank_ref_num'=>$_POST['bank_ref_num'],'bankcode'=>$_POST['bankcode'],'error_message'=>$_POST['error_Message'],'amount'=>$_POST['amount'],'discount'=>$_POST['discount'],'card_category'=>$_POST['cardCategory'],'card_number'=>$_POST['cardnum'],'name_on_card'=>$_POST['name_on_card'],'payment_source'=>$_POST['payment_source'],'payment_mode'=>$_POST['mode'],'addedon'=>$_POST['addedon'],'status'=>$_POST['status'],'bank_status'=>$_POST['unmappedstatus']);
+		$insertArr = array('transaction_id'=>$_POST['txnid'],'firstname'=>$_POST['firstname'],'lastname'=>$_POST['lastname'],'city'=>$_POST['city'],'zipcode'=>$_POST['zipcode'],'email'=>$_POST['email'],'net_amount_debit'=>$_POST['net_amount_debit'],'bank_ref_num'=>$_POST['bank_ref_num'],'bankcode'=>$_POST['bankcode'],'error_message'=>$_POST['error_Message'],'amount'=>$_POST['amount'],'discount'=>$_POST['discount'],'card_category'=>$_POST['cardCategory'],'card_number'=>$_POST['cardnum'],'name_on_card'=>$_POST['name_on_card'],'payment_source'=>$_POST['payment_source'],'payment_mode'=>$_POST['mode'],'addedon'=>$_POST['addedon'],'status'=>$_POST['status'],'bank_status'=>$_POST['unmappedstatus']);
 		$modelObj->insertTable($insertArr);
 		if($_POST['status'] == 'success'){
 			$updateArr['payment_status'] 	= 'success';
@@ -50,6 +50,7 @@ function pay_page ( $params, $salt )
 
 
 		$result = response( $_POST, $salt );
+		//print_r($result);exit;
 		Misc::show_reponse( $result );
 	} else {
 		$host = (isset( $_SERVER['https'] ) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -452,7 +453,7 @@ class Misc {
 	public static function show_reponse ( $result )
 	{
 		if ( $result['status'] === Misc::SUCCESS )
-			$result['data']();
+			header( 'Location:' . $result['data'] );//$result['data']();
 		else
 			return $result['data'];
 	}

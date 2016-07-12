@@ -30,9 +30,9 @@ switch($action){
 				$insertArr['commission'] 			= $_POST['commission'];
 				$insertArr['taxed_cost'] 			= $_POST['taxed_cost'];
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
-				$insertArr['author_name']			= "Prashant";
+				$insertArr['author_name']			= $_SESSION['tmobi']['AdminName'];
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
-				$insertArr['update_date']		= date('Y-m-d H:i:s');
+				
 				$insertArr['status']= 0;
 				$insertArr['ip']= getIP();
 				$returnVal = $modelObj->insertTable($insertArr);
@@ -58,7 +58,7 @@ switch($action){
 				$updateArr['price'] 	= $_POST['price'];
 				$updateArr['commission'] 	= $_POST['commission'];
 				$updateArr['taxed_cost'] 	= $_POST['taxed_cost'];
-
+				$updateArr['update_date']		= date('Y-m-d H:i:s');
 				$whereArr = array('id' => $order_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 				$arrReturn['result'] = 'success';

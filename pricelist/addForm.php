@@ -74,7 +74,7 @@ $cities = $memcache->get('city');
  							 <!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
  							 <span class="help-block" id="efburl_error"> </span> -->
  						 <select tabindex="1" class="large m-wrap" id="varianttype" name="varianttype">
- 							<?php echo optionsGenerator($varianttype,$data['varianttype']);//echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['id'], " where status='0'"); ?>
+ 							<?php echo optionsGeneratorNew($varianttype,$data['varianttype']);//echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['id'], " where status='0'"); ?>
  						 </select>
  						 </div>
  						</div>
@@ -87,7 +87,7 @@ $cities = $memcache->get('city');
 							<!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span> -->
 						<select tabindex="1" class="large m-wrap" id="city" name="city">
-						 <?php echo optionsGenerator($cities,$data['city']); //echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id'], " where status='0'"); ?>
+						 <?php echo optionsGeneratorNew($cities,$data['city']); //echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id'], " where status='0'"); ?>
 						</select>
 						</div>
 					 </div>
@@ -222,7 +222,7 @@ function saveData(frm_id, action){
 				document.getElementById('record_modified').style.display='none';
 			}, 1000);
 		<?php if($pricelist_id =='' || $pricelist_id == 0){ ?>
-		window.location.href = "<?php echo SITEPATH;?>/pricelist/display.php?pricelist_id="+res_pricelist_id+"&flag=t";
+		window.location.href = "<?php echo SITEPATH;?>/pricelist/display.php";
 		<?php } ?>
     }
 </script>

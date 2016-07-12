@@ -157,7 +157,13 @@ $cities = $memcache->get('city');
 					<div class="control-group">
 					 <label class="control-label">State </label>
 					 <div class="controls">
-						 <input type="text" id="state" name="state" value="<?php echo isset($data)?$data['state']:''; ?>" class="m-wrap span12">
+						 <!--input type="text" id="state" name="state" value="<?php //echo isset($data)?$data['state']:''; ?>" class="m-wrap span12"-->
+						 <select id="state" name="state" class="m-wrap span12">
+						<?php foreach ($states as $k=>$state) { ?>
+							<option value="<?php echo $k; ?>" <?php if($data['state'] == $k): echo "selected"; else: ""; endif; ?>><?php echo $state; ?></option>
+						<?php } ?>
+						<?php ?>
+						</select>
 						 <span class="help-block" id="efburl_error"> </span>
 					 </div>
 					</div>
@@ -190,10 +196,10 @@ $cities = $memcache->get('city');
 						<label class="control-label">Price<span class="required">*</span></label>
 						<div class="controls">
 							<input type="text" id="price" name="price" value="<?php
-							$id = $_GET['lead_source_id'];
+						/*	$id = $_GET['lead_source_id'];
 							$arVal = $modelObj->getPrice();
 							//echo '<pre>'; print_r($arVal[0]['price']); echo '</pre>';
-							$data['price']=$arVal[0]['price'];
+							$data['price']=$arVal[0]['price'];*/
 							 echo isset($data)?$data['price']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span>
 

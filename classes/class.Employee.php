@@ -8,7 +8,7 @@ class Employee {
 
 	/********************* START OF CONSTRUCTOR *******************************/
 	public function __construct() {
-		$this -> tableName = 'employee';
+		$this -> tableName = 'crmemployee';
 		$this -> tableName1 = 'attendance';
 		$this -> folderName = "employee";
 		$this -> className = "employee";
@@ -24,9 +24,13 @@ class Employee {
 		$offset = $offset*$recperpage;
 		$keyValueArray = array();
 		if ($status == '-1') {
-			$keyValueArray['employee.status'] = -1;
+			$keyValueArray['crmemployee
+
+.status'] = -1;
 		} else {
-			$keyValueArray['notequal'] = "employee.status != -1";
+			$keyValueArray['notequal'] = "crmemployee
+
+.status != -1";
 		}
 	    $main_sql = '1=1';
 
@@ -72,15 +76,23 @@ class Employee {
 		$keyValueArray['sqlclause'] = $main_sql;
 		$limit = $offset . "," . $recperpage;
 		if($sort != '') {
-			$sort = 'employee.name '.$sort;
+			$sort = 'crmemployee
+
+.name '.$sort;
 		}else{
-			$sort = 'employee.name ASC';
+			$sort = 'crmemployee
+
+.name ASC';
 		}
 		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", $limit, true);
-		$joinArray[] = array('type'=>'left','table'=>'attendance','condition'=>'attendance.employee_id=employee.id AND DATE(attendance.date)=CURRENT_DATE');
-		$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=employee.city');
-		$joinArray[] = array('type'=>'left','table'=>'designation','condition'=>'designation.id=employee.designation');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " employee.*,attendance.attendance,city.name as cityName,designation.name as designationName ", $sort, $limit,$joinArray, false);
+		$joinArray[] = array('type'=>'left','table'=>'attendance','condition'=>'attendance.employee_id=crmemployee
+
+.id AND DATE(attendance.date)=CURRENT_DATE');
+/*$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=crmemployee.city');
+$joinArray[] = array('type'=>'left','table'=>'designation','condition'=>'designation.id=crmemployee.designation');*/
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " crmemployee
+
+.*,attendance.attendance", $sort, $limit,$joinArray, false);
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;

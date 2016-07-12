@@ -77,10 +77,10 @@ class Pricelist {
 			$sort = $this -> tableName.'.name ASC';
 		}
 		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
-		$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=pricelist.city');
+		//$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=pricelist.city');
 		$joinArray[] = array('type'=>'left','table'=>'category','condition'=>'category.id=pricelist.category_type');
 		$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=pricelist.lead_source');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " pricelist.*,city.name as cityName,category.name as categoryName,leadsource.name as leadsourceName ", $sort, $limit,$joinArray, false);
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " pricelist.*,category.name as categoryName,leadsource.name as leadsourceName ", $sort, $limit,$joinArray, false);
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;
@@ -175,9 +175,15 @@ class Pricelist {
 		$memcache = new Memcache;
 		$memcache->connect('localhost', 11211);
 		if($id){
-			$arr = $memcache->get('pricelist');
+			/*$arr = $memcache->get('pricelist');
 			$arr[] = array('value'=>$id,'display'=>$values['name']);
-			$memcache->set('pricelist',$arr);
+			$memcache->set('pricelist',$arr);*/
+			$stmt = "select distinct name as display,id as value from pricelist group by name";
+        	$this -> db ->query($stmt);
+        	while ($result = $this-> db ->fetch()) {
+            	$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+        	}	
+			$memcache->set('pricelist',$pricelists);
 		}
 		$response =  $id;
 		$this->logs->writelogs($this->folderName,"Insertion: ".json_encode($response));
@@ -189,15 +195,21 @@ class Pricelist {
 		$memcache->connect('localhost', 11211);
 		$id = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
 		if($id){
-			$arr = $memcache->get('pricelist');
+			/*$arr = $memcache->get('pricelist');
 			foreach ($arr as $key =>$val) {
 				if($val['value'] == $id){
 					unset($arr[$key]);
 				}
 			}
 			if($values['name'] != '')
-			$arr[] = array('value'=>$id,'display'=>$values['name']);
-			$memcache->set('pricelist',$arr);
+			$arr[] = array('value'=>$id,'display'=>$values['name']);*/
+			$stmt = "select distinct name as display,id as value from pricelist group by name";
+        	$this -> db ->query($stmt);
+        	while ($result = $this-> db ->fetch()) {
+            	$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+        	}	
+			$memcache->set('pricelist',$pricelists);
+			//$memcache->set('pricelist',$arr);
 		}
 		$response = $id;
 		$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));

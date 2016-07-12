@@ -4,6 +4,8 @@ $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
 $leadstage = $memcache->get('leadstage');
+$mhcclient = $memcache->get('mhcclient');
+
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
@@ -17,7 +19,8 @@ $leadstage = $memcache->get('leadstage');
 	</select>
 
 		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
-		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
+		<input type="text" name="filter_date" id="filter_date" value="<?php if($_GET['filter_date'] != ''): echo $_GET['filter_date']; else: ''; endif; ?>" placeholder="Select a Lead Date" />
+		<!--input type="hidden" name="p" value="<?php //echo $_GET['p']; ?>" /-->
 	<button type="submit">Submit</button>
 	</form>
 	<div role="grid" class="dataTables_wrapper form-inline " id="sample_3_wrapper" style="width:96%;height:80%;overflow: auto">
@@ -29,12 +32,13 @@ $leadstage = $memcache->get('leadstage');
 				 <th class="hidden-480">Lead Source</th>
 				 <th class="hidden-480">Lead Owner</th>
 				  <th class="hidden-480">Lead Stage</th>
-				 <th class="hidden-480">Client Name</th>
-				  <th class="hidden-480">Client Mobile No</th>
-				 <th class="hidden-480">Service Date</th>
+				 <th class="hidden-480">Client Details</th>
+				  <!-- <th class="hidden-480">Client Mobile No</th> -->
+				 <th class="hidden-480">Service Details</th>
 				 <th class="hidden-480">Service Time</th>
 				 <th class="hidden-480">Order Status</th>
 				 <th class="hidden-480">Inquiry Date/time</th>
+				 <th class="hidden-480">Comments/Remarks</th>
 				 <th class="hidden-480">Action</th>
 			  </tr>
 			</thead>
@@ -50,15 +54,26 @@ $leadstage = $memcache->get('leadstage');
 		   		$sort = $_GET['sort'];
 		   }
 		   $recperpage=PER_PAGE_ROWS;
-			$filterData = array('city' =>$_SESSION['tmobi']['city']);
+			//$filterData = array('city' =>$_SESSION['tmobi']['city']);
 			// if ($_GET['filterby']) {
 		 //     $filterData = array('city' =>$_SESSION['tmobi']['city'],'lead_source' =>$_SESSION['tmobi']['city']);
 			// }
+		    if($_SESSION['tmobi']['city'] != '')
+ 			$filterData['city'] = $_SESSION['tmobi']['city'];
 
+			if(isset($_GET['filter_date'])){
+		   		//$filter_date = $_GET['filter_date'];
+		   		$filterData['service_date'] = $_GET['filter_date'];
+		   		//$filterData['service_date'] = $_GET['filter_date'];
+		   		//$filterData['service_date'] = $_GET['filter_date'];
+ 		    }
 			$result_data = $modelObj->getListingData($_GET['filterby'], $page,$recperpage,$searchData,$filterData,'',$sort);
 
 			//print_r($result_data);
 			foreach ($result_data['rows'] as $key){
+				$mhcclientInfo = "";
+				$mhcclientInfo = $mhcclient[$key['mhcclient_id']];
+				//print_r($mhcclientInfo);
 				// if($key['parent_id'] == 0){
 				// 	$is_parent_val = 'Yes';
 				// }else{
@@ -93,10 +108,11 @@ $leadstage = $memcache->get('leadstage');
 						</select> -->
 					</div>
 				</td>
-				<td class="hidden-480"><?php print $key['client_firstname'];?></td>
-				<td class="hidden-480"><?php print $key['client_mobile_no'];?></td>
-				<td class="hidden-480"><?php print date('d M Y',strtotime($key['service1_date']));?></td>
-				<td class="hidden-480"><?php print date('h:i A',strtotime($key['service1_time']));?></td>
+				<td class="hidden-480"><b><?php print $mhcclientInfo['client_firstname'].' ' .$mhcclientInfo['client_lastname'].'</b></br>'.$mhcclientInfo['client_mobile_no'].'</br>'.$mhcclientInfo['address'];?></td>
+				<!-- <td class="hidden-480"><?php //print $key['client_mobile_no'];?></td> -->
+				<td class="hidden-480"><?php print $key['service1'].' </br>'.$key['service2'].'</br>'.$key['service3'];?></td>
+				<!-- <td class="hidden-480"><?php //print date('d M Y',strtotime($key['service1_date']));?></td> -->
+				<td class="hidden-480"><?php print date('d M Y',strtotime($key['service1_date'])). ' </br>'.date('h:i A',strtotime($key['service1_time']));?></td>
 				 <td id="confirmed<?php echo $key['id']; ?>">
 				 	<?php if($key['job_status']=='confirmed'):
 				 	echo "Confirmed";
@@ -109,6 +125,7 @@ $leadstage = $memcache->get('leadstage');
 				 <?php endif; ?>
 				</td>
 				<td><?php echo date('d M Y h:i A',strtotime($key['insert_date'])); ?></td>
+				<td class="hidden-480"><?php print $key['additional_note'];?></td>
 				<td>
 					<?php if(in_array('edit',$actionArr)): ?>
 					<span class="label label-success"><a href="<?php print SITEPATH.'/'.$modelObj->folderName.'/display.php?leadmanager_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
@@ -167,7 +184,9 @@ $(document).ready(function () {
  	 set_reminder(myid);
 	});
 
-  
+  $("#filter_date").datepicker({
+   	dateFormat:"yy/mm/dd"
+   });
 
 });
 
@@ -266,9 +285,6 @@ $(document).ready(function () {
 	}
 
 	function set_reminder(id){
-
-		
-
 		if(id !=''){
 			//var reminder = $('#reminder'+id).val();
 			var reminder =  $('#datePicker'+id).val();

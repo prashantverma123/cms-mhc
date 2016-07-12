@@ -8,31 +8,8 @@ require_once 'payu.php';
 //echo "hello";exit();
 $m = isset($_GET['m'])?$_GET['m']:"";
 $l = $_GET['l']?$_GET['l']:"";
-$row = $modelObj->get_order_details($m,$l); 
-function payment_success() {
-	$m = isset($_GET['m'])?$_GET['m']:"";
-	$l = $_GET['l']?$_GET['l']:"";
-	/* Payment success logic goes here. */
-	//header('Location: '.SITEPATH.'/payment/response.php?m='.$m.'&l='.$l.'&r=s');
-	//echo "Congratulations !! The Payment is successful.";
-}
+$row = $modelObj->get_order_details($m,$l);
 
-function payment_failure() {
-	$m = isset($_GET['m'])?$_GET['m']:"";
-$l = $_GET['l']?$_GET['l']:"";
-	/* Payment failure logic goes here. */
-	//header('Location: '.SITEPATH.'/payment/response.php?m='.$m.'&l='.$l.'&r=f');
-	//echo "We are sorry. The Payment has failed";
-}
-
-
-
-/*if ( count( $_POST ) ){ 
-
-  pay_page( array ('key' => $_POST['key'], 'txnid' => $_POST['txnid'], 'amount' => $_POST['amount'],'firstname' => $_POST['firstname'], 'email' => $_POST['email'], 'phone' => $_POST['phone'],'productinfo' => $_POST['productinfo'], 'surl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=s', 'furl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=f','udf1'=>decryptdata($m),'udf2'=>decryptdata($l)), 
-      SALT );
-
-}else*/
 /* Payments made easy. */
 if ( count( $_POST ) ){ 
   pay_page( array ('key' => $_POST['key'], 'txnid' => $_POST['txnid'], 'amount' => $_POST['amount'],'firstname' => $_POST['firstname'], 'email' => $_POST['email'], 'phone' => $_POST['phone'],'productinfo' => $_POST['productinfo'], 'surl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=s', 'furl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=f','udf1'=>decryptdata($m),'udf2'=>decryptdata($l)), 
@@ -154,6 +131,10 @@ $('#frmMrHomeCarePayment').validate({
       email:{
         required:true,
         email:true
+      },
+      zipcode:{
+        required:true,
+        number:true
       }
     },
     submitHandler: function() {
@@ -209,12 +190,12 @@ $('#frmMrHomeCarePayment').validate({
       <input name='city' id="city" type='text' value='<?php echo isset($row[0]["cityname"])?$row[0]["cityname"]:"";?>' tabindex="5">
     </label>
   </div>
-<!--   <div class="col-3">
+  <div class="col-3">
     <label>
       Pincode
-      <input name='zipcode' id="zipdoc" type='text' value='<?php //echo isset($row[0]["pincode"])?$row[0]["pincode"]:"";?>' tabindex="6">
+      <input name='zipcode' id="zipdoc" type='text' value='<?php echo isset($row[0]["pincode"])?$row[0]["pincode"]:"";?>' tabindex="6">
     </label>
-  </div> -->
+  </div>
   <div class="col-3">
     <label>
       Product Info
