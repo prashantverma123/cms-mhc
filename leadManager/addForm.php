@@ -38,7 +38,7 @@ $pricelist = $memcache->get('pricelist');
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
 						   <?php if($leadsources)
-						   		echo optionsGenerator($leadsources,$data['lead_source']);
+						   		echo optionsGeneratorNew($leadsources,$data['lead_source']);
 						   		else
 						   		echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $data['lead_source']," where status='0'"); ?>
 							</select>

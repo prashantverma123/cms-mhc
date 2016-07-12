@@ -5,7 +5,7 @@ $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
 $leadstage = $memcache->get('leadstage');
 $mhcclient = $memcache->get('mhcclient');
-
+$leadsources = $memcache->get('leadsource');
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
@@ -84,7 +84,7 @@ $mhcclient = $memcache->get('mhcclient');
 				<!-- <td><input type="checkbox" class="checkboxes" value="1" /></td>-->
 				<!-- <td><?php //print $key['category_id'];?></td> -->
 				<td class="hidden-480"><?php print 'J'.$key['id'];?></td>
-				<td class="hidden-480"><?php print $key['leadsource_name'];?></td>
+				<td class="hidden-480"><?php print $leadsources[$key['lead_source']];?></td>
 				<td class="hidden-480"><?php print $key['lead_owner'];?></td>
 				<td class="hidden-480">
 					<select class="small m-wrap lead_stage" name="lead_stage" id="leadstage<?php print $key['id'];?>" onchange="changeLeadStage(<?php print $key['id'];?>);">

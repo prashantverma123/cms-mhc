@@ -51,13 +51,13 @@ class Dashboard {
 			$memcache->set('city',$cityarr);
 		}
 		
-		//if(!$memcache->get('leadsource')){
+		if(!$memcache->get('leadsource')){
 			$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadsource', "distinct name as display, id as value", 'name ASC', '');
 			foreach ($leadsources as $leadsource) {
 				$sourcearr[$leadsource['value']] =  $leadsource['display'];
 			}
 			$memcache->set('leadsource',$sourcearr);
-		//}
+		}
 		if(!$memcache->get('leadstage')){
 			$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadstage', "distinct name as display, id as value", '', '');
 			$memcache->set('leadstage',$leadsources);

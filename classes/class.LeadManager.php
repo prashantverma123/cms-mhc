@@ -105,12 +105,12 @@ class LeadManager {
 		}
 		/*$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);*/
 
-		$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
+		//$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
 		$joinArray[] = array('type'=>'left','table'=>'leadstage','condition'=>'leadstage.id=leadmanager.lead_stage');
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
 		$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*,leadsource.name as leadsource_name,leadstage.name as leadstage_name,leadstage.id as leadstage_id,p1.name as service1,p2.name as service2,p3.name as service3", $sort, $limit,$joinArray, false);
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*,leadstage.name as leadstage_name,leadstage.id as leadstage_id,p1.name as service1,p2.name as service2,p3.name as service3", $sort, $limit,$joinArray, false);
 
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);

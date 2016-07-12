@@ -69,9 +69,11 @@ class LeadSource {
 				$this -> finalData[] = $dataArr[$p];
 			}
 		}
-		$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", '', false);
+
+		//$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", '', false);
 		$result['rows'] = $this -> finalData;
-		$result['count'] = count($countAll);
+		//$result['count'] = count($countAll);
+		$result['count']= count($dataArr);
 		//echo '<pre>'; print_r($this -> finalData);
 		return $result;
 	}// eof getDefault
@@ -127,7 +129,8 @@ class LeadSource {
 		$memcache->connect('localhost', 11211);
 		if($id){
 			$arr = $memcache->get('leadsource');
-			$arr[] = array('value'=>$id,'display'=>$values['name']);
+			//$arr[] = array('value'=>$id,'display'=>$values['name']);
+			$arr[$id] = $values['name'];
 			$memcache->set('leadsource',$arr);
 		}
 		return $id;
@@ -140,12 +143,16 @@ class LeadSource {
 		if($id){
 			$arr = $memcache->get('leadsource');
 			foreach ($arr as $key =>$val) {
-				if($val['value'] == $id){
+				if($key == $id){
 					unset($arr[$key]);
 				}
 			}
 			if($values['name'] != '')
-			$arr[] = array('value'=>$id,'display'=>$values['name']);
+				$arr[$id] = $values['name'];
+			//$arr[] = array('value'=>$id,'display'=>$values['name']);
+			if($values['status']){
+				unset($arr[$id]);
+			}
 			$memcache->set('leadsource',$arr);
 		}
 		return $id;
