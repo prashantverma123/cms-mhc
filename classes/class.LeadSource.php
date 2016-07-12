@@ -70,10 +70,10 @@ class LeadSource {
 			}
 		}
 
-		//$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", '', false);
+		$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", '', false);
 		$result['rows'] = $this -> finalData;
-		//$result['count'] = count($countAll);
-		$result['count']= count($dataArr);
+		$result['count'] = count($countAll);
+		//$result['count']= count($dataArr);
 		//echo '<pre>'; print_r($this -> finalData);
 		return $result;
 	}// eof getDefault

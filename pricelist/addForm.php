@@ -3,6 +3,7 @@
 if($pricelist_id > 0){
 $returned_data = (array)json_decode($modelObj->getEditData($pricelist_id));
 $data = (array)$returned_data[0];
+print_r($data);
 }
 $leadsources = $memcache->get('leadsource');
 $categories = $memcache->get('category');
@@ -31,7 +32,11 @@ $cities = $memcache->get('city');
 						<label class="control-label">Lead Source <span class="required">*</span></label>
 						<div class="controls">
 						 <select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
-						 <?php echo optionsGeneratorNew($leadsources,$data['id']); //echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['id'], " where status='0'"); ?>
+						 <?php 
+						 if($leadsources)
+						 echo optionsGeneratorNew($leadsources,$data['lead_source']); 
+						 else
+						 echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['lead_source'], " where status='0'"); ?>
 						</select>
 						</div>
 					 </div>
@@ -59,7 +64,11 @@ $cities = $memcache->get('city');
 					 <div class="control-group">
 						<label class="control-label">Category <span class="required">*</span></label>
 							<select tabindex="1" class="large m-wrap" id="category_type" name="category_type">
-							 <?php echo optionsGeneratorNew($categories,$data['category_type']);//echo $modelObj->optionsGenerator('category', 'name', 'id',$data['id'], " where status='0'"); ?>
+							 <?php 
+							 if($categories)
+							 echo optionsGeneratorNew($categories,$data['category_type']);
+							 else
+							 echo $modelObj->optionsGenerator('category', 'name', 'id',$data['category_type'], " where status='0'"); ?>
 							</select>
 					 </div>
 				  </div>
@@ -71,10 +80,14 @@ $cities = $memcache->get('city');
  						<div class="control-group">
  						 <label class="control-label">Variant <span class="required">*</span></label>
  						 <div class="controls">
- 							 <!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
+ 							 <!-- <input type="text" id="city" name="city" value="<?php //echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
  							 <span class="help-block" id="efburl_error"> </span> -->
  						 <select tabindex="1" class="large m-wrap" id="varianttype" name="varianttype">
- 							<?php echo optionsGeneratorNew($varianttype,$data['varianttype']);//echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['id'], " where status='0'"); ?>
+ 							<?php 
+ 							if($varianttype)
+ 							echo optionsGeneratorNew($varianttype,$data['varianttype']);
+ 							else
+ 							echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype'], " where status='0'"); ?>
  						 </select>
  						 </div>
  						</div>
@@ -84,10 +97,14 @@ $cities = $memcache->get('city');
 					 <div class="control-group">
 						<label class="control-label">City <span class="required">*</span></label>
 						<div class="controls">
-							<!-- <input type="text" id="city" name="city" value="<?php echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
+							<!-- <input type="text" id="city" name="city" value="<?php //echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span> -->
 						<select tabindex="1" class="large m-wrap" id="city" name="city">
-						 <?php echo optionsGeneratorNew($cities,$data['city']); //echo $modelObj->optionsGenerator('city', 'name', 'id',$data['id'], " where status='0'"); ?>
+						 <?php 
+						 if($cities)
+						 echo optionsGeneratorNew($cities,$data['city']); 
+						 else
+						 echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city'], " where status='0'"); ?>
 						</select>
 						</div>
 					 </div>
@@ -216,7 +233,7 @@ function saveData(frm_id, action){
     function getData(success){ //alert('Jmd................');
         var jObj=eval("("+success+")");
         var res_action=jObj.action; //alert('AAs');
-        var res_pricelist_id=jObj.pricelist_id; alert('AA'+res_pricelist_id);
+        var res_pricelist_id=jObj.pricelist_id; //alert('AA'+res_pricelist_id);
 		$('#record_modified').show();
 			 setTimeout(function () {
 				document.getElementById('record_modified').style.display='none';

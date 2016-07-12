@@ -58,19 +58,23 @@ class Dashboard {
 			}
 			$memcache->set('leadsource',$sourcearr);
 		}
-		if(!$memcache->get('leadstage')){
-			$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadstage', "distinct name as display, id as value", '', '');
-			$memcache->set('leadstage',$leadsources);
-		}
-		if(!$memcache->get('pricelist')){
+		//if(!$memcache->get('leadstage')){
+			$leadstages = $this -> db -> getDataFromTable($keyValueArray, 'leadstage', "distinct name as display, id as value", '', '');
+			foreach ($leadstages as $leadstage) {
+				$stagearr[$leadstage['value']] =  $leadstage['display'];
+			}
+			$memcache->set('leadstage',$stagearr);
+		//}
+		//if(!$memcache->get('pricelist')){
 			//$pricelists = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "name as display, id as value", '', '',true);
-			$stmt = "select distinct name as display,id as value from pricelist group by name";
+			$stmt = "select distinct name as display,id as value from pricelist where status!='-1' group by name";
         	$this -> db ->query($stmt);
         	while ($result = $this-> db ->fetch()) {
-            	$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+            	//$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+            	$pricelists[$result['value']] = $result['display'];
         	}	
 			$memcache->set('pricelist',$pricelists);
-		}
+		//}
 		if(!$memcache->get('designation')){
 			$designations = $this -> db -> getDataFromTable($keyValueArray, 'designation', "distinct name as display, id as value", '', '');
 			foreach ($designations as $designation) {
@@ -105,13 +109,13 @@ class Dashboard {
 			$memcache->set('taxes',$taxes);
 		}
 
-		if(!$memcache->get('mhcclient')){
+		//if(!$memcache->get('mhcclient')){
 			$mhcclients = $this -> db -> getDataFromTable($whereArr, 'mhcclient', "*", "", '', false);
 			foreach ($mhcclients as $mhcclient) {
 				$mhcclientarr[$mhcclient['id']] =  array('client_firstname'=>$mhcclient['client_firstname'],'client_lastname'=>$mhcclient['client_lastname'],'client_mobile_no'=>$mhcclient['client_mobile_no'],'address'=>$mhcclient['address']);
 			}
 			$memcache->set('mhcclient',$mhcclientarr);
-		}
+		//}
 		
 	}
 

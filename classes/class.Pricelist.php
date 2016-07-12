@@ -76,11 +76,11 @@ class Pricelist {
 		}else{
 			$sort = $this -> tableName.'.name ASC';
 		}
-		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
+		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
 		//$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=pricelist.city');
-		$joinArray[] = array('type'=>'left','table'=>'category','condition'=>'category.id=pricelist.category_type');
-		$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=pricelist.lead_source');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " pricelist.*,category.name as categoryName,leadsource.name as leadsourceName ", $sort, $limit,$joinArray, false);
+		//$joinArray[] = array('type'=>'left','table'=>'category','condition'=>'category.id=pricelist.category_type');
+		//$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=pricelist.lead_source');
+		//$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " pricelist.*", $sort, $limit,$joinArray, false);
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;
@@ -178,10 +178,11 @@ class Pricelist {
 			/*$arr = $memcache->get('pricelist');
 			$arr[] = array('value'=>$id,'display'=>$values['name']);
 			$memcache->set('pricelist',$arr);*/
-			$stmt = "select distinct name as display,id as value from pricelist group by name";
+			$stmt = "select distinct name as display,id as value from pricelist where status!='-1' group by name";
         	$this -> db ->query($stmt);
         	while ($result = $this-> db ->fetch()) {
-            	$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+            	//$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+            	$pricelists[$result['value']] = $result['display'];
         	}	
 			$memcache->set('pricelist',$pricelists);
 		}
@@ -203,10 +204,11 @@ class Pricelist {
 			}
 			if($values['name'] != '')
 			$arr[] = array('value'=>$id,'display'=>$values['name']);*/
-			$stmt = "select distinct name as display,id as value from pricelist group by name";
+			$stmt = "select distinct name as display,id as value from pricelist where status!='-1' group by name";
         	$this -> db ->query($stmt);
         	while ($result = $this-> db ->fetch()) {
-            	$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+            	//$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+            	$pricelists[$result['value']] = $result['display'];
         	}	
 			$memcache->set('pricelist',$pricelists);
 			//$memcache->set('pricelist',$arr);

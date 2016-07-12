@@ -130,7 +130,7 @@ switch($action){
 				$updateArr['lead_source'] 	= $_POST['lead_source'];
 				$updateArr['lead_owner'] 	= $_POST['lead_owner'];
 				$updateArr['followup_by'] 	= $_POST['followup_by'];
-				$updateArr['job_status']	= $_POST['job_status'];
+				//$updateArr['job_status']	= $_POST['job_status'];
 				$updateArr['lead_stage']    = $_POST['lead_stage'];
 				$updateArr['reminder']    	= $_POST['reminder'];
 				$updateArr['service1_date'] 		=  date("Y-m-d", strtotime($_POST['service1_date']));

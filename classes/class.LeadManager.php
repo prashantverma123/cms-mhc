@@ -40,6 +40,7 @@ class LeadManager {
 							continue;	
 						}
 					}
+					if($value != ''){
 					if($key == 'service_date'){
 						$keyValueArray['DATE(service1_date)'] = $value;
 						//$keyValueArray['DATE(service2_date)'] = $value;
@@ -47,7 +48,7 @@ class LeadManager {
 					}else{
 						$main_sql .= 'leadmanager.'.$key." like '%".$value."%' ";
 					}
-					
+					}
 					if($k < count($filterData)){
 						$main_sql .= " OR ";
 					}
@@ -59,12 +60,13 @@ class LeadManager {
 
 		if(count($searchData)>0){
 			if($search){
-				if($searchData['filter']!='')
-				$main_sql .= ' and ';
+				//if($searchData['filter']!='')
+				//$main_sql .= ' and ';
+
 				$fields = explode(',',$search);
 
 				$j = 1;
-				foreach ($fields as $field) {
+				/*foreach ($fields as $field) {
 					if($searchData['filter']!=''){
 						if($field == 'client_firstname'){
 							$name = explode(' ',$searchData['filter']);
@@ -83,6 +85,44 @@ class LeadManager {
 						}
 						$j++;
 					}
+				}*/
+				foreach ($fields as $field) {
+					if($searchData['filter']!=''){
+						if($field == 'client_firstname'){
+							$name = explode(' ',$searchData['filter']);
+							$mhcclient_sql = "";
+							if($name[0]){
+								$mhcclient_sql = 'client_firstname'." like '%".$name[0]."%' ";
+							}
+							if(count($name) > 2){
+								$mhcclient_sql .= 'client_lastname'." like '%".$name[1]."%' ";
+							}
+							$mhcclientArr['sqlclause'] = $mhcclient_sql;
+							$clientsArr = $this -> db -> getDataFromTable($mhcclientArr,'mhcclient', " id ", '', '', false);
+							//$m = 1;
+							if(count($clientsArr) > 0){
+								foreach ($clientsArr as $client) {
+									$keyValueArray['mhcclient_id'] = $client['id'];
+								}
+							}
+						}else if($field == 'client_mobile_no'){
+							$mhcclient_sql = 'client_mobile_no'." like '%".$searchData['filter']."%' ";
+							$mhcclientArr['sqlclause'] = $mhcclient_sql;
+							$clientsArr = $this -> db -> getDataFromTable($mhcclientArr,'mhcclient', " id ", '', '', false);
+							if(count($clientsArr) > 0){
+								foreach ($clientsArr as $client) {
+									$keyValueArray['mhcclient_id'] = $client['id'];
+								}
+							}
+						}
+						//else
+							//$main_sql .= $field." like '%".$searchData['filter']."%'";
+						
+						if($j < count($fields)){
+							$mhcclient_sql .= " OR ";
+						}
+						$j++;
+					}
 				}
 			}
 			if(array_key_exists('parent_id',$searchData)) {
@@ -90,27 +130,26 @@ class LeadManager {
 			}
 		}
 
-		if ($search == 'byname') {
+	/*	if ($search == 'byname') {
 			$keyValueArray['sqlclause'] = "client_firstname like '$searchData%'";
 		}else if ($search == 'integer') {
 			$keyValueArray['sqlclause'] = "substring(name,1,1) between '0' AND '9'";
-		}
+		}*/
 
 		$keyValueArray['sqlclause'] = $main_sql;
 		$limit = $offset . "," . $recperpage;
 		if($sort != '') {
-			$sort = 'leadsource.name '.$sort;
+			$sort = 'leadmanager.insert_date '.$sort;
 		}else{
 			$sort = 'leadmanager.insert_date DESC';
 		}
-		/*$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);*/
-
+		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
 		//$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
-		$joinArray[] = array('type'=>'left','table'=>'leadstage','condition'=>'leadstage.id=leadmanager.lead_stage');
-		$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
-		$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
-		$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*,leadstage.name as leadstage_name,leadstage.id as leadstage_id,p1.name as service1,p2.name as service2,p3.name as service3", $sort, $limit,$joinArray, false);
+		//$joinArray[] = array('type'=>'left','table'=>'leadstage','condition'=>'leadstage.id=leadmanager.lead_stage');
+		//$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
+		//$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
+		//$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
+		//$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*", $sort, $limit,$joinArray, false);
 
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
@@ -301,12 +340,12 @@ class LeadManager {
     		$response = '';
 			$keyValueArray['leadmanager.id'] = intval($id);
 			$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
-			$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=leadmanager.city');
+			//$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=leadmanager.city');
 			$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
 			$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
 			$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
-			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.id as lead_source,city.name as city_name,p1.name as service1,p2.name as service2,p3.name as service3",'','',$joinArray,false);
-			//print_r($dataArr);
+			$joinArray[] = array('type'=>'left','table'=>'mhcclient as client','condition'=>'client.id=leadmanager.mhcclient_id');
+			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,client.*,leadsource.id as lead_source,p1.name as service1,p2.name as service2,p3.name as service3",'','',$joinArray,true);
 			foreach ($dataArr as $k=>$value) {
 				$serviceArr[] = $value['service_inquiry1'];
 				$serviceArr[] = $value['service_inquiry2'];
@@ -376,7 +415,7 @@ class LeadManager {
 						$values['status']= 0;
 						$values['ip']= getIP();
 
-						$response =  $this -> db -> insertDataIntoTable($values, 'order');
+						$response =  $this -> db -> insertDataIntoTable($values, 'order',true);
 						}
 					}
 					//print_r($values);
@@ -763,6 +802,14 @@ Click to pay online
 	public function insertClientTable($values) {
 		$tablename = 'mhcclient';
 		$response =  $this -> db -> insertDataIntoTable($values, $tablename);
+		if($response){
+			$memcache = new Memcache;
+			$memcache->connect('localhost', 11211);
+
+			$mhcclientarr = $memcache->get('mhcclient');
+			$mhcclientarr[$response] =  array('client_firstname'=>$values['client_firstname'],'client_lastname'=>$values['client_lastname'],'client_mobile_no'=>$values['client_mobile_no'],'address'=>$values['address']);
+			$memcache->set('mhcclient',$mhcclientarr);
+		}
 		//$this->logs->writelogs($this->folderName,"Insertion: ".json_encode($response));
 		return $response;
 	}
@@ -770,6 +817,24 @@ Click to pay online
 	public function updateClientTable($values, $whereArr) {
 		$tablename = "mhcclient";
 		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $tablename);
+
+		if($response){
+			$memcache = new Memcache;
+			$memcache->connect('localhost', 11211);
+			$mhcclientarr = $memcache->get('mhcclient');
+			foreach ($mhcclientarr as $key =>$client) {
+				if($key == $response){
+					unset($mhcclientarr[$key]);
+				}
+			}
+			if($values['client_firstname'] != '')
+				$mhcclientarr[$response] =  array('client_firstname'=>$values['client_firstname'],'client_lastname'=>$values['client_lastname'],'client_mobile_no'=>$values['client_mobile_no'],'address'=>$values['address']);
+
+			if($values['status']){
+				unset($mhcclientarr[$response]);
+			}
+			$memcache->set('mhcclient',$mhcclientarr);
+		}
 		//$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
 		return $response;
 	}

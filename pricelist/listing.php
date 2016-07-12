@@ -4,6 +4,9 @@ $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
 $cities = $memcache->get('city');
+$leadsources = $memcache->get('leadsource');
+$categories = $memcache->get('category');
+$varianttype = $memcache->get('varianttype');
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
@@ -52,8 +55,8 @@ $cities = $memcache->get('city');
 			  <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
 				<!-- <td><input type="checkbox" class="checkboxes" value="1" /></td>-->
 				 <td><?php print $key['name'];?></td>
-				 <td class="hidden-480"><?php print $key['leadsourceName'];?></td>
-				 <td class="hidden-480"><?php print $key['categoryName'];?></td>
+				 <td class="hidden-480"><?php print $leadsources[$key['lead_source']];?></td>
+				 <td class="hidden-480"><?php print $categories[$key['category_type']];?></td>
 				 <td class="hidden-480"><?php print $cities[$key['city']];?></td>
 				 <td class="hidden-480"><?php print $key['price'];?></td>
 				 <td class="hidden-480"><?php print $key['commission'];?></td>

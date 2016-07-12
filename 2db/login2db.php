@@ -28,8 +28,8 @@ switch($action) {
 					  $_SESSION['tmobi']['AdminEmail'] 	= $key['email'];
 					  $_SESSION['tmobi']['UserId'] 		= $key['id'];
 						$_SESSION['tmobi']['role'] 		= $key['role'];
-						//$_SESSION['tmobi']['city'] 		= $key['role']=="admin"?'':$key['city'];
-						$_SESSION['tmobi']['city'] 		= $key['city'];
+						$_SESSION['tmobi']['city'] 		= $key['role']=="admin"?'':$key['city'];
+						//$_SESSION['tmobi']['city'] 		= $key['city'];
 						$user_city = $key['city'];
 					  //echo json_encode($_SESSION);
 							echo '1';

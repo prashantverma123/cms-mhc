@@ -3,9 +3,16 @@ $session = Session::getInstance();
 $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
-$leadstage = $memcache->get('leadstage');
-$mhcclient = $memcache->get('mhcclient');
-$leadsources = $memcache->get('leadsource');
+if( $memcache){
+	$leadstage = $memcache->get('leadstage');
+	$mhcclient = $memcache->get('mhcclient');
+	$leadsources = $memcache->get('leadsource');
+	$pricelist = $memcache->get('pricelist');
+}else{
+	$leadstage = $memcache->get('leadstage');
+	$mhcclient = $memcache->get('mhcclient');
+	$leadsources = $memcache->get('leadsource');
+}
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
@@ -88,7 +95,11 @@ $leadsources = $memcache->get('leadsource');
 				<td class="hidden-480"><?php print $key['lead_owner'];?></td>
 				<td class="hidden-480">
 					<select class="small m-wrap lead_stage" name="lead_stage" id="leadstage<?php print $key['id'];?>" onchange="changeLeadStage(<?php print $key['id'];?>);">
-					<?php echo optionsGenerator($leadstage,$key['leadstage_id']); //echo $modelObj->optionsGenerator('leadstage', 'name', 'id', $key['leadstage_id'], "where  status='0'"); ?>
+					<?php 
+					if($leadstage)
+						echo optionsGeneratorNew($leadstage,$key['lead_stage']); 
+					else
+						echo $modelObj->optionsGenerator('leadstage', 'name', 'id', $key['lead_stage'], "where  status='0'"); ?>
 					</select>
 					<div id="dialog-modal_<?php echo $key['id']; ?>" class="dialog-modal">
 						<label for="">Reminder:</label>
@@ -110,13 +121,17 @@ $leadsources = $memcache->get('leadsource');
 				</td>
 				<td class="hidden-480"><b><?php print $mhcclientInfo['client_firstname'].' ' .$mhcclientInfo['client_lastname'].'</b></br>'.$mhcclientInfo['client_mobile_no'].'</br>'.$mhcclientInfo['address'];?></td>
 				<!-- <td class="hidden-480"><?php //print $key['client_mobile_no'];?></td> -->
-				<td class="hidden-480"><?php print $key['service1'].' </br>'.$key['service2'].'</br>'.$key['service3'];?></td>
+				<td class="hidden-480"><?php print $pricelist[$key['service_inquiry1']].' </br>'.$pricelist[$key['service_inquiry2']].'</br>'.$pricelist[$key['service_inquiry3']]; ?></td>
 				<!-- <td class="hidden-480"><?php //print date('d M Y',strtotime($key['service1_date']));?></td> -->
 				<td class="hidden-480"><?php print date('d M Y',strtotime($key['service1_date'])). ' </br>'.date('h:i A',strtotime($key['service1_time']));?></td>
 				 <td id="confirmed<?php echo $key['id']; ?>">
-				 	<?php if($key['job_status']=='confirmed'):
-				 	echo "Confirmed";
-				 else: ?>
+				 	<?php if($key['job_status']=='confirmed'): ?>
+				 	<select name="job_status<?php echo $key['id']; ?>" id="job_status<?php echo $key['id']; ?>" tabindex="1" class="small m-wrap " onchange="update_status('<?php echo $key['id']; ?>');">
+				 		<option value="pending">Pending</option>
+				 		<option value='in_process'>In Process</option>
+				 		<option value='confirmed' selected='selected'>Confirmed</option>
+				 	</select>
+				<?php  else: ?>
 				 	<select name="job_status<?php echo $key['id']; ?>" id="job_status<?php echo $key['id']; ?>" tabindex="1" class="small m-wrap " onchange="update_status('<?php echo $key['id']; ?>');">
 				 		<option value="pending" <?php if($key['job_status']=='pending'): echo "selected"; else: echo "";endif; ?>>Pending</option>
 				 		<option value='in_process' <?php if($key['job_status']=='in_process'): echo "selected"; else: echo "";endif; ?>>In Process</option>
@@ -250,7 +265,13 @@ $(document).ready(function () {
 								url: "<?php print SITEPATH.'/'.$modelObj->folderName.'/category2db.php';?>",
 								data: 'action=saveIntoOrder&leadmanager_id='+id,
 								success: function(r){
-									$('#confirmed'+id).html('Confirmed');
+									var html = '<select name="job_status'+id+'" id="job_status'+id+'" tabindex="1" class="small m-wrap " onchange="update_status('+id+');">';
+
+				 					html +='<option value="pending">Pending</option>';
+						 		html +="<option value='in_process'>In Process</option>";
+						 		html +="<option value='confirmed' selected='selected'>Confirmed</option>";
+				 				html +='</select>';
+									$('#confirmed'+id).html(html);
 									//send_invoice_email(id);
 								}
 							});

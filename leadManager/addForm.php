@@ -68,7 +68,7 @@ $pricelist = $memcache->get('pricelist');
 							<select tabindex="3" class="large m-wrap" id="lead_stage" name="lead_stage">
 						   <?php 
 						   if($leadstage)
-						    echo optionsGenerator($leadstage,$data['lead_stage']); 
+						    echo optionsGeneratorNew($leadstage,$data['lead_stage']); 
 							else
 							echo $modelObj->optionsGenerator('leadstage', 'name', 'id',$data['lead_stage']," where status='0'"); ?>
 							</select>
@@ -270,7 +270,7 @@ $pricelist = $memcache->get('pricelist');
 							<select tabindex="17" class="large m-wrap" id="service_inquiry1" name="service_inquiry1" onchange="getVaiantType(this.value,'varianttype1')">
 						   <?php 
 						   if($pricelist)
-						   echo optionsGenerator($pricelist,$data['service_inquiry1']);
+						   echo optionsGeneratorNew($pricelist,$data['service_inquiry1']);
 						   else
 						   echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry1']," where status='0'"); ?>
 							</select>
@@ -343,7 +343,11 @@ $pricelist = $memcache->get('pricelist');
 	 				 <div class="controls">
 
 							<select tabindex="24" class="large m-wrap" id="service_inquiry2" name="service_inquiry2" onchange="getVaiantType(this.value,'varianttype2')" >
-							 <?php  echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry2']," where status='0'"); ?>
+							 <?php  
+							  if($pricelist)
+						   		echo optionsGeneratorNew($pricelist,$data['service_inquiry2']);
+						   	  else
+							 	echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry2']," where status='0'"); ?>
 							</select>
 	 						<span class="help-block" id="service_inquiry2_error"> </span>
 	 				 </div>
@@ -409,7 +413,11 @@ $pricelist = $memcache->get('pricelist');
 	 				 <div class="controls">
 	 						<!-- <input type="text" placeholder="Please Enter service inquiry3" value="<?php echo isset($data)?$data['service_inquiry3']:''; ?>" id="service_inquiry3" name="service_inquiry3" class="m-wrap span12"> -->
 							<select tabindex="31" class="large m-wrap" id="service_inquiry3" name="service_inquiry3" onchange="getVaiantType(this.value,'varianttype3')">
-							 <?php  echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry3']," where status='0'"); ?>
+							 <?php  
+							  if($pricelist)
+						  	 echo optionsGeneratorNew($pricelist,$data['service_inquiry3']);
+						   	  else
+							 echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry3']," where status='0'"); ?>
 							</select>
 							<span class="help-block" id="service_inquiry3_error"> </span>
 	 				 </div>
