@@ -71,21 +71,27 @@ class Dashboard {
         	}	
 			$memcache->set('pricelist',$pricelists);
 		}
-		//if(!$memcache->get('designation')){
+		if(!$memcache->get('designation')){
 			$designations = $this -> db -> getDataFromTable($keyValueArray, 'designation', "distinct name as display, id as value", '', '');
 			foreach ($designations as $designation) {
 				$designationarr[$designation['value']] =  $designation['display'];
 			}
 			$memcache->set('designation',$designationarr);
-		//}
+		}
 		if(!$memcache->get('role')){
-			$role = $this -> db -> getDataFromTable(array(), 'role', "distinct name as display, role as value", '', '');
-			$memcache->set('role',$role);
+			$roles = $this -> db -> getDataFromTable(array(), 'role', "distinct name as display, role as value", '', '');
+			foreach ($roles as $role) {
+				$rolearr[$role['value']] =  $role['display'];
+			}
+			$memcache->set('role',$rolearr);
 		}
-		if(!$memcache->get('category')){
-			$category = $this -> db -> getDataFromTable(array(), 'category', "distinct name as display, id as value", '', '');
-			$memcache->set('category',$category);
-		}
+		//if(!$memcache->get('category')){
+			$categories = $this -> db -> getDataFromTable(array(), 'category', "distinct name as display, id as value", '', '');
+			foreach ($categories as $category) {
+				$categoryarr[$category['value']] =  $category['display'];
+			}
+			$memcache->set('category',$categoryarr);
+		//}
 		if(!$memcache->get('varianttype')){
 			$varianttype = $this -> db -> getDataFromTable(array(), 'variantmaster', "distinct varianttype as display, id as value", '', '');
 			foreach ($varianttype as $value) {

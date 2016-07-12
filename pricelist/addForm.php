@@ -31,7 +31,7 @@ $cities = $memcache->get('city');
 						<label class="control-label">Lead Source <span class="required">*</span></label>
 						<div class="controls">
 						 <select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
-						 <?php echo optionsGenerator($leadsources,$data['id']); //echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['id'], " where status='0'"); ?>
+						 <?php echo optionsGeneratorNew($leadsources,$data['id']); //echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['id'], " where status='0'"); ?>
 						</select>
 						</div>
 					 </div>
@@ -59,7 +59,7 @@ $cities = $memcache->get('city');
 					 <div class="control-group">
 						<label class="control-label">Category <span class="required">*</span></label>
 							<select tabindex="1" class="large m-wrap" id="category_type" name="category_type">
-							 <?php echo optionsGenerator($categories,$data['category_type']);//echo $modelObj->optionsGenerator('category', 'name', 'id',$data['id'], " where status='0'"); ?>
+							 <?php echo optionsGeneratorNew($categories,$data['category_type']);//echo $modelObj->optionsGenerator('category', 'name', 'id',$data['id'], " where status='0'"); ?>
 							</select>
 					 </div>
 				  </div>

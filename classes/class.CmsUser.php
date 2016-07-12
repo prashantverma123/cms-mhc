@@ -67,9 +67,9 @@ class CmsUser {
 		}else{
 			$sort = $this -> tableName.'.name ASC';
 		}
-		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
-		$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=cmsuser.city');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " cmsuser.*,city.name as cityName ", $sort, $limit,$joinArray, false);
+		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
+		//$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=cmsuser.city');
+		//$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " cmsuser.*,city.name as cityName ", $sort, $limit,$joinArray, false);
 
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);

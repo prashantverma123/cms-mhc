@@ -96,7 +96,7 @@ $role=$memcache->get('role');
 						<label class="control-label">City<span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="city" name="city">
-						   <?php echo optionsGenerator($cities,$data['city']); //echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city']," where status='0'"); ?>
+						   <?php echo optionsGeneratorNew($cities,$data['city']); //echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city']," where status='0'"); ?>
 							</select>
 						</div>
 					 </div>

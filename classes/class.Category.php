@@ -136,7 +136,8 @@ class Category {
 		$memcache->connect('localhost', 11211);
 		if($id){
 			$arr = $memcache->get('category');
-			$arr[] = array('value'=>$id,'display'=>$values['name']);
+			//$arr[] = array('value'=>$id,'display'=>$values['name']);
+			$arr[$id] = $values['name'];
 			$memcache->set('category',$arr);
 		}
 		$response =  $id;
@@ -151,12 +152,16 @@ class Category {
 		if($id){
 			$arr = $memcache->get('category');
 			foreach ($arr as $key =>$val) {
-				if($val['value'] == $id){
+				if($key == $id){
 					unset($arr[$key]);
 				}
 			}
 			if($values['name'] != '')
-			$arr[] = array('value'=>$id,'display'=>$values['name']);
+				$arr[$id] = $values['name'];
+			//$arr[] = array('value'=>$id,'display'=>$values['name']);
+			if($values['status']){
+				unset($arr[$id]);
+			}
 			$memcache->set('category',$arr);
 		}
 		$response = $id;

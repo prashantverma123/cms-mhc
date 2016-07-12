@@ -3,12 +3,14 @@ $session = Session::getInstance();
 $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
+$cities=$memcache->get('city');
+$role=$memcache->get('role');
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
 	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>Ascending</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>Descending</option></select>
 		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
-		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
+		<!--input type="hidden" name="p" value="<?php //echo $_GET['p']; ?>" /-->
 	<button type="submit">Submit</button>
 	</form>
 	<div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
@@ -52,8 +54,8 @@ $userId = $session->get('UserId');
 				 <td><?php print $key['name'];?></td>
 				  <td class="hidden-480"><?php print $key['email'];?></td>
 				 <td class="hidden-480"><?php print $key['username'];?></td>
-				 <td class="hidden-480"><?php print $key['cityName'];?></td>
-				  <td class="hidden-480"><?php print $key['role'];?></td>
+				 <td class="hidden-480"><?php print $cities[$key['city']];?></td>
+				  <td class="hidden-480"><?php print $role[$key['role']];?></td>
 				  <td class="hidden-480">
 				  	<select name="status" class="small" onchange="updateStatus(this.value,<?php print $key['id'];?>);">
 				  		<option value='1' <?php if($key['status'] == '1'): echo "selected"; else: ""; endif; ?>>Approved</option>
