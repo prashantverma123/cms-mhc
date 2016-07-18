@@ -12,6 +12,7 @@ if($leadmanager_id > 0){
 <?php 
 $cities = $memcache->get('city');
 $leadsources = $memcache->get('leadsource');
+$lead_dropdown = $memcache->get('pricelist_dropdown');
 $leadstage = $memcache->get('leadstage');
 $pricelist = $memcache->get('pricelist');
 ?>
@@ -30,63 +31,8 @@ $pricelist = $memcache->get('pricelist');
 		 <form class="form-horizontal" action="" name="frm_lead_manager" id="frm_lead_manager">
 		 <input type="hidden" name="action" value="saveLeadManager"/>
 		 <input type="hidden" name="leadmanager_id" value="<?php print $leadmanager_id;?>"/>
-			   <h3 class="form-section">Lead Manager</h3>
-			   <div class="row-fluid">
-				  <div class="span6 ">
-					 <div class="control-group">
-						<label class="control-label">Lead Source <span class="required">*</span></label>
-						<div class="controls">
-							<select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
-						   <?php if($leadsources)
-						   		echo optionsGeneratorNew($leadsources,$data['lead_source']);
-						   		else
-						   		echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $data['lead_source']," where status='0'"); ?>
-							</select>
-						</div>
-					 </div>
-				  </div>
-
-					<div class="span6 ">
-					 <div class="control-group">
-						<label class="control-label">Lead Owner<span class="required">*</span></label>
-						<div class="controls">
-							<!-- <select tabindex="1" class="large m-wrap" id="category_id" name="category_id">
-						   <?php  //echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $selected_value=""," where status='0'"); ?>
-							</select> -->
-							<input tabindex="2" type="text" placeholder="Please Enter Lead Owner" value="<?php echo isset($data)?$data['lead_owner']:''; ?>" id="lead_owner" name="lead_owner" class="m-wrap span12">
- 						   <span class="help-block" id="validity_error"> </span>
-						</div>
-					 </div>
-				  </div>
-			   </div>
-
-			    <div class="row-fluid">
-				  <div class="span6 ">
-					 <div class="control-group">
-						<label class="control-label">Lead Stage <span class="required">*</span></label>
-						<div class="controls">
-							<select tabindex="3" class="large m-wrap" id="lead_stage" name="lead_stage">
-						   <?php 
-						   if($leadstage)
-						    echo optionsGeneratorNew($leadstage,$data['lead_stage']); 
-							else
-							echo $modelObj->optionsGenerator('leadstage', 'name', 'id',$data['lead_stage']," where status='0'"); ?>
-							</select>
-						</div>
-					 </div>
-				  </div>
-
-				  <div class="span6 ">
-					<div class="control-group">
-						<label class="control-label">Reminder</label>
-						 <div class="controls">
-								<input tabindex="4" type="text" placeholder="Please Set Reminder" value="<?php echo isset($data)?$data['reminder']:''; ?>" id="reminder" name="reminder" class="m-wrap span12 datepicker">
-								<span class="help-block" id="reminder_error"> </span>
-						 </div>
-						</div>
-				 	</div>
-
-			   </div>
+			  <!--  <h3 class="form-section">Lead Manager</h3> -->
+			
 				<div>
 					<div class="row-fluid" style="background-color:#6d6d6d;margin-bottom:15px;">
 					<h3 style="padding-left:10px">Client Details</h3>
@@ -97,12 +43,15 @@ $pricelist = $memcache->get('pricelist');
 	 				 <label class="control-label"> Salutation <!--<span class="required">*</span>--></label>
 	 				 <div class="controls">
 	 						<!-- <input tabindex="7" type="text" placeholder="Please Enter Salutation" value="<?php //echo isset($data)?$data['client_salutation']:''; ?>" id="client_salutation" name="client_salutation" class="m-wrap span12"> -->
-	 						<select tabindex="5" id="client_salutation" name="client_salutation" class="m-wrap span12">
+	 						<!-- <select tabindex="5" id="client_salutation" name="client_salutation" class="m-wrap span12">
 	 							<option>Please Select Salutation</option>
-	 							<option value="Mr" <?php if($data['client_salutation'] == 'Mr'): echo "selected"; else: ""; endif; ?>>Mr.</option>
-	 							<option value="Ms" <?php if($data['client_salutation'] == 'Ms'): echo "selected"; else: ""; endif; ?>>Ms.</option>
-	 							<option value="Dr" <?php if($data['client_salutation'] == 'Dr'): echo "selected"; else: ""; endif; ?>>Dr.</option>
-	 						</select>
+	 							<option value="Mr" <?php //if($data['client_salutation'] == 'Mr'): echo "selected"; else: ""; endif; ?>>Mr.</option>
+	 							<option value="Ms" <?php //if($data['client_salutation'] == 'Ms'): echo "selected"; else: ""; endif; ?>>Ms.</option>
+	 							<option value="Dr" <?php //if($data['client_salutation'] == 'Dr'): echo "selected"; else: ""; endif; ?>>Dr.</option>
+	 						</select> -->
+	 						<label class="checkbox-inline" style="float:left;width:50px"><input type="radio" name="client_salutation" value="Mr" <?php if($data['client_salutation'] == 'Mr'): echo "checked"; else: ""; endif; ?>>Mr.</label>
+	 						<label class="checkbox-inline" style="float:left;width:50px"><input type="radio" name="client_salutation" value="Mr" <?php if($data['client_salutation'] == 'Ms'): echo "checked"; else: ""; endif; ?>>Ms.</label>
+	 						<label class="checkbox-inline" style="float:left;width:50px"><input type="radio" name="client_salutation" value="Mr" <?php if($data['client_salutation'] == 'Dr'): echo "checked"; else: ""; endif; ?>>Dr.</label>
 	 						<span class="help-block" id="client_salutation_error"> </span>
 	 				 </div>
 	 				</div>
@@ -158,6 +107,7 @@ $pricelist = $memcache->get('pricelist');
 				 <label class="control-label">client email id </label>
 				 <div class="controls">
 						<input tabindex="10" type="text" placeholder="Please Enter client email id" value="<?php echo isset($data)?$data['client_email_id']:''; ?>" id="client_email_id" name="client_email_id" class="m-wrap span12">
+						<span class="error">Multiple email Id with comma seperate</span>
 						<span class="help-block" id="client_email_id_error"> </span>
 				 </div>
 				</div>
@@ -257,10 +207,66 @@ $pricelist = $memcache->get('pricelist');
 				</div>
 
 				</div>
+
 				<div class="row-fluid" style="background-color:#6d6d6d;margin-bottom:15px;">
 				<h3 style="padding-left:10px">Service Details</h3>
 			</div>
+				   <div class="row-fluid">
+				  <div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Lead Source <span class="required">*</span></label>
+						<div class="controls">
+							<select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
+						   <?php if($leadsources)
+						   		echo optionsGeneratorNew($leadsources,$data['lead_source']);
+						   		else
+						   		echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $data['lead_source']," where status='0'"); ?>
+							</select>
+						</div>
+					 </div>
+				  </div>
 
+					<div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Lead Owner<span class="required">*</span></label>
+						<div class="controls">
+							<!-- <select tabindex="1" class="large m-wrap" id="category_id" name="category_id">
+						   <?php  //echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $selected_value=""," where status='0'"); ?>
+							</select> -->
+							<input tabindex="2" type="text" placeholder="Please Enter Lead Owner" value="<?php echo isset($data)?$data['lead_owner']:''; ?>" id="lead_owner" name="lead_owner" class="m-wrap span12">
+ 						   <span class="help-block" id="validity_error"> </span>
+						</div>
+					 </div>
+				  </div>
+			   </div>
+
+			    <div class="row-fluid">
+				  <div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Lead Stage <span class="required">*</span></label>
+						<div class="controls">
+							<select tabindex="3" class="large m-wrap" id="lead_stage" name="lead_stage">
+						   <?php 
+						   if($leadstage)
+						    echo optionsGeneratorNew($leadstage,$data['lead_stage']); 
+							else
+							echo $modelObj->optionsGenerator('leadstage', 'name', 'id',$data['lead_stage']," where status='0'"); ?>
+							</select>
+						</div>
+					 </div>
+				  </div>
+
+				  <div class="span6 ">
+					<div class="control-group">
+						<label class="control-label">Reminder</label>
+						 <div class="controls">
+								<input tabindex="4" type="text" placeholder="Please Set Reminder" value="<?php echo isset($data)?$data['reminder']:''; ?>" id="reminder" name="reminder" class="m-wrap span12 datepicker">
+								<span class="help-block" id="reminder_error"> </span>
+						 </div>
+						</div>
+				 	</div>
+
+			   </div>
 
 				<div class="row-fluid">
 					<div class="span6 ">
@@ -822,7 +828,7 @@ $(document).ready(function(){
    			$('#service1_time').timepicker();
 	});
 	
-
+	$('#service1_time').timepicker();
 	 $('#service2_date').datepicker({
 		 format:'yyyy/mm/dd'
 		});
@@ -846,7 +852,7 @@ $(document).ready(function() {
 
 
 function saveData(frm_id, action){
-        // alert('Jai Mata Di............' + frm_id);
+         //alert('Jai Mata Di............' + frm_id);
         $('#frm_lead_manager').validate({
 	    	rules:{
 	    		lead_source:"required",
@@ -861,8 +867,18 @@ function saveData(frm_id, action){
 	    			number:true
 	    		}/*,
 	    		client_email_id:{
-	    			email:true
+	    			email:true,
+	    			remote: {
+				        url: "<?php print SITEPATH;?>/<?php echo $modelObj->folderName; ?>/category2db.php?action=check_email&id=<?php echo $cmsuser_id; ?>",
+				        type: "post",
+				        data: {
+				          email: function() {
+				            return $( "#email" ).val();
+				          }
+				        }
+				    }
 	    		}*/,
+
 	    		address:{
 	    			required:true
 	    		},

@@ -8,8 +8,17 @@ require_once 'payu.php';
 //echo "hello";exit();
 $m = isset($_GET['m'])?$_GET['m']:"";
 $l = $_GET['l']?$_GET['l']:"";
+if($memcache){
+$cities = $memcache->get('city');
+$mhcclient = $memcache->get('mhcclient');
+$pricelist = $memcache->get('pricelist_dropdown');
+}else{
+  $cities = $dashboardObj->city();
+  $mhcclient = $dashboardObj->mhcclient();
+  $pricelist = $dashboardObj->pricelist();
+}
 $row = $modelObj->get_order_details($m,$l);
-
+$client = $mhcclient[$row[0]['mhcclient_id']];
 /* Payments made easy. */
 if ( count( $_POST ) ){ 
   pay_page( array ('key' => $_POST['key'], 'txnid' => $_POST['txnid'], 'amount' => $_POST['amount'],'firstname' => $_POST['firstname'], 'email' => $_POST['email'], 'phone' => $_POST['phone'],'productinfo' => $_POST['productinfo'], 'surl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=s', 'furl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=f','udf1'=>decryptdata($m),'udf2'=>decryptdata($l)), 
@@ -159,13 +168,13 @@ $('#frmMrHomeCarePayment').validate({
   	  <div class="col-2">
     <label>
       Firstname
-      <input name='firstname' id="firstname" type='text' value='<?php echo isset($row[0]["client_firstname"])?$row[0]["client_firstname"]:"";?>' tabindex="1">
+      <input name='firstname' id="firstname" type='text' value='<?php echo isset($client["client_firstname"])?$client["client_firstname"]:"";?>' tabindex="1">
     </label>
   </div>
     <div class="col-2">
     <label>
       Lastname
-      <input name='lastname' id="lastname" type='text' value='<?php echo isset($row[0]["client_lastname"])?$row[0]["client_lastname"]:"";?>' tabindex="2">
+      <input name='lastname' id="lastname" type='text' value='<?php echo isset($client["client_lastname"])?$client["client_lastname"]:"";?>' tabindex="2">
     </label>
   </div>
 
@@ -174,32 +183,32 @@ $('#frmMrHomeCarePayment').validate({
   <div class="col-3">
     <label>
       Email
-      <input name='email' id="email" type='text' value='<?php echo isset($row[0]["client_email_id"])?$row[0]["client_email_id"]:"";?>' tabindex="3">
+      <input name='email' id="email" type='text' value='<?php echo isset($client["client_email_id"])?$client["client_email_id"]:"";?>' tabindex="3">
     </label>
   </div>
   <div class="col-3">
     <label>
       Phone
-      <input name='phone' id="phone" type='text' value='<?php echo isset($row[0]["client_mobile_no"])?$row[0]["client_mobile_no"]:"";?>' tabindex="4">
+      <input name='phone' id="phone" type='text' value='<?php echo isset($client["client_mobile_no"])?$client["client_mobile_no"]:"";?>' tabindex="4">
     </label>
   </div>
 
   <div class="col-3">
     <label>
       City
-      <input name='city' id="city" type='text' value='<?php echo isset($row[0]["cityname"])?$row[0]["cityname"]:"";?>' tabindex="5">
+      <input name='city' id="city" type='text' value='<?php echo isset($cities[$client["city"]])?$cities[$client["city"]]:"";?>' tabindex="5">
     </label>
   </div>
   <div class="col-3">
     <label>
       Pincode
-      <input name='zipcode' id="zipdoc" type='text' value='<?php echo isset($row[0]["pincode"])?$row[0]["pincode"]:"";?>' tabindex="6">
+      <input name='zipcode' id="zipdoc" type='text' value='<?php echo isset($client["pincode"])?$client["pincode"]:"";?>' tabindex="6">
     </label>
   </div>
   <div class="col-3">
     <label>
       Product Info
-      <input name='productinfo' id="productinfo" type='text' value='<?php echo isset($row[0]["service1"])?$row[0]["service1"]:""; echo " ";  echo isset($row[0]["service2"])?$row[0]["service2"]:""; echo " ";  echo isset($row[0]["service3"])?$row[0]["service3"]:""; ?>' tabindex="7">
+      <input name='productinfo' id="productinfo" type='text' value='<?php echo isset($pricelist[$row[0]["service_inquiry1"]])?$pricelist[$row[0]["service_inquiry1"]]:""; echo " ";  echo isset($pricelist[$row[0]["service_inquiry2"]])?$pricelist[$row[0]["service_inquiry2"]]:""; echo " ";  echo isset($pricelist[$row[0]["service_inquiry3"]])?$pricelist[$row[0]["service_inquiry3"]]:""; ?>' tabindex="7">
     </label>
   </div>
   <div class="col-3">

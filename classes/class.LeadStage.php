@@ -128,7 +128,8 @@ class LeadStage {
 		$memcache->connect('localhost', 11211);
 		if($id){
 			$arr = $memcache->get('leadstage');
-			$arr[] = array('value'=>$id,'display'=>$values['name']);
+			$arr[$id] = $values['name'];
+			//$arr[] = array('value'=>$id,'display'=>$values['name']);
 			$memcache->set('leadstage',$arr);
 		}
 		return $id;
@@ -142,12 +143,16 @@ class LeadStage {
 		if($id){
 			$arr = $memcache->get('leadstage');
 			foreach ($arr as $key =>$val) {
-				if($val['value'] == $id){
+				if($key == $id){
 					unset($arr[$key]);
 				}
 			}
 			if($values['name'] != '')
-			$arr[] = array('value'=>$id,'display'=>$values['name']);
+			$arr[$id] = $values['name'];
+		
+			if($values['status']){
+				unset($arr[$id]);
+			}
 			$memcache->set('leadstage',$arr);
 		}
 		return $id;

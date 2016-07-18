@@ -30,7 +30,7 @@ $cities = $memcache->get('city');
 							<select tabindex="1" class="large m-wrap lead_source" id="lead_source" name="lead_source">
 							<?php 
 							if($leadstage != '')
-						   		echo optionsGenerator($leadsources,$data['lead_source']); 
+						   		echo optionsGeneratorNew($leadsources,$data['lead_source']); 
 						   else
 						    	echo $modelObj->optionsGenerator('leadsource', 'name', 'id',$data['lead_source'], " where status='0'");
 							 ?>
@@ -88,7 +88,8 @@ $cities = $memcache->get('city');
 					 <div class="control-group">
 						<label class="control-label">Email Id<span class="required">*</span></label>
 							<div class="controls">
-							   <input type="email" id="email_id" name="email_id" value="<?php echo isset($data)?$data['email_id']:''; ?>" class="m-wrap span7">
+							   <input type="text" id="email_id" name="email_id" value="<?php echo isset($data)?$data['email_id']:''; ?>" class="m-wrap span7">
+							   
 								 <div id="email_error"class=" alert alert-danger" style="display:none" >
 	 						   Please Enter Correct Email Id
 	 						</div>
@@ -143,7 +144,7 @@ $cities = $memcache->get('city');
 						<select tabindex="1" class="large m-wrap" id="city" name="city">
 							<?php 
 							if($cities != '')
-								echo optionsGenerator($cities,$data['city']); 
+								echo optionsGeneratorNew($cities,$data['city']); 
 							else
 								echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city'], " where status='0'"); ?>
 						</select>
@@ -157,8 +158,8 @@ $cities = $memcache->get('city');
 					<div class="control-group">
 					 <label class="control-label">State </label>
 					 <div class="controls">
-						 <!--input type="text" id="state" name="state" value="<?php //echo isset($data)?$data['state']:''; ?>" class="m-wrap span12"-->
-						 <select id="state" name="state" class="m-wrap span12">
+						 <!-- <input type="text" id="state" name="state" value="<?php //echo isset($data)?$data['state']:''; ?>" class="m-wrap span12"> -->
+						  <select id="state" name="state" class="m-wrap span12">
 						<?php foreach ($states as $k=>$state) { ?>
 							<option value="<?php echo $k; ?>" <?php if($data['state'] == $k): echo "selected"; else: ""; endif; ?>><?php echo $state; ?></option>
 						<?php } ?>
@@ -196,7 +197,7 @@ $cities = $memcache->get('city');
 						<label class="control-label">Price<span class="required">*</span></label>
 						<div class="controls">
 							<input type="text" id="price" name="price" value="<?php
-						/*	$id = $_GET['lead_source_id'];
+							/*$id = $_GET['lead_source_id'];
 							$arVal = $modelObj->getPrice();
 							//echo '<pre>'; print_r($arVal[0]['price']); echo '</pre>';
 							$data['price']=$arVal[0]['price'];*/
@@ -206,10 +207,6 @@ $cities = $memcache->get('city');
 						</div>
 					 </div>
 				  </div>
-				  <!--/span-->
-
-			   </div>
-				<div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
 						<label class="control-label">Commission</label>
@@ -222,17 +219,20 @@ $cities = $memcache->get('city');
 						</div>
 					 </div>
 				  </div>
-					<div class="span6 ">
+				  <!--/span-->
+
+			   </div>
+			    <div class="row-fluid">
+			 	<div class="span6 ">
 					 <div class="control-group">
 						<label class="control-label">Billing Amount</label>
 						<div class="controls">
-							<input type="text" id="taxed_cost" name="taxed_cost" value="<?php echo isset($data)?$data['taxed_cost']=$data['price']+$data['price']*0.145 + $data['price']*0.1 :''; ?>" class="m-wrap span12">
+							<input type="text" id="taxed_cost" name="taxed_cost" value="<?php echo isset($data)?$data['taxed_cost']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span>
 						</div>
 					 </div>
 				  </div>
-				  <!--/span-->
-			   </div>
+			 </div>
 			<div class="row-fluid">
 				<div class="span6 ">
 					<div class="control-group">
@@ -273,6 +273,96 @@ $cities = $memcache->get('city');
 					</div>
 				</div>
 			</div>
+			   <div>
+					<div class="row-fluid" style="background-color:#6d6d6d;margin-bottom:15px;">
+					<h3 style="padding-left:10px">Client Bill Details</h3>
+				</div>
+				<div class="row-fluid">
+					<div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Client Billing Name</label>
+						<div class="controls">
+							<input type="text" id="billing_name" name="billing_name" value="<?php echo isset($data)?$data['billing_name']:''; ?>" class="m-wrap span12">
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					 </div>
+				  </div>
+					<div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Client Billing Amount</label>
+						<div class="controls">
+							<input type="text" id="taxed_cost" name="taxed_cost" value="<?php echo isset($data)?$data['taxed_cost']:''; ?>" class="m-wrap span12">
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					 </div>
+				  </div>
+				  	
+			   </div>
+			   <div class="row-fluid">
+			   	<div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Client Billing Email ID</label>
+						<div class="controls">
+							<input type="text" id="billing_email" name="billing_email" value="<?php echo isset($data)?$data['billing_email']:''; ?>" class="m-wrap span12">
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					 </div>
+				  </div>
+			   	<div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Client Bill Address</label>
+						<div class="controls">
+							<textarea id="billing_address" name="billing_address" class="m-wrap span12"><?php echo isset($data)?$data['billing_address']:''; ?></textarea>
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					 </div>
+				  </div>
+			   </div>
+			   <div>
+					<div class="row-fluid" style="background-color:#6d6d6d;margin-bottom:15px;">
+					<h3 style="padding-left:10px">Partner Bill Details</h3>
+				</div>
+			   <div class="row-fluid">
+					<div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Partner Billing Name</label>
+						<div class="controls">
+							<input type="text" id="billing_name2" name="billing_name2" value="<?php echo isset($data)?$data['billing_name2']:''; ?>" class="m-wrap span12">
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					 </div>
+				  </div>
+					<div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Partner Billing Amount</label>
+						<div class="controls">
+							<input type="text" id="billing_amount2" name="billing_amount2" value="<?php echo isset($data)?$data['billing_amount2']:''; ?>" class="m-wrap span12">
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					 </div>
+				  </div>
+			   </div>
+			   <div class="row-fluid">
+			   	<div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Partner Billing Email ID</label>
+						<div class="controls">
+							<input type="text" id="billing_email2" name="billing_email2" value="<?php echo isset($data)?$data['billing_email2']:''; ?>" class="m-wrap span12">
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					 </div>
+				  </div>
+			   	<div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Partner Bill Address</label>
+						<div class="controls">
+							<textarea id="billing_address2" name="billing_address2" class="m-wrap span12"><?php echo isset($data)?$data['billing_address2']:''; ?></textarea>
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					 </div>
+				  </div>
+			   </div>
+			
 
 			<div class="form-actions">
 				<span style="color:#FF0000;margin-bottom:20px;display:none;" id="record_modified">
@@ -356,17 +446,14 @@ function saveData(frm_id, action){
         //alert('Jai Mata Di............' + frm_id);
 
 
-				$('#frm_about_order').validate({
+			$('#frm_about_order').validate({
 	    	rules:{
 	    		lead_source:"required",
 	    		city: "required",
 	    		service:"required",
 	    		price:"required",
 	    		name:"required",
-	    		address:"required",
-	    		email_id:{
-					required:true
-				}
+	    		address:"required"
 	    	},
 	    	submitHandler: function() {
 
@@ -378,19 +465,9 @@ function saveData(frm_id, action){
 				if (data.name===""){
 						$('#name_error').css('display', 'block');
 						//$('#mobile_no_error').css('display', 'block');
-						//$('#email_error').css('display', 'block');
 					return false;
 				}
-				/*if(data.mobile_no.length!==10 || data.mobile_no===""){
-					$('#mobile_no_error').css('display', 'block');
-						$('#email_error').css('display', 'block');
-						return false;
-				}*/
-				/*if(data.email_id.indexOf('@') === -1 || data.email_id===""){
-						$('#email_error').css('display', 'block');
-						return false;
-				}*/
-				//debugger;
+				
         $('.error').hide();
         var flag=0;
         var order_name = $('#order_name').val();
@@ -430,7 +507,7 @@ function saveData(frm_id, action){
     }
 
     function getData(success){ //alert('Jmd................');
-				debugger;
+				//debugger;
         var jObj=eval("("+success+")");
         var res_action=jObj.action; //alert('AAs');
         var res_order_id=jObj.order_id;

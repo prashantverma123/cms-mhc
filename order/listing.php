@@ -3,9 +3,18 @@ $session = Session::getInstance();
 $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
-
-// echo $modelObj->sendEmail();
-
+if( $memcache){
+	//$leadstage = $memcache->get('leadstage');
+	$mhcclient = $memcache->get('mhcclient');
+	$leadsources = $memcache->get('leadsource');
+	$pricelist = $memcache->get('pricelist');
+	$lead_dropdown = $memcache->get('pricelist_dropdown');
+	$cities = $memcache->get('city');
+}else{
+	$cities = $dashboardObj->city();
+	$leadsources = $dashboardObj->leadsource();
+	$pricelist = $dashboardObj->pricelist();
+}
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
@@ -16,20 +25,23 @@ $userId = $session->get('UserId');
 	<button type="submit">Submit</button>
 	</form>
 	<div role="grid" class="dataTables_wrapper form-inline" style="width:96%;height:80%;overflow: auto" id="sample_3_wrapper">
-    	<table class="table table-striped table-bordered table-hover" id="">
+    	<table class="table table-striped table-bordered table-hover" id="" style="width:100%">
 		   <thead>
 			  <tr>
 				 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
-				 <th>Client Info</th>
+				 <th class="hidden-480">Client Info</th>
 				 <th class="hidden-480">Source</th>
 				 <th class="hidden-480">Service</th>
-				 <th class="hidden-480" style="width:10%">Service Date</th>
+				 <th class="hidden-480">Service Date</th>
 				<!--  <th class="hidden-480">Service Time</th> --><!-- 
 				 <th class="hidden-480">Contact No</th> -->
 				 <!-- <th class="hidden-480">Email Id</th> -->
 				 <th class="hidden-480"> Site Address</th>
 				 <th class="hidden-480">Billing Amount</th>
 				 <th class="hidden-480">Job Updates</th>
+				 <th class="hidden-480">Team Leader</th>
+				 <th class="hidden-480">Supervisor</th>
+				 <th class="hidden-480">Janitor</th>
 				 <th class="hidden-480">Invoice</th>
 				 <th class="hidden-480">Payment Mode</th>
 				 <th class="hidden-480">Payment Status</th>
@@ -59,12 +71,14 @@ $userId = $session->get('UserId');
 		   $recperpage=PER_PAGE_ROWS;
 			$result_data = $modelObj->getListingData('lead_source,name,city', $page,$recperpage,$searchData,$filterData,0,$sort);
 
-
 			foreach ($result_data['rows'] as $key){
 				if($key['parent_id'] == 0){
 					$is_parent_val = 'Yes';
 				}else{
 					$is_parent_val = '--';
+				}
+				if($key['city']){
+					$key['cityname'] = $cities[$key['city']];
 				}
 		 ?>
 			  <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
@@ -72,9 +86,18 @@ $userId = $session->get('UserId');
 				 <td><?php print ucfirst($key['name']);
 				 if($key['mobile_no'] != '') echo '<br />'.$key['mobile_no'];
 				 if($key['email_id']) echo '<br />'.$key['email_id'];?></td>
-				 <td class="hidden-480"><?php print $key['leadsource_name'];?></td>
-				 <td class="hidden-480"><?php print $key['service'];?></td>
-				 <td class="hidden-480" style="width:10%"><span><?php print date('d M Y h:i A',strtotime($key['service_date'])); ?></span>
+				 <td class="hidden-480"><?php print $leadsources[$key['lead_source']];?></td>
+				 <td class="hidden-480">
+				 	<?php 
+				 		//print_r($key['service']);
+				 		$services = explode(',', $key['service']);
+				 		foreach ($services as $service) {
+				 			print $lead_dropdown[$service];
+				 		}
+				 		
+				 	?>
+				 </td>
+				 <td class="hidden-480" width="20%"><span><?php if($key['service_date'] !='0000-00-00 00:00:00') print date('d M Y h:i A',strtotime($key['service_date'])); ?></span>
 					<a href="javascript:void(0);" data-orderid="<?php print $key['id'];?>" onclick="getDatePickerId('reschedule_order<?php print $key['id'];?>',this);" id="reschedule_order<?php print $key['id'];?>" class="edit reschedule_order" title="Reschedule Order" style="color:#FFFFFF"><img src="../img/calendar.png" /> </a>
 					<!-- <input type="text" name="reschedule_order" id="reschedule_order" value="" />  -->
 				 </td>
@@ -93,13 +116,13 @@ $userId = $session->get('UserId');
 					<?php else:
 						if($key['job_status'] == 'success'):
 					?>
-						<select class="small m-wrap jobstatus" name="job_status"  id="jobstatus<?php print $key['id'];?>" onchange="saveJobStatus(<?php print $key['id'];?>)">
+						<select class="small m-wrap jobstatus" name="job_status" style="width:94px !important" id="jobstatus<?php print $key['id'];?>" onchange="saveJobStatus(<?php print $key['id'];?>)">
 						<option value="">Please Select</option>
 						<option value="success" <?php if($key['job_status'] == 'success'): echo "selected"; else: ""; endif; ?>>Success</option>
 						<option value="complaint">Complaint</option>
 					</select>
 					<?php else: ?>
-					<select class="small m-wrap jobstatus" name="job_status"  id="jobstatus<?php print $key['id'];?>" onchange="saveJobStatus(<?php print $key['id'];?>)">
+					<select class="small m-wrap jobstatus" name="job_status" style="width:94px !important" id="jobstatus<?php print $key['id'];?>" onchange="saveJobStatus(<?php print $key['id'];?>)">
 						<option value="">Please Select</option>
 						<option value="success">Success</option>
 						<option value="complaint" <?php if($key['job_status'] == 'complaint'): echo "selected"; else: ""; endif; ?>>Complaint</option>
@@ -107,11 +130,14 @@ $userId = $session->get('UserId');
 					<?php endif; endif; ?>
 					<br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="<?php print $key['id'];?>" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick='remarkPopup(<?php print $key['id'];?>)'>Remark</button>
 				</td>
+				<td><input type="textbox" onchange="change_deployment(<?php print $key['id'];?>,'teamleader',this)" style="border-color:gray;width:97%;text-align:center" placeholder="Team Leader" value="<?php echo $key['teamleader_deployment']; ?>" name="teamleader_deployment"></td>
+				<td><input type="textbox" onchange="change_deployment(<?php print $key['id'];?>,'supervisor',this)" style="border-color:gray;width:97%;text-align:center" placeholder="Supervisor" value="<?php echo $key['supervisor_deployment']; ?>" name="supervisor_deployment"></td>
+				<td><input type="textbox" onchange="change_deployment(<?php print $key['id'];?>,'janitor',this)" style="border-color:gray;width:97%;text-align:center" placeholder="Janitor" value="<?php echo $key['janitor_deployment'] ?>" name="janitor_deployment"></td>
 				<td class="hidden-480">
 					<button type="button" class="btn-info invoicebtn btn-sm" id="bill<?php print $key['id'];?>" onclick="generateInvoice('<?php print $key['id'];?>')" data-toggle="modal" data-target="#billing" data-id="<?php print $key['id'];?>" data-billingname="<?php print $key['billing_name'];?>" data-billingname2="<?php print $key['leadsource_name'];?>" data-billingemail="<?php print $key['email_id'];?>" data-billingemail2="<?php print $key['billing_email2'];?>" data-billingaddress="<?php print $key['billing_address'];?>" data-billingaddress2="<?php print $key['billing_address2'];?>" data-billingamount="<?php print $key['taxed_cost'];?>" data-billingamount2="<?php print $key['billing_amount2'];?>">Send</button>
 				</td>
 				<td>
-					<select class="small m-wrap payment_mode" name="payment_mode"  id="paymentMode<?php print $key['id'];?>" onchange="changePaymentMode(<?php print $key['id'];?>,this.value)">
+					<select class="small m-wrap payment_mode" name="payment_mode" style="width:120px !important" id="paymentMode<?php print $key['id'];?>" onchange="changePaymentMode(<?php print $key['id'];?>,this.value)">
 						<option value="">Payment Mode</option>
 						<option value="online" <?php if($key['payment_mode'] == 'instamojo'): echo "selected"; else: ""; endif; ?>>Instamojo</option>
 						<option value="online" <?php if($key['payment_mode'] == 'hdfc'): echo "selected"; else: ""; endif; ?>>HDFC</option>
@@ -121,7 +147,7 @@ $userId = $session->get('UserId');
 					
 				</td>
 				<td>
-					<select class="small m-wrap payment_status" name="payment_status"  id="paymentStatus<?php print $key['id'];?>" onchange="changePaymentStatus(<?php print $key['id'];?>,this.value)">
+					<select class="small m-wrap payment_status" name="payment_status" style="width:122px !important" id="paymentStatus<?php print $key['id'];?>" onchange="changePaymentStatus(<?php print $key['id'];?>,this.value)">
 						<option value="">Payment Status</option>
 						<option value="pending" <?php if($key['payment_status'] == 'pending'): echo "selected"; else: ""; endif; ?>>Pending</option>
 						<option value="part_received" <?php if($key['payment_status'] == 'part_received'): echo "selected"; else: ""; endif; ?>>Part Received</option>
@@ -133,15 +159,15 @@ $userId = $session->get('UserId');
 
 				 <td>
 				 	<?php if(in_array('edit',$actionArr)): ?>
-					<span class="label label-success"><a href="<?php print SITEPATH.'/order/display.php?order_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> &nbsp;
+					<span class="label label-success"><a href="<?php print SITEPATH.'/order/display.php?order_id='.encryptdata($key['id']);?>" class="edit" title="Edit" style="color:#FFFFFF"><img src="../img/edit.png"/> </a></span> 
 					<?php endif; if(in_array('delete',$actionArr)): ?>
-					<span class="label label-warning"><a href="javascript:void(0);" onclick="deleteConfirm('order',<?php print $key['id'];?>,'delete_order','order_id')" class="edit" title="Delete" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
+					<span class="label label-warning" style="margin-top:5px"><a href="javascript:void(0);" onclick="deleteConfirm('order',<?php print $key['id'];?>,'delete_order','order_id')" class="edit" title="Delete" style="color:#FFFFFF"><img src="../img/delete.png" /> </a></span>
 					<?php endif; ?>
-					<span class="label label"><a href="javascript:void(0);" class="edit" onclick="printWorkOrder('<?php echo htmlspecialchars(json_encode($key)); ?>');" title="Print Work Order" style="color:#FFFFFF"><img src="../img/print.png"/> </a></span> &nbsp;
+					<span class="label" style="margin-top:5px"><a href="javascript:void(0);" class="edit" onclick="printWorkOrder('<?php echo htmlspecialchars(json_encode($key)); ?>');" title="Print Work Order" style="color:#FFFFFF"><img src="../img/print.png"/> </a></span><br />
 					<?php if($key['status'] != '1'): ?>
-					<span class="label label-warning"><a href="javascript:void(0);" onclick="cancelOrder(<?php print $key['id'];?>)" class="edit" title="Cancel Order" style="color:#FFFFFF"><img src="../img/icon-color-close.png" /> </a></span>
+					<span class="label label-warning" style="margin-top:5px"><a href="javascript:void(0);" onclick="cancelOrder(<?php print $key['id'];?>)" class="edit" title="Cancel Order" style="color:#FFFFFF"><img src="../img/icon-color-close.png" /> </a></span>
 					<?php elseif($key['status'] == '1'): ?>
-					 <span>Order Cancelled</span>
+					 <span style="margin-top:5px">Order Cancelled</span>
 					<?php endif; ?>
 
 				</td>
@@ -234,9 +260,8 @@ $userId = $session->get('UserId');
   </div>
 <!----PAYMENT MODE POPUP ENDS HERE------- -->
 <!----DEPLOYMENT POPUP STARTS HERE------- -->
- <div class="modal fade" id="orderDeployment" role="dialog">
+ <!-- <div class="modal fade" id="orderDeployment" role="dialog">
     <div class="modal-dialog">
-      <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"></button>
@@ -252,7 +277,7 @@ $userId = $session->get('UserId');
         </div>
        </div>
     </div>
-  </div>
+  </div> -->
 <!----DEPLOYMENT POPUP ENDS HERE------- -->
 
 <!----PAYMENT RECEIVED POPUP STARTS HERE------- -->
@@ -359,7 +384,7 @@ $(document).ready(function () {
 		}
 		});
     })
-    $('#addDeployment').click(function(){
+   /* $('#addDeployment').click(function(){
 	    $('#frmOrderDeployment').validate({
 		rules:{
 			deployment:"required"
@@ -384,7 +409,7 @@ $(document).ready(function () {
 			});
 		}
 		});
-	});
+	});*/
     $("#updatePaymentReceived").click(function(){
     	 $('#frmPaymentReceived').validate({
 		rules:{
@@ -628,11 +653,11 @@ function changePaymentStatus(id,value){
 					success: function(res){
 						if(job_info == 'job_start'){
 							$('.jobinfo'+id).html('<div class="checker"><span><input type="checkbox" name="job_info'+id+'" value="job_end" onchange="updateJobInfo('+id+')"></span></div>End<br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="'+id+'" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick="remarkPopup('+id+')">Remark</button>');
-							$('#orderDeployment').modal('show');
-							$('#deployment_orderid').val(id);
+							//$('#orderDeployment').modal('show');
+							//$('#deployment_orderid').val(id);
 						}
 						else if(job_info == 'job_end'){
-							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" class="small m-wrap"><option value="">Please Select</option><option value="success">Success</option><option value="complaint">Complaint</option></select><br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="'+id+'" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick="remarkPopup('+id+')">Remark</button>');
+							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" style="width:94px !important" class="small m-wrap"><option value="">Please Select</option><option value="success">Success</option><option value="complaint">Complaint</option></select><br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="'+id+'" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick="remarkPopup('+id+')">Remark</button>');
 						}
 					},
 					error:function(){
@@ -708,6 +733,23 @@ function changePaymentStatus(id,value){
 			});
 		}
 	}
+	
+	function change_deployment(id,deployment_type,current){
+		d = $(current).val();
+			if(id){
+				$.ajax({
+					type: "POST",
+					url: "<?php print SITEPATH.'/order/category2db.php';?>",
+					data: 'action=change_deployment&order_id='+id+'&deployment_type='+deployment_type+'&deployment='+d,
+					success: function(res){
+						//alert("C!")
+					},
+					error:function(){
+						alert("failure");
+					}
+				});
+			}
+		}
     function printWorkOrder(work_order) {  
     	//console.log(work_order);  
     	wo = JSON.parse(work_order);

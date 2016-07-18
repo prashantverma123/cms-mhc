@@ -61,24 +61,37 @@ switch($action){
 			}
 
 		if($leadmanager_id == '' ){ //add new record
-			//print_r($_POST);
 				$insertArr['lead_source'] 	= $_POST['lead_source'];
 				$insertArr['lead_owner'] 	= $_POST['lead_owner'];
 				$insertArr['followup_by'] 	= $_POST['followup_by'];
 				$insertArr['job_status']	= 'pending';
 				$insertArr['lead_stage']    = $_POST['lead_stage'];
 				$insertArr['reminder']    	= $_POST['reminder'];
-				if($_POST['service1_date'] 	!= ' '){
+				if($_POST['service1_date']!=''){
 					$insertArr['service1_date'] = date("Y-m-d", strtotime($_POST['service1_date']));
+					$insertArr['service1_time'] 		= $_POST['service2_time'];
 				}
 				else{
-					$insertArr['service1_date'] = "";
+					$insertArr['service1_date'] = null;
+					$insertArr['service1_time'] = null;
 				}
-				$insertArr['service1_time'] 		=  $_POST['service1_time'];
-				$insertArr['service2_date'] 		=  isset($_POST['service2_date'])?date("Y-m-d", strtotime($_POST['service2_date'])):"";
-				$insertArr['service2_time'] 		= $_POST['service2_time'];
-				$insertArr['service3_date'] 		=  isset($_POST['service3_date'])?date("Y-m-d", strtotime($_POST['service3_date'])):"";
-				$insertArr['service3_time'] 		= $_POST['service3_time'];
+				
+				if($_POST['service2_date']!=''){
+					$insertArr['service2_date'] 		=  isset($_POST['service2_date'])?date("Y-m-d", strtotime($_POST['service2_date'])):"";
+					$insertArr['service2_time'] 		=  $_POST['service1_time'];
+				}else{
+					$insertArr['service2_date'] =null;
+					$insertArr['service2_time'] = null;
+				}
+				
+				if($_POST['service3_date']!=''){
+					$insertArr['service3_date'] 		=  isset($_POST['service3_date'])?date("Y-m-d", strtotime($_POST['service3_date'])):"";
+					$insertArr['service3_time'] 		= $_POST['service3_time'];
+				}else{
+					$insertArr['service3_date'] =null;
+					$insertArr['service3_time'] = null;
+				}
+				
 
 				$insertArr['teamLeader_deployment'] 		= $_POST['teamLeader_deployment'];
 				$insertArr['supervisor_deployment'] 		= $_POST['supervisor_deployment'];
@@ -133,12 +146,38 @@ switch($action){
 				//$updateArr['job_status']	= $_POST['job_status'];
 				$updateArr['lead_stage']    = $_POST['lead_stage'];
 				$updateArr['reminder']    	= $_POST['reminder'];
-				$updateArr['service1_date'] 		=  date("Y-m-d", strtotime($_POST['service1_date']));
+	/*			$updateArr['service1_date'] 		=  date("Y-m-d", strtotime($_POST['service1_date']));
 				$updateArr['service1_time'] 		= $_POST['service1_time'];
 				$updateArr['service2_date'] 		=  date("Y-m-d", strtotime($_POST['service2_date']));
 				$updateArr['service2_time'] 		= $_POST['service2_time'];
 				$updateArr['service3_date'] 		=  date("Y-m-d", strtotime($_POST['service3_date']));
-				$updateArr['service3_time'] 		= $_POST['service3_time'];
+				$updateArr['service3_time'] 		= $_POST['service3_time'];*/
+
+				if($_POST['service1_date']!=''){
+					$updateArr['service1_date'] = date("Y-m-d", strtotime($_POST['service1_date']));
+					$updateArr['service1_time'] 		= $_POST['service2_time'];
+				}
+				else{
+					$updateArr['service1_date'] = null;
+					$updateArr['service1_time'] = null;
+				}
+				
+				if($_POST['service2_date']!=''){
+					$updateArr['service2_date'] 		=  isset($_POST['service2_date'])?date("Y-m-d", strtotime($_POST['service2_date'])):"";
+					$updateArr['service2_time'] 		=  $_POST['service1_time'];
+				}else{
+					$updateArr['service2_date'] =null;
+					$updateArr['service2_time'] = null;
+				}
+				
+				if($_POST['service3_date']!=''){
+					$updateArr['service3_date'] 		=  isset($_POST['service3_date'])?date("Y-m-d", strtotime($_POST['service3_date'])):"";
+					$updateArr['service3_time'] 		= $_POST['service3_time'];
+				}else{
+					$updateArr['service3_date'] =null;
+					$updateArr['service2_time'] = null;
+				}
+
 
 				$updateArr['teamLeader_deployment'] 		= $_POST['teamLeader_deployment'];
 				$updateArr['supervisor_deployment'] 		= $_POST['supervisor_deployment'];

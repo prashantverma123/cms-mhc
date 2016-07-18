@@ -3,15 +3,18 @@ $session = Session::getInstance();
 $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
-if( $memcache){
+if($memcache){
 	$leadstage = $memcache->get('leadstage');
 	$mhcclient = $memcache->get('mhcclient');
 	$leadsources = $memcache->get('leadsource');
-	$pricelist = $memcache->get('pricelist');
+	$pricelist = $memcache->get('pricelist_dropdown');
+	$variant = $memcache->get('varianttype');
 }else{
-	$leadstage = $memcache->get('leadstage');
-	$mhcclient = $memcache->get('mhcclient');
-	$leadsources = $memcache->get('leadsource');
+	$leadstage = $dashboardObj->leadstage();
+	$mhcclient = $dashboardObj->mhcclient();
+	$leadsources = $dashboardObj->leadsource();
+	$pricelist = $dashboardObj->pricelist();
+	$variant = $dashboardObj->varianttype();
 }
 ?>
 <div class="portlet-body">
@@ -31,22 +34,22 @@ if( $memcache){
 	<button type="submit">Submit</button>
 	</form>
 	<div role="grid" class="dataTables_wrapper form-inline " id="sample_3_wrapper" style="width:96%;height:80%;overflow: auto">
-    	<table class="table table-striped table-bordered table-hover leadmanagergrid" id="leadmanagergrid" style="" >
+    	<table class="table table-striped table-bordered table-hover leadmanagergrid" id="leadmanagergrid" style="width:100%" >
 		   <thead>
 			  <tr>
 				 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
-				 <th class="hidden-480">Job Id</th>
-				 <th class="hidden-480">Lead Source</th>
-				 <th class="hidden-480">Lead Owner</th>
+				 <th class="hidden-480" width="5%">Job Id</th>
+				 <th class="hidden-480" width="10%">Lead Source</th>
+				 <th class="hidden-480" width="10%">Lead Owner</th>
 				  <th class="hidden-480">Lead Stage</th>
-				 <th class="hidden-480">Client Details</th>
+				 <th class="hidden-480" width="20%">Client Details</th>
 				  <!-- <th class="hidden-480">Client Mobile No</th> -->
 				 <th class="hidden-480">Service Details</th>
-				 <th class="hidden-480">Service Time</th>
+				 <th class="hidden-480" width="15%">Service Time</th>
 				 <th class="hidden-480">Order Status</th>
 				 <th class="hidden-480">Inquiry Date/time</th>
 				 <th class="hidden-480">Comments/Remarks</th>
-				 <th class="hidden-480">Action</th>
+				 <th class="hidden-480" width="5%">Action</th>
 			  </tr>
 			</thead>
 		   <tbody>
@@ -76,7 +79,7 @@ if( $memcache){
  		    }
 			$result_data = $modelObj->getListingData($_GET['filterby'], $page,$recperpage,$searchData,$filterData,'',$sort);
 
-			//print_r($result_data);
+			//echo "<pre>";print_r($result_data);
 			foreach ($result_data['rows'] as $key){
 				$mhcclientInfo = "";
 				$mhcclientInfo = $mhcclient[$key['mhcclient_id']];
@@ -94,7 +97,7 @@ if( $memcache){
 				<td class="hidden-480"><?php print $leadsources[$key['lead_source']];?></td>
 				<td class="hidden-480"><?php print $key['lead_owner'];?></td>
 				<td class="hidden-480">
-					<select class="small m-wrap lead_stage" name="lead_stage" id="leadstage<?php print $key['id'];?>" onchange="changeLeadStage(<?php print $key['id'];?>);">
+					<select class="small m-wrap lead_stage" style="width:94px !important" name="lead_stage" id="leadstage<?php print $key['id'];?>" onchange="changeLeadStage(<?php print $key['id'];?>);">
 					<?php 
 					if($leadstage)
 						echo optionsGeneratorNew($leadstage,$key['lead_stage']); 
@@ -121,18 +124,26 @@ if( $memcache){
 				</td>
 				<td class="hidden-480"><b><?php print $mhcclientInfo['client_firstname'].' ' .$mhcclientInfo['client_lastname'].'</b></br>'.$mhcclientInfo['client_mobile_no'].'</br>'.$mhcclientInfo['address'];?></td>
 				<!-- <td class="hidden-480"><?php //print $key['client_mobile_no'];?></td> -->
-				<td class="hidden-480"><?php print $pricelist[$key['service_inquiry1']].' </br>'.$pricelist[$key['service_inquiry2']].'</br>'.$pricelist[$key['service_inquiry3']]; ?></td>
+				<td class="hidden-480">
+					<?php if($pricelist[$key['service_inquiry1']] != '')
+						echo $pricelist[$key['service_inquiry1']].':'.$variant[$key['varianttype1']]."<br />";
+						if($pricelist[$key['service_inquiry2']] != '')
+						echo $pricelist[$key['service_inquiry2']].':'.$variant[$key['varianttype2']]."<br />";
+						if($pricelist[$key['service_inquiry3']] != '')
+						echo $pricelist[$key['service_inquiry3']].':'.$variant[$key['varianttype3']]."<br />";
+					?>
+					</td>
 				<!-- <td class="hidden-480"><?php //print date('d M Y',strtotime($key['service1_date']));?></td> -->
-				<td class="hidden-480"><?php print date('d M Y',strtotime($key['service1_date'])). ' </br>'.date('h:i A',strtotime($key['service1_time']));?></td>
+				<td class="hidden-480"><?php if($key['service1_date'] != "0000-00-00")print date('d M Y',strtotime($key['service1_date'])). ' </br>'.date('h:i A',strtotime($key['service1_time']));?></td>
 				 <td id="confirmed<?php echo $key['id']; ?>">
 				 	<?php if($key['job_status']=='confirmed'): ?>
-				 	<select name="job_status<?php echo $key['id']; ?>" id="job_status<?php echo $key['id']; ?>" tabindex="1" class="small m-wrap " onchange="update_status('<?php echo $key['id']; ?>');">
+				 	<select name="job_status<?php echo $key['id']; ?>" style="width:94px !important" id="job_status<?php echo $key['id']; ?>" tabindex="1" class="small m-wrap " onchange="update_status('<?php echo $key['id']; ?>');">
 				 		<option value="pending">Pending</option>
 				 		<option value='in_process'>In Process</option>
 				 		<option value='confirmed' selected='selected'>Confirmed</option>
 				 	</select>
 				<?php  else: ?>
-				 	<select name="job_status<?php echo $key['id']; ?>" id="job_status<?php echo $key['id']; ?>" tabindex="1" class="small m-wrap " onchange="update_status('<?php echo $key['id']; ?>');">
+				 	<select name="job_status<?php echo $key['id']; ?>" style="width:94px !important" id="job_status<?php echo $key['id']; ?>" tabindex="1" class="small m-wrap " onchange="update_status('<?php echo $key['id']; ?>');">
 				 		<option value="pending" <?php if($key['job_status']=='pending'): echo "selected"; else: echo "";endif; ?>>Pending</option>
 				 		<option value='in_process' <?php if($key['job_status']=='in_process'): echo "selected"; else: echo "";endif; ?>>In Process</option>
 				 		<option value='confirmed' <?php if($key['job_status']=='confirmed'): echo "selected"; else: echo "";endif; ?>>Confirmed</option>

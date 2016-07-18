@@ -58,23 +58,33 @@ class Dashboard {
 			}
 			$memcache->set('leadsource',$sourcearr);
 		}
-		//if(!$memcache->get('leadstage')){
+		if(!$memcache->get('leadstage')){
 			$leadstages = $this -> db -> getDataFromTable($keyValueArray, 'leadstage', "distinct name as display, id as value", '', '');
 			foreach ($leadstages as $leadstage) {
 				$stagearr[$leadstage['value']] =  $leadstage['display'];
 			}
 			$memcache->set('leadstage',$stagearr);
-		//}
-		//if(!$memcache->get('pricelist')){
+		}
+		if(!$memcache->get('pricelist')){
 			//$pricelists = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "name as display, id as value", '', '',true);
-			$stmt = "select distinct name as display,id as value from pricelist where status!='-1' group by name";
+			$stmt = "select distinct name as display,id as value from pricelist where status!='-1'
+			group by name";
         	$this -> db ->query($stmt);
         	while ($result = $this-> db ->fetch()) {
             	//$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
             	$pricelists[$result['value']] = $result['display'];
         	}	
 			$memcache->set('pricelist',$pricelists);
-		//}
+		}
+		if(!$memcache->get('pricelist_dropdown')){
+			$stmt = "select distinct name as display,id as value from pricelist where status!='-1'";
+        	$this -> db ->query($stmt);
+        	while ($result = $this-> db ->fetch()) {
+            	//$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+            	$pricelists[$result['value']] = $result['display'];
+        	}	
+			$memcache->set('pricelist_dropdown',$pricelists);
+		}
 		if(!$memcache->get('designation')){
 			$designations = $this -> db -> getDataFromTable($keyValueArray, 'designation', "distinct name as display, id as value", '', '');
 			foreach ($designations as $designation) {
@@ -89,13 +99,13 @@ class Dashboard {
 			}
 			$memcache->set('role',$rolearr);
 		}
-		//if(!$memcache->get('category')){
+		if(!$memcache->get('category')){
 			$categories = $this -> db -> getDataFromTable(array(), 'category', "distinct name as display, id as value", '', '');
 			foreach ($categories as $category) {
 				$categoryarr[$category['value']] =  $category['display'];
 			}
 			$memcache->set('category',$categoryarr);
-		//}
+		}
 		if(!$memcache->get('varianttype')){
 			$varianttype = $this -> db -> getDataFromTable(array(), 'variantmaster', "distinct varianttype as display, id as value", '', '');
 			foreach ($varianttype as $value) {
@@ -109,13 +119,13 @@ class Dashboard {
 			$memcache->set('taxes',$taxes);
 		}
 
-		//if(!$memcache->get('mhcclient')){
+		if(!$memcache->get('mhcclient')){
 			$mhcclients = $this -> db -> getDataFromTable($whereArr, 'mhcclient', "*", "", '', false);
 			foreach ($mhcclients as $mhcclient) {
-				$mhcclientarr[$mhcclient['id']] =  array('client_firstname'=>$mhcclient['client_firstname'],'client_lastname'=>$mhcclient['client_lastname'],'client_mobile_no'=>$mhcclient['client_mobile_no'],'address'=>$mhcclient['address']);
+				$mhcclientarr[$mhcclient['id']] =  array('client_firstname'=>$mhcclient['client_firstname'],'client_lastname'=>$mhcclient['client_lastname'],'client_mobile_no'=>$mhcclient['client_mobile_no'],'address'=>$mhcclient['address'],'city'=>$mhcclient['city'],'client_email_id'=>$mhcclient['client_email_id'],'pincode'=>$mhcclient['pincode']);
 			}
 			$memcache->set('mhcclient',$mhcclientarr);
-		//}
+		}
 		
 	}
 
@@ -125,6 +135,58 @@ class Dashboard {
 			$cityarr[$city['value']] =  $city['display'];
 		}
 		return $cityarr;
+	}
+
+	function leadstage(){
+		$leadstages = $this -> db -> getDataFromTable($keyValueArray, 'leadstage', "distinct name as display, id as value", '', '');
+		foreach ($leadstages as $leadstage) {
+			$stagearr[$leadstage['value']] =  $leadstage['display'];
+		}
+		return $stagearr;
+	}
+
+	function leadsource(){
+		$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadsource', "distinct name as display, id as value", 'name ASC', '');
+			foreach ($leadsources as $leadsource) {
+				$sourcearr[$leadsource['value']] =  $leadsource['display'];
+			}
+			return $sourcearr;
+	}
+
+	function mhcclient(){
+		$mhcclients = $this -> db -> getDataFromTable($whereArr, 'mhcclient', "*", "", '', false);
+			foreach ($mhcclients as $mhcclient) {
+				$mhcclientarr[$mhcclient['id']] =  array('client_firstname'=>$mhcclient['client_firstname'],'client_lastname'=>$mhcclient['client_lastname'],'client_mobile_no'=>$mhcclient['client_mobile_no'],'address'=>$mhcclient['address'],'city'=>$mhcclient['city'],'client_email_id'=>$mhcclient['client_email_id'],'pincode'=>$mhcclient['pincode']);
+			}
+		return $mhcclientarr;	
+	}
+
+	function pricelist(){
+		$stmt = "select distinct name as display,id as value from pricelist where status!='-1' group by name";
+        	$this -> db ->query($stmt);
+        	while ($result = $this-> db ->fetch()) {
+            	//$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+            	$pricelists[$result['value']] = $result['display'];
+        	}	
+        	return $pricelists;
+	}
+
+	function varianttype(){
+		$varianttype = $this -> db -> getDataFromTable(array(), 'variantmaster', "distinct varianttype as display, id as value", '', '');
+		foreach ($varianttype as $value) {
+			$arr[$value['value']] =  $value['display'];
+		}
+		return $arr;
+	}
+
+	function pricelistAll(){
+			$stmt = "select distinct name as display,id as value from pricelist where status!='-1'";
+        	$this -> db ->query($stmt);
+        	while ($result = $this-> db ->fetch()) {
+            	//$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+            	$pricelists[$result['value']] = $result['display'];
+        	}	
+        	return $pricelists;
 	}
 }
 ?>

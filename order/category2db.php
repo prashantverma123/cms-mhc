@@ -29,10 +29,20 @@ switch($action){
 				$insertArr['price'] 			= $_POST['price'];
 				$insertArr['commission'] 			= $_POST['commission'];
 				$insertArr['taxed_cost'] 			= $_POST['taxed_cost'];
+				$insertArr['billing_name'] 			= $_POST['billing_name'];
+				$insertArr['billing_address'] 			= $_POST['billing_address'];
+				$insertArr['billing_email'] 			= $_POST['billing_email'];
+				$insertArr['billing_name2'] 			= $_POST['billing_name2'];
+				$insertArr['billing_address2'] 			= $_POST['billing_address2'];
+				$insertArr['billing_email2'] 			= $_POST['billing_email2'];
+				$insertArr['billing_amount2'] 			= $_POST['billing_amount2'];
+				$insertArr['teamleader_deployment'] = $_POST['teamleader_deployment'];
+				$insertArr['janitor_deployment'] = $_POST['janitor_deployment'];
+				$insertArr['supervisor_deployment'] = $_POST['supervisor_deployment'];
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
 				$insertArr['author_name']			= $_SESSION['tmobi']['AdminName'];
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
-				
+				//$insertArr['update_date']		= date('Y-m-d H:i:s');
 				$insertArr['status']= 0;
 				$insertArr['ip']= getIP();
 				$returnVal = $modelObj->insertTable($insertArr);
@@ -58,7 +68,18 @@ switch($action){
 				$updateArr['price'] 	= $_POST['price'];
 				$updateArr['commission'] 	= $_POST['commission'];
 				$updateArr['taxed_cost'] 	= $_POST['taxed_cost'];
-				$updateArr['update_date']		= date('Y-m-d H:i:s');
+				$updateArr['billing_name'] 			= $_POST['billing_name'];
+				$updateArr['billing_address'] 			= $_POST['billing_address'];
+				$updateArr['billing_email'] 			= $_POST['billing_email'];
+				$updateArr['billing_name2'] 			= $_POST['billing_name2'];
+				$updateArr['billing_address2'] 			= $_POST['billing_address2'];
+				$updateArr['billing_email2'] 			= $_POST['billing_email2'];
+				$updateArr['billing_amount2'] 			= $_POST['billing_amount2'];
+				
+				$updateArr['teamleader_deployment'] = $_POST['teamleader_deployment'];
+				$updateArr['janitor_deployment'] = $_POST['janitor_deployment'];
+				$updateArr['supervisor_deployment'] = $_POST['supervisor_deployment'];
+
 				$whereArr = array('id' => $order_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 				$arrReturn['result'] = 'success';
@@ -197,6 +218,20 @@ switch($action){
 			case "addPaymentInfo":
 				$whereArr = array('id'=>$_POST['paymodeorderid']);
 				$updateArr['payment_info'] = $_POST['payment_info'];
+				$updateArr['update_date'] = date('Y-m-d h:i:s');
+				$updateArr['author_id'] = $_SESSION['tmobi']['UserId'];
+				$result = $modelObj->updateTable($updateArr,$whereArr);
+			 	$arrReturn['result'] = $result;
+			break;
+			case "change_deployment":
+			    $whereArr = array('id'=>$_POST['order_id']);
+			    if($_POST['deployment_type'] == "janitor"):
+				$updateArr['janitor_deployment'] = $_POST['deployment'];
+				elseif($_POST['deployment_type'] == "teamleader"):
+				$updateArr['teamleader_deployment'] = $_POST['deployment'];
+				elseif($_POST['deployment_type'] == "supervisor"):
+				$updateArr['supervisor_deployment'] = $_POST['deployment'];
+				endif;
 				$updateArr['update_date'] = date('Y-m-d h:i:s');
 				$updateArr['author_id'] = $_SESSION['tmobi']['UserId'];
 				$result = $modelObj->updateTable($updateArr,$whereArr);

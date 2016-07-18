@@ -21,14 +21,14 @@ class Pay {
 		$keyValueArray = array();
 		$keyValueArray['leadmanager.id'] = decryptdata($leadmanagerId);
 		$keyValueArray['leadmanager.order_id'] = decryptdata($orderId);
+		//$keyValueArray['leadmanager.id'] = 1;
+		//$keyValueArray['leadmanager.order_id'] = 'MHC8576a7cac92c7e';
 		$joinArray[] = array('type'=>'left','table'=>'`order`','condition'=>'`order`.order_id=leadmanager.order_id');
-		$joinArray[] = array('type'=>'left','table'=>'`city`','condition'=>'`city`.id=leadmanager.city');
-		$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
-		$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
-		$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
-		$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.client_firstname,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,p1.name as service1,p2.name as service2,p3.name as service3,`order`.payment_status,city.name as cityname",'','',$joinArray,false);
-		//print_r($result);
-
+		//$joinArray[] = array('type'=>'left','table'=>'`city`','condition'=>'`city`.id=leadmanager.city');
+		//$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
+		//$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
+		//$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
+		$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.mhcclient_id,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.service_inquiry1,leadmanager.service_inquiry2,leadmanager.service_inquiry3,`order`.payment_status",'','',$joinArray,false);
 		return $result;
 	}
 
