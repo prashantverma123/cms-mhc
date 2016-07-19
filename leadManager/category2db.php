@@ -256,7 +256,7 @@ switch($action){
 		$arrReturn['result'] = $row;
 		break;
 		case "getVaiantType":
-		$row = $modelObj->get_variant_type($_POST['id']);
+		$row = $modelObj->get_variant_type($_POST['id'],$_POST['service']);
 		$arrReturn['result'] = $row;
 		break;
 		case "getClientFirstname":

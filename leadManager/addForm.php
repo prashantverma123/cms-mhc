@@ -15,6 +15,7 @@ $leadsources = $memcache->get('leadsource');
 $lead_dropdown = $memcache->get('pricelist_dropdown');
 $leadstage = $memcache->get('leadstage');
 $pricelist = $memcache->get('pricelist');
+$varianttype = $memcache->get('varianttype');
 ?>
 	<div class="portlet box green">
 	  <div class="portlet-title">
@@ -107,7 +108,6 @@ $pricelist = $memcache->get('pricelist');
 				 <label class="control-label">client email id </label>
 				 <div class="controls">
 						<input tabindex="10" type="text" placeholder="Please Enter client email id" value="<?php echo isset($data)?$data['client_email_id']:''; ?>" id="client_email_id" name="client_email_id" class="m-wrap span12">
-						<span class="error">Multiple email Id with comma seperate</span>
 						<span class="help-block" id="client_email_id_error"> </span>
 				 </div>
 				</div>
@@ -208,12 +208,12 @@ $pricelist = $memcache->get('pricelist');
 
 				</div>
 
-				<div class="row-fluid" style="background-color:#6d6d6d;margin-bottom:15px;">
+			<div class="row-fluid" style="background-color:#6d6d6d;margin-bottom:15px;">
 				<h3 style="padding-left:10px">Service Details</h3>
 			</div>
-				   <div class="row-fluid">
-				  <div class="span6 ">
-					 <div class="control-group">
+			<div class="row-fluid">
+				<div class="span6 ">
+					<div class="control-group">
 						<label class="control-label">Lead Source <span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
@@ -223,8 +223,8 @@ $pricelist = $memcache->get('pricelist');
 						   		echo $modelObj->optionsGenerator('leadsource', 'name', 'id', $data['lead_source']," where status='0'"); ?>
 							</select>
 						</div>
-					 </div>
-				  </div>
+					</div>
+				</div>
 
 					<div class="span6 ">
 					 <div class="control-group">
@@ -267,232 +267,110 @@ $pricelist = $memcache->get('pricelist');
 				 	</div>
 
 			   </div>
-
-				<div class="row-fluid">
-					<div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label">Service Inquiry1 <span class="required">*</span></label>
-	 				 <div class="controls">
-							<select tabindex="17" class="large m-wrap" id="service_inquiry1" name="service_inquiry1" onchange="getVaiantType(this.value,'varianttype1')">
-						   <?php 
-						   if($pricelist)
-						   echo optionsGeneratorNew($pricelist,$data['service_inquiry1']);
-						   else
-						   echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry1']," where status='0'"); ?>
-							</select>
-	 						<span class="help-block" id="service_inquiry1_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
-				 <div class="span6 ">
-				<div class="control-group">
-				 <label class="control-label">Variant Type 1 <span class="required">*</span></label>
-				 <div class="controls">
-					 <select tabindex="18" class="large m-wrap" id="varianttype1" name="varianttype1" onchange="showPrice();">
-						<?php
-							if($leadmanager_id != '')
-							echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype1']," where status='0'"); ?>
-					 </select>
-				 </div>
+			   
+			<div class="servicess">
+			   	<div class="servicesss">
+			   	<hr />
+			   	<span style="padding:10px;background-color:green">1</span>
+			   	<div class="row-fluid">
+					<div class="span4 ">
+		 				<div class="control-group">
+		 				 <label class="control-label">Service Inquiry <span class="required">*</span></label>
+		 				 <div class="controls">
+								<select tabindex="17" class="medium m-wrap" id="service_inquiry" name="service_inquiry[]" onchange="getVaiantType(this,'varianttype','service_inquiry')">
+							   <?php 
+							   if($pricelist)
+							   echo optionsGeneratorNew($pricelist,$data['service_inquiry']);
+							   else
+							   echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry']," where status='0'"); ?>
+								</select>
+		 						<span class="help-block" id="service_inquiry_error"> </span>
+		 				</div>
+	 					</div>
+		 			</div>
+					<div class="span4 ">
+						<div class="control-group">
+						 <label class="control-label">Variant Type  <span class="required">*</span></label>
+						 <div class="controls">
+							 <select tabindex="18" class="medium m-wrap" id="varianttype" name="varianttype" onchange="showPrice();">
+								<?php
+									if($leadmanager_id != '')
+									echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype']," where status='0'"); ?>
+							 </select>
+						 </div>
+						</div>
+				 	</div>
+			 		<div class="span4">
+		 				<div class="control-group">
+		 				 <label class="control-label">Service Booked <span class="required">*</span></label>
+		 				 <div class="controls">
+		 						<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="21" type="radio" id="inquiry11" name="service_inquiry_booked" value="yes" <?php if($data['service_inquiry_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
+		 						<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="22" type="radio" id="inquiry12" name="service_inquiry_booked" value="no" <?php if($data['service_inquiry_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
+		 						<span class="help-block" id="service_inquiry_booked_error"> </span>
+		 				 </div>
+		 				</div>
+		 			</div>
 				</div>
-			 </div>
+				<div class="row-fluid">
+		 			<div class="span6 ">
+		 				<div class="control-group">
+		 				 <label class="control-label">Service Price <!--<span class="required">*</span>--></label>
+		 				 <div class="controls">
+							<input type="text" tabindex="38" name="service_price" id="service_price" class="m-wrap span12"><?php echo isset($data)?trim($data['service_price']):''; ?></textarea>
+		 					<span class="help-block" id="service_price"> </span>
+		 				 </div>
+		 				</div>
+	 			 	</div>
+		 			<div class="span6 ">
+		 				<div class="control-group">
+			 				<label class="control-label">Additional Variant </label>
+			 				 <div class="controls">
+			 					<input tabindex="23" type="text" placeholder="Please Enter Variant" value="<?php echo isset($data)?$data['sqft']:''; ?>" id="sqft" name="sqft" class="m-wrap span12">
+			 					<span class="help-block" id="sqft1_error"> </span>
+			 				</div>
+		 				</div>
+		 			</div>
 				</div>
 				<div class="row-fluid serviceDateTime1">
 					<div class="span6 ">
-					<div class="control-group">
-					 <label class="control-label">Service1 Date <span class="required">*</span></label>
-					 <div class="controls">
-							<input tabindex="19" type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service1_date']:''; ?>" id="service1_date" name="service1_date" class="m-wrap span12 datepicker">
-							<span class="help-block" id="cost1_error"> </span>
-					 </div>
-					</div>
-				 </div>
-				<div class="span6 ">
-				<div class="control-group">
-				 <label class="control-label">Service1 Time  <span class="required">*</span></label>
-				 <div class="controls bootstrap-timepicker timepicker">
-						<input tabindex="20" type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service1_time']:''; ?>" id="service1_time" name="service1_time" class="m-wrap span12">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-						<span class="help-block" id="service1_time_error"> </span>
-				 </div>
-				</div>
-			 </div>
-			</div>
-
-				<div class="row-fluid">
-					<div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label">Service Inquiry1 Booked <span class="required">*</span></label>
-	 				 <div class="controls">
-	 						<!-- <input type="text" placeholder="Please Enter service inquiry1 booked" value="<?php //echo isset($data)?$data['service_inquiry1_booked']:''; ?>" id="service_inquiry1_booked" name="service_inquiry1_booked" class="m-wrap span12"> -->
-	 						<label class="checkbox-inline"><input tabindex="21" type="radio" id="inquiry11" name="service_inquiry1_booked" value="yes" <?php if($data['service_inquiry1_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
-	 						<label class="checkbox-inline"><input tabindex="22" type="radio" id="inquiry12" name="service_inquiry1_booked" value="no" <?php if($data['service_inquiry1_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
-	 						<span class="help-block" id="service_inquiry1_booked_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
-	 			 <div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label">Additional Variant 1 </label>
-	 				 <div class="controls">
-	 						<input tabindex="23" type="text" placeholder="Please Enter Variant" value="<?php echo isset($data)?$data['sqft1']:''; ?>" id="sqft1" name="sqft1" class="m-wrap span12">
-	 						<span class="help-block" id="sqft1_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
-	 			 
-				</div>
-				<div class="row-fluid">
-					<div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label">Service Inquiry2 <!--<span class="required">*</span>--></label>
-	 				 <div class="controls">
-
-							<select tabindex="24" class="large m-wrap" id="service_inquiry2" name="service_inquiry2" onchange="getVaiantType(this.value,'varianttype2')" >
-							 <?php  
-							  if($pricelist)
-						   		echo optionsGeneratorNew($pricelist,$data['service_inquiry2']);
-						   	  else
-							 	echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry2']," where status='0'"); ?>
-							</select>
-	 						<span class="help-block" id="service_inquiry2_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
-				 <div class="span6 ">
-				 <div class="control-group">
-					<label class="control-label">Variant Type 2 </label>
-					<div class="controls">
-						<select tabindex="25" class="large m-wrap" id="varianttype2" name="varianttype2" onchange="showPrice();">
-						 <?php  if($leadmanager_id != '')  echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype2']," where status='0'"); ?>
-						</select>
-					</div>
-				 </div>
-				</div>
-				</div>
-				<div class="row-fluid serviceDateTime2">
-					<div class="span6 ">
-					<div class="control-group">
-					 <label class="control-label">Service2 Date </label>
-					 <div class="controls">
-							<input tabindex="26" type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service2_date']:''; ?>" id="service2_date" name="service2_date" class="m-wrap span12 datepicker">
-							<span class="help-block" id="cost2_error"> </span>
-					 </div>
-					</div>
-				 </div>
-				<div class="span6 ">
-				<div class="control-group">
-				 <label class="control-label">Service2 Time </label>
-				 <div class="controls bootstrap-timepicker timepicker">
-						<input tabindex="27" type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service2_time']:''; ?>" id="service2_time" name="service2_time" class="m-wrap span12">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-						<span class="help-block" id="service2_time_error"> </span>
-				 </div>
-				</div>
-			 </div>
-			</div>
-				<div class="row-fluid">
-					<div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label">Service Inquiry2 Booked <!--<span class="required">*</span>--></label>
-	 				 <div class="controls">
-	 						<label class="checkbox-inline"><input tabindex="28" type="radio" id="inquiry11" name="service_inquiry2_booked" value="yes" <?php if($data['service_inquiry2_booked']=='yes'): echo "checked"; else: ""; endif; ?>/>Yes</label>
-	 						<label class="checkbox-inline"><input tabindex="29" type="radio" id="inquiry12" name="service_inquiry2_booked" value="no" <?php if($data['service_inquiry2_booked']=='no'): echo "checked"; else: ""; endif; ?>/>No</label>
-	 						<span class="help-block" id="service_inquiry2_booked_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
-	 			  <div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label">Additional Variant 2 </label>
-	 				 <div class="controls">
-	 						<input tabindex="30" type="text" placeholder="Please Enter Variant" value="<?php echo isset($data)?$data['sqft2']:''; ?>" id="sqft2" name="sqft2" class="m-wrap span12">
-	 						<span class="help-block" id="sqft1_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
-				</div>
-				<div class="row-fluid">
-					<div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label">Service Inquiry3 <!--<span class="required">*</span>--></label>
-	 				 <div class="controls">
-	 						<!-- <input type="text" placeholder="Please Enter service inquiry3" value="<?php echo isset($data)?$data['service_inquiry3']:''; ?>" id="service_inquiry3" name="service_inquiry3" class="m-wrap span12"> -->
-							<select tabindex="31" class="large m-wrap" id="service_inquiry3" name="service_inquiry3" onchange="getVaiantType(this.value,'varianttype3')">
-							 <?php  
-							  if($pricelist)
-						  	 echo optionsGeneratorNew($pricelist,$data['service_inquiry3']);
-						   	  else
-							 echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry3']," where status='0'"); ?>
-							</select>
-							<span class="help-block" id="service_inquiry3_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
-				 <div class="span6 ">
-					<div class="control-group">
-					 <label class="control-label">Variant Type 3 </label>
-					 <div class="controls">
-						 <select tabindex="32" class="large m-wrap" id="varianttype3" name="varianttype3" onchange="showPrice();">
-							<?php if($leadmanager_id != '') echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype3']," where status='0'"); ?>
-						 </select>
-					 </div>
-					</div>
-				 </div>
-				</div>
-				<div class="row-fluid serviceDateTime3">
-					<div class="span6 ">
-					<div class="control-group">
-						<label class="control-label">Service3 Date </label>
+						<div class="control-group">
+						 <label class="control-label">Service Date <span class="required">*</span></label>
 						 <div class="controls">
-								<input tabindex="33" type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service3_date']:''; ?>" id="service3_date" name="service3_date" class="m-wrap span12 datepicker">
-								<span class="help-block" id="cost2_error"> </span>
+								<input tabindex="19" type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data['service1_date']:''; ?>" name="service_date[]" class="m-wrap span12 datepicker service_date">
+								<span class="help-block" id="cost1_error"> </span>
 						 </div>
 						</div>
 				 	</div>
 					<div class="span6 ">
 						<div class="control-group">
-							<label class="control-label">Service3 Time </label>
-						 	<div class="controls bootstrap-timepicker timepicker">
-								<input tabindex="34" type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service3_time']:''; ?>" id="service3_time" name="service3_time" class="m-wrap span12">
+						 <label class="control-label">Service Time  <span class="required">*</span></label>
+						 <div class="controls bootstrap-timepicker timepicker">
+								<input tabindex="20" type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data['service_time']:''; ?>" name="service_time[]" class="m-wrap span12 service_time">
 								<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-								<span class="help-block" id="service2_time_error"> </span>
-						 	</div>
+								<span class="help-block" id="service1_time_error"> </span>
+						 </div>
 						</div>
-					</div>
+			 		</div>
 				</div>
-				<div class="row-fluid">
-					<div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label">Service Inquiry3 Booked <!--<span class="required">*</span>--></label>
-	 				 <div class="controls">
-	 						<label class="checkbox-inline"><input tabindex="35" type="radio" id="inquiry11" name="service_inquiry3_booked" value="yes" <?php if($data['service_inquiry3_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
-	 						<label class="checkbox-inline"><input tabindex="36" type="radio" id="inquiry12" name="service_inquiry3_booked" value="no" <?php if($data['service_inquiry3_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
-	 						<span class="help-block" id="service_inquiry3_booked_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
-	 			  <div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label">Additional Variant 3 </label>
-	 				 <div class="controls">
-	 						<input tabindex="37" type="text" placeholder="Please Enter Variant" value="<?php echo isset($data)?$data['sqft3']:''; ?>" id="sqft3" name="sqft3" class="m-wrap span12">
-	 						<span class="help-block" id="sqft1_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
+
+				</div><!-- End service -->
+
+			</div>
+				<div>
+				<a href="javascript::void();" onclick="addServices()"><img src="<?php print IMAGEPATH;?>/plus.png"></a>
 				</div>
+				<hr />
 				<div class="row-fluid">
+					
 					<div class="span6 ">
-	 				<div class="control-group">
-	 				 <label class="control-label">Additional Note <!--<span class="required">*</span>--></label>
-	 				 <div class="controls">
-						 <textarea tabindex="38" rows="3" name="additional_note" id="additional_note" class="m-wrap span12"><?php echo isset($data)?trim($data['additional_note']):''; ?></textarea>
-	 						<!-- <input type="text" placeholder="Please Enter additional note" value="<?php echo isset($data)?$data['additional_note']:''; ?>" id="additional_note" name="additional_note" class="m-wrap span12"> -->
-	 						<span class="help-block" id="additional_note_error"> </span>
-	 				 </div>
-	 				</div>
-	 			 </div>
+		 				<div class="control-group">
+		 				 <label class="control-label">Additional Note <!--<span class="required">*</span>--></label>
+		 				 <div class="controls">
+							<textarea tabindex="38" rows="3" name="additional_note" id="additional_note" class="m-wrap span12"><?php echo isset($data)?trim($data['additional_note']):''; ?></textarea>
+		 					<span class="help-block" id="additional_note_error"> </span>
+		 				 </div>
+		 				</div>
+	 			 	</div>
 				</div>
 				<div class="row-fluid">
 					<div class="span6 ">
@@ -795,7 +673,7 @@ $(document).ready(function(){
     		$('#partner_mode_row').hide();
     	}
 
-	$('#service1_date').datepicker({
+	$('.service_date').datepicker({
   	format:'yyyy/mm/dd'
   });
 
@@ -805,22 +683,22 @@ $(document).ready(function(){
 
 	if($('#lead_stage option:selected').text()!='Closed'){
 		$('.serviceDateTime1').hide();
-		$('.serviceDateTime2').hide();
-		$('.serviceDateTime3').hide();
+		//$('.serviceDateTime2').hide();
+		//$('.serviceDateTime3').hide();
 	}else{
 		$('.serviceDateTime1').show();
-		$('.serviceDateTime2').show();
-		$('.serviceDateTime3').show();
+		//$('.serviceDateTime2').show();
+		//$('.serviceDateTime3').show();
 	}
 	$('#lead_stage').change(function(){
 		if($('#lead_stage option:selected').text()!='Closed'){
 			$('.serviceDateTime1').hide();
-			$('.serviceDateTime2').hide();
-			$('.serviceDateTime3').hide();
+			//$('.serviceDateTime2').hide();
+			//$('.serviceDateTime3').hide();
 		}else{
 			$('.serviceDateTime1').show();
-			$('.serviceDateTime2').show();
-			$('.serviceDateTime3').show();
+			//$('.serviceDateTime2').show();
+			//$('.serviceDateTime3').show();
 		}
 	});
 	$('#lead_stage').change(function(){
@@ -828,17 +706,8 @@ $(document).ready(function(){
    			$('#service1_time').timepicker();
 	});
 	
-	$('#service1_time').timepicker();
-	 $('#service2_date').datepicker({
-		 format:'yyyy/mm/dd'
-		});
-		 $('#service2_time').timepicker();
+	$('.service_time').timepicker();
 
-		 $('#service3_date').datepicker({
-			 format:'yyyy/mm/dd'
-			});
-
-			 $('#service3_time').timepicker();
 });
 <?php if($leadmanager_id != '' && $flag != 'new'){ ?>
 $(document).ready(function() {
@@ -850,7 +719,54 @@ $(document).ready(function() {
 });
 <?php } ?>
 
+function addServices(){
+	var t = '<div class="servicesss"><hr /><span style="padding:10px;background-color:green">1</span>';
+	t += '<div class="row-fluid"><div class="span4 "><div class="control-group"><label class="control-label">Service Inquiry <span class="required">*</span></label>';
+	t +='<div class="controls"><select tabindex="17" class="medium m-wrap" id="service_inquiry" name="service_inquiry" onchange="getVaiantType(this,"varianttype","service_inquiry")">';
+	t += "<?php 
+	   if($pricelist)
+	   echo optionsGeneratorNew($pricelist,$data['service_inquiry']);
+	   else
+	   echo $modelObj->optionsGenerator('pricelist', 'name', 'id', $data['service_inquiry'],' where status="0"'); ?>";
 
+	t +='</select><span class="help-block" id="service_inquiry_error"></span></div></div></div>';
+	t +='<div class="span4 "><div class="control-group"><label class="control-label">Variant Type  <span class="required">*</span></label>';
+	t +='<div class="controls"><select tabindex="18" class="medium m-wrap" id="varianttype" name="varianttype" onchange="showPrice();">';
+	t +="<?php
+		if($leadmanager_id != '')
+		echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype'],' where status="0"'); ?>";
+	t +='</select></div></div></div><div class="span4"><div class="control-group">';
+	t +='<label class="control-label">Service Booked <span class="required">*</span></label><div class="controls">';
+	t +='<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="21" type="radio" id="inquiry11" name="service_inquiry_booked" value="yes" <?php if($data["service_inquiry_booked"]=="yes"): echo "checked"; else: ""; endif; ?> />Yes</label>';
+	t +='<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="22" type="radio" id="inquiry12" name="service_inquiry_booked" value="no" <?php if($data["service_inquiry_booked"]=="no"): echo "checked"; else: ""; endif; ?> />No</label>';
+	t +='<span class="help-block" id="service_inquiry_booked_error"> </span></div></div></div></div>';
+
+	t +='<div class="row-fluid"><div class="span6 "><div class="control-group"><label class="control-label">Service Price</label>';
+	t +='<div class="controls"><input type="text" tabindex="38" name="service_price" id="service_price" class="m-wrap span12"><?php echo isset($data)?trim($data["service_price"]):""; ?></textarea>';
+	t +='<span class="help-block" id="service_price"> </span></div></div></div>';
+	t +='<div class="span6 "><div class="control-group"><label class="control-label">Additional Variant </label>';
+	t +='<div class="controls"><input tabindex="23" type="text" placeholder="Please Enter Variant" value="<?php echo isset($data)?$data["sqft"]:""; ?>" name="sqft[]" class="m-wrap span12"><span class="help-block" id="sqft1_error"> </span></div></div></div></div>';
+	t +='<div class="row-fluid serviceDateTime1"><div class="span6 "><div class="control-group">';
+	t +='<label class="control-label">Service Date <span class="required">*</span></label><div class="controls"><input tabindex="19" type="text" placeholder="Please Enter Service Date" value="<?php echo isset($data)?$data["service_date"]:""; ?>" name="service_date[]" class="m-wrap span12 datepicker service_date">';
+	t +='<span class="help-block" id="cost1_error"> </span></div></div></div>';
+	t +='<div class="span6 "><div class="control-group"><label class="control-label">Service Time  <span class="required">*</span></label><div class="controls bootstrap-timepicker timepicker">';
+	t +='<input tabindex="20" type="text" placeholder="Please Enter Service Time" value="<?php echo isset($data)?$data["service_time"]:""; ?>" name="service_time[]" class="m-wrap span12 service_time">';
+	t +='<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span><span class="help-block" id="service1_time_error"> </span></div></div></div></div></div>';
+	$(".servicesss").append(t);
+	$('.service_date').datepicker({
+	  	format:'yyyy/mm/dd'
+	  });
+	$('.service_time').timepicker();
+		if($('#lead_stage option:selected').text()!='Closed'){
+		$('.serviceDateTime1').hide();
+		$('.serviceDateTime2').hide();
+		$('.serviceDateTime3').hide();
+	}else{
+		$('.serviceDateTime1').show();
+		$('.serviceDateTime2').show();
+		$('.serviceDateTime3').show();
+	}
+}
 function saveData(frm_id, action){
          //alert('Jai Mata Di............' + frm_id);
         $('#frm_lead_manager').validate({
@@ -867,18 +783,8 @@ function saveData(frm_id, action){
 	    			number:true
 	    		}/*,
 	    		client_email_id:{
-	    			email:true,
-	    			remote: {
-				        url: "<?php print SITEPATH;?>/<?php echo $modelObj->folderName; ?>/category2db.php?action=check_email&id=<?php echo $cmsuser_id; ?>",
-				        type: "post",
-				        data: {
-				          email: function() {
-				            return $( "#email" ).val();
-				          }
-				        }
-				    }
+	    			email:true
 	    		}*/,
-
 	    		address:{
 	    			required:true
 	    		},
@@ -981,7 +887,7 @@ function saveData(frm_id, action){
 		<?php } ?>
     }
 
-    function getVaiantType(id,service){
+   /* function getVaiantType(id,service){
 
 	  	$.ajax({
 	        type: "POST",
@@ -1003,7 +909,31 @@ function saveData(frm_id, action){
 
 	    });
     }
+*/
 
+    function getVaiantType(id,varianttype,service){
+
+	  	$.ajax({
+	        type: "POST",
+	        url: "<?php print SITEPATH;?>/<?php echo $modelObj->folderName; ?>/category2db.php",
+	        data: {action:'getVaiantType',id:$(id).find("option:selected").text(),service:service},
+	        success: function(vartypes){
+	        	var jObj1=eval("("+vartypes+")");
+	        	tt = <?php echo json_encode($varianttype); ?>;
+	        	//console.log(jObj1.result);
+	        	var options = '<option value="">Please Select</option>';
+	        	$.each(jObj1.result,function(i,e){
+	        		options += '<option value="'+e.varianttype+'">'+tt[e.varianttype]+'</option>';
+	        	});
+	        	$('#'+varianttype).html(options);
+	        },
+	        error:function(){
+	            alert("failure");
+	            //$("#result").html('there is error while submit');
+	        }
+
+	    });
+    }
     function showPartnerInfo(current){
     	if(current == 'P'){
     		$('#partner_mode_row').show();

@@ -519,10 +519,10 @@ function replacespecialcharsurl($str){
         $options_str = "<option value=''>Please Select</option>";
         foreach ($optionsArr as $k=>$v) 
 		 {
-            $options_str.='<option value="' . $k . '"';
-            if ($selected_value != "" && $selected_value == $k)
+            $options_str.="<option value='" . $k . "'";
+            if ($selected_value != '' && $selected_value == $k)
                 $options_str.=' selected ';
-            $options_str.='>' . $v . '</option>';
+            $options_str.=">" . $v . "</option>";
         }
         return $options_str;
     }

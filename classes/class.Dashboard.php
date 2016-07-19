@@ -115,11 +115,13 @@ class Dashboard {
 		}
 
 		if(!$memcache->get('taxes')){
+			$whereArr = array();
 			$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
 			$memcache->set('taxes',$taxes);
 		}
 
 		if(!$memcache->get('mhcclient')){
+			$whereArr = array();
 			$mhcclients = $this -> db -> getDataFromTable($whereArr, 'mhcclient', "*", "", '', false);
 			foreach ($mhcclients as $mhcclient) {
 				$mhcclientarr[$mhcclient['id']] =  array('client_firstname'=>$mhcclient['client_firstname'],'client_lastname'=>$mhcclient['client_lastname'],'client_mobile_no'=>$mhcclient['client_mobile_no'],'address'=>$mhcclient['address'],'city'=>$mhcclient['city'],'client_email_id'=>$mhcclient['client_email_id'],'pincode'=>$mhcclient['pincode']);
@@ -130,6 +132,7 @@ class Dashboard {
 	}
 
 	function city(){
+		$keyValueArray['status'] = '0';
 		$cities = $this -> db -> getDataFromTable($keyValueArray, 'city', "distinct name as display, id as value", '', '');
 		foreach ($cities as $city) {
 			$cityarr[$city['value']] =  $city['display'];
@@ -138,6 +141,7 @@ class Dashboard {
 	}
 
 	function leadstage(){
+		$keyValueArray['status'] = '0';
 		$leadstages = $this -> db -> getDataFromTable($keyValueArray, 'leadstage', "distinct name as display, id as value", '', '');
 		foreach ($leadstages as $leadstage) {
 			$stagearr[$leadstage['value']] =  $leadstage['display'];
@@ -146,6 +150,7 @@ class Dashboard {
 	}
 
 	function leadsource(){
+		$keyValueArray['status'] = '0';
 		$leadsources = $this -> db -> getDataFromTable($keyValueArray, 'leadsource', "distinct name as display, id as value", 'name ASC', '');
 			foreach ($leadsources as $leadsource) {
 				$sourcearr[$leadsource['value']] =  $leadsource['display'];
@@ -154,6 +159,7 @@ class Dashboard {
 	}
 
 	function mhcclient(){
+		$whereArr = array();
 		$mhcclients = $this -> db -> getDataFromTable($whereArr, 'mhcclient', "*", "", '', false);
 			foreach ($mhcclients as $mhcclient) {
 				$mhcclientarr[$mhcclient['id']] =  array('client_firstname'=>$mhcclient['client_firstname'],'client_lastname'=>$mhcclient['client_lastname'],'client_mobile_no'=>$mhcclient['client_mobile_no'],'address'=>$mhcclient['address'],'city'=>$mhcclient['city'],'client_email_id'=>$mhcclient['client_email_id'],'pincode'=>$mhcclient['pincode']);

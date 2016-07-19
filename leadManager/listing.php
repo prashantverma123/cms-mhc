@@ -9,6 +9,8 @@ if($memcache){
 	$leadsources = $memcache->get('leadsource');
 	$pricelist = $memcache->get('pricelist_dropdown');
 	$variant = $memcache->get('varianttype');
+
+	
 }else{
 	$leadstage = $dashboardObj->leadstage();
 	$mhcclient = $dashboardObj->mhcclient();
@@ -45,7 +47,7 @@ if($memcache){
 				 <th class="hidden-480" width="20%">Client Details</th>
 				  <!-- <th class="hidden-480">Client Mobile No</th> -->
 				 <th class="hidden-480">Service Details</th>
-				 <th class="hidden-480" width="15%">Service Time</th>
+				 <th class="hidden-480" width="10%">Service Time</th>
 				 <th class="hidden-480">Order Status</th>
 				 <th class="hidden-480">Inquiry Date/time</th>
 				 <th class="hidden-480">Comments/Remarks</th>

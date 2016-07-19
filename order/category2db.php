@@ -237,5 +237,17 @@ switch($action){
 				$result = $modelObj->updateTable($updateArr,$whereArr);
 			 	$arrReturn['result'] = $result;
 			break;
+			case "addCost":
+			$order_id =$_POST['deployment_orderid'];
+			$updateArr['travel_cost'] = $_POST['travel_cost'];
+			$updateArr['material_cost'] = $_POST['material_cost'];
+			$whereArr = array('id' => $order_id );
+			$returnVal = $modelObj->updateTable($updateArr,$whereArr);
+			if($returnVal):
+			$arrReturn['result'] = 'success';
+			else:
+			$arrReturn['result'] = 'failed';
+			endif;
+			break;
 }
 echo json_encode($arrReturn);

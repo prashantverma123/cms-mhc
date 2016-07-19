@@ -11,9 +11,11 @@ if( $memcache){
 	$lead_dropdown = $memcache->get('pricelist_dropdown');
 	$cities = $memcache->get('city');
 }else{
+	$mhcclient = $dashboardObj->mhcclient();
 	$cities = $dashboardObj->city();
 	$leadsources = $dashboardObj->leadsource();
 	$pricelist = $dashboardObj->pricelist();
+	$lead_dropdown = $dashboard->pricelistAll();
 }
 ?>
 <div class="portlet-body">
@@ -260,7 +262,7 @@ if( $memcache){
   </div>
 <!----PAYMENT MODE POPUP ENDS HERE------- -->
 <!----DEPLOYMENT POPUP STARTS HERE------- -->
- <!-- <div class="modal fade" id="orderDeployment" role="dialog">
+ 	<div class="modal fade" id="orderDeployment" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -269,15 +271,16 @@ if( $memcache){
         </div>
         <div class="modal-body">
         	<form name="frmOrderDeployment" id="frmOrderDeployment">
-          		<p>Add No. Of Deployment <input type="text" name="deployment" id="deployment"></p>
+          		<p>Material Cost <input type="text" name="material_cost" id="material_cost"></p>
+          		<p>Travel Cost <input type="text" name="travel_cost" id="travel_cost"></p>
           		<input type="hidden" name="deployment_orderid" id="deployment_orderid" />
-          		 <input type="hidden" name="action" value="addDeployment" /> 
+          		 <input type="hidden" name="action" value="addCost" /> 
           		<button type="submit" class="btn btn-default" id="addDeployment">Submit</button>
         	</form>
         </div>
        </div>
     </div>
-  </div> -->
+  </div>
 <!----DEPLOYMENT POPUP ENDS HERE------- -->
 
 <!----PAYMENT RECEIVED POPUP STARTS HERE------- -->
@@ -384,10 +387,11 @@ $(document).ready(function () {
 		}
 		});
     })
-   /* $('#addDeployment').click(function(){
+    $('#addDeployment').click(function(){
 	    $('#frmOrderDeployment').validate({
 		rules:{
-			deployment:"required"
+			travel_cost:"required",
+			material_cost:"required"
 		},
 		submitHandler: function() {
 			//var orderId = $(this).data('orderid');
@@ -399,7 +403,8 @@ $(document).ready(function () {
 				data: formDate,
 				success: function(res){
 					if(res){
-						$('#deployment').val('');
+						$('#travel_cost').val('');
+						$('#travel_cost').val('');
 						$('#orderDeployment').modal('toggle');
 					}
 				},
@@ -409,7 +414,7 @@ $(document).ready(function () {
 			});
 		}
 		});
-	});*/
+	});
     $("#updatePaymentReceived").click(function(){
     	 $('#frmPaymentReceived').validate({
 		rules:{
@@ -653,8 +658,8 @@ function changePaymentStatus(id,value){
 					success: function(res){
 						if(job_info == 'job_start'){
 							$('.jobinfo'+id).html('<div class="checker"><span><input type="checkbox" name="job_info'+id+'" value="job_end" onchange="updateJobInfo('+id+')"></span></div>End<br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="'+id+'" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick="remarkPopup('+id+')">Remark</button>');
-							//$('#orderDeployment').modal('show');
-							//$('#deployment_orderid').val(id);
+							$('#orderDeployment').modal('show');
+							$('#deployment_orderid').val(id);
 						}
 						else if(job_info == 'job_end'){
 							$('.jobinfo'+id).html('<select onchange="saveJobStatus('+id+')" id="jobstatus'+id+'" name="job_status" style="width:94px !important" class="small m-wrap"><option value="">Please Select</option><option value="success">Success</option><option value="complaint">Complaint</option></select><br /><button type="button" class="btn-success btn-sm" data-toggle="modal" data-orderid="'+id+'" data-target="#remark" style="padding:4px 4px!important;margin-top:10px;" onclick="remarkPopup('+id+')">Remark</button>');

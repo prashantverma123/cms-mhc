@@ -15,9 +15,8 @@ class LeadManager {
 		$this -> logs = new Logging();
 		checkRole('leadmanager');
 	}
-
-
 	/**************************** END OF CONSTRUCTOR **************************/
+
 	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(),$filterData= array(), $status = '',$sort='') {
 		$offset = $offset * $recperpage;
 		$keyValueArray = array();
@@ -283,8 +282,8 @@ class LeadManager {
         $this -> db ->query($stmt);
         $options_str = "<option value=''>Please Select</option>";
         while ($result = $this-> db ->fetch()) {
-            $options_str.='<option value="' . $result['value'] . '"';
-            if ($selected_value != "" && $selected_value == $result['value'])
+            $options_str.="<option value='" . $result['value'] . "'";
+            if ($selected_value != '' && $selected_value == $result['value'])
                 $options_str.=' selected ';
             $options_str.='>' . $result['display'] . '</option>';
         }
@@ -296,8 +295,8 @@ class LeadManager {
 
 	        $options_str = "<option value=''>Please Select</option>";
 					for ($i=1; $i <=$endIndex ; $i++) {
-						$options_str.='<option value="' . $i . '"';
-						if ($selected_value != "" && $selected_value ==$i)
+						$options_str.="<option value='" . $i . "'";
+						if ($selected_value != '' && $selected_value ==$i)
 								$options_str.=' selected ';
 						$options_str.='>' . $i . '</option>';
 					}
@@ -334,6 +333,15 @@ class LeadManager {
 				//echo $invoiceId;
 				return $invoiceId;
 			}
+
+	function getcategoryforServiceId($serviceId){
+		$keyValueArray['id'] = $serviceId;
+
+		$category = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "category_type", '', '', false);
+
+		return $category;
+	}		
+
     function insertIntoOrder($id){
     	$memcache = new Memcache;
 		$memcache->connect('localhost', 11211) or die ("Could not connect");
@@ -347,20 +355,26 @@ class LeadManager {
 			//$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
 			//$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
 			//$joinArray[] = array('type'=>'left','table'=>'mhcclient as client','condition'=>'client.id=leadmanager.mhcclient_id');
-			$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*",'','',false);
-			//if($memcache)
-			$pricelist = $memcache->get('pricelist_dropdown');
-			$mhcclient = $memcache->get('mhcclient');
-			$leadsource = $memcache->get('leadsource');
+			$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*",'','',true);
+				if($memcache){
+				$pricelist = $memcache->get('pricelist_dropdown');
+				$mhcclient = $memcache->get('mhcclient');
+				$leadsource = $memcache->get('leadsource');
+			}else{
+				$pricelist = $dashboard->pricelistAll();
+				$mhcclient = $dashboard->mhcclient();
+				$leadsource =$dashboard->leadsource();
+			}
 
 			foreach ($dataArr as $k=>$value) {
-				//echo $value['service1_date'].' '.$value['service1_time'];exit;
 				$client = $mhcclient[$value['mhcclient_id']];
 				$serviceArr[] = $value['service_inquiry1'];
 				$serviceArr[] = $value['service_inquiry2'];
 				$serviceArr[] = $value['service_inquiry3'];
-				// if ($value['invoice_type']==-1) {
-					
+				$katgory1 = $this->getcategoryforServiceId($value['service_inquiry1']);
+				$katgory2 = $this->getcategoryforServiceId($value['service_inquiry2']);
+				$katgory3 = $this->getcategoryforServiceId($value['service_inquiry3']);
+				
 				$values['leadmanager_id'] = $value['id'];
 				$values['name'] = $client['client_firstname'];
 				$values['lead_source'] = $value['lead_source'];
@@ -373,7 +387,6 @@ class LeadManager {
 				$values['city'] = $client['city'];
 				$values['state'] = $client['state'];
 				$values['pincode'] = $client['pincode'];
-				$values['service'] = implode(',',$serviceArr);
 				$values['price'] = $value['price'];
 				$values['commission'] = $value['commission'];
 				$values['billing_name'] = $client['client_firstname'].' '.$client['client_lastname'];
@@ -382,59 +395,151 @@ class LeadManager {
 				$values['billing_name2'] = $leadsource[$value['lead_source']];
 				$values['taxed_cost'] = $value['taxed_cost'];
 				$values['billing_amount2'] = $value['partner_amount'];
-				$values['service_date'] = $value['service1_date'].' '.$value['service1_time'];
-				$values['service_date2'] = $value['service2_date'].' '.$value['service2_time'];
-				$values['service_date3'] = $value['service3_date'].' '.$value['service3_time'];
 				$values['order_id'] = $value['order_id'];
-				$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry1']],$pricelist[$value['service_inquiry2']],$pricelist[$value['service_inquiry3']]),$value['city_name'],$id);
- 				$values['author_id'] = $_SESSION['tmobi']['UserId'];
+				$values['author_id'] = $_SESSION['tmobi']['UserId'];
 				$values['author_name'] = "";
 				$values['insert_date']		= date('Y-m-d H:i:s');
 				$values['update_date']		= date('Y-m-d H:i:s');
 				$values['status']= 0;
 				$values['ip']= getIP();
 				
-				$response =  $this -> db -> insertDataIntoTable($values, 'order');
+				if ($katgory1==$katgory2 && $katgory2==$katgory3 && $katgory3==$katgory1) {
+					$serviceArr = array();
+					$serviceArr[] = $value['service_inquiry1'];
+					$serviceArr[] = $value['service_inquiry2'];
+					$serviceArr[] = $value['service_inquiry3'];
+					$values['service'] = implode(',',$serviceArr);				
+					$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry1']],$pricelist[$value['service_inquiry2']],$pricelist[$value['service_inquiry3']]),$value['city_name'],$id);
+					$response =  $this -> db -> insertDataIntoTable($values, 'order');
+				}
+
+				if ($katgory1!=$katgory2 && $katgory2!=$katgory3 && $katgory3!=$katgory1) {
+					$serviceArr = array();
+					$values['service'] = $value['service_inquiry1'];				
+					$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry1']]),$value['city_name'],$id);
+					$response =  $this -> db -> insertDataIntoTable($values, 'order');
+
+					$values['service'] = $value['service_inquiry2'];				
+					$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry2']]),$value['city_name'],$id);
+					$response =  $this -> db -> insertDataIntoTable($values, 'order');
+
+					$values['service'] = $value['service_inquiry3'];				
+					$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry3']]),$value['city_name'],$id);
+					$response =  $this -> db -> insertDataIntoTable($values, 'order');
+				}
+
+				if ($katgory1==$katgory2&&$katgory2!=$katgory3) {
+					$serviceArr = array();
+					$serviceArr[] = $value['service_inquiry1'];
+					$serviceArr[] = $value['service_inquiry2'];
+					$values['service'] = implode(',',$serviceArr);				
+					$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry1']],$pricelist[$value['service_inquiry1']]),$value['city_name'],$id);
+					$response =  $this -> db -> insertDataIntoTable($values, 'order');
+
+					$values['service'] = $value['service_inquiry3'];				
+					$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry3']]),$value['city_name'],$id);
+					$response =  $this -> db -> insertDataIntoTable($values, 'order');
+
+				}
+
+				if ($katgory1==$katgory3 && $katgory2!=$katgory3) {
+					$serviceArr = array();
+					$serviceArr[] = $value['service_inquiry1'];
+					$serviceArr[] = $value['service_inquiry3'];
+					$values['service'] = implode(',',$serviceArr);				
+					$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry1']],$pricelist[$value['service_inquiry3']]),$value['city_name'],$id);
+					$response =  $this -> db -> insertDataIntoTable($values, 'order');
+
+					$values['service'] = $value['service_inquiry2'];				
+					$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry2']]),$value['city_name'],$id);
+					$response =  $this -> db -> insertDataIntoTable($values, 'order');
+				}
+
+				if ($katgory1!=$katgory2 && $katgory2==$katgory3) {
+					$serviceArr = array();
+					$serviceArr[] = $value['service_inquiry2'];
+					$serviceArr[] = $value['service_inquiry3'];
+					$values['service'] = implode(',',$serviceArr);				
+					$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry2']],$pricelist[$value['service_inquiry3']]),$value['city_name'],$id);
+					$response =  $this -> db -> insertDataIntoTable($values, 'order');
+
+					$values['service'] = $value['service_inquiry1'];				
+					$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry1']]),$value['city_name'],$id);
+					$response =  $this -> db -> insertDataIntoTable($values, 'order');
+				}
+
+				// if ($katgory1!=$katgory3 && $katgory2==$katgory3) {
+				// 	$serviceArr = array();
+				// 	$serviceArr[] = $value['service_inquiry2'];
+				// 	$serviceArr[] = $value['service_inquiry3'];
+				// 	$values['service'] = implode(',',$serviceArr);				
+				// 	$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry2']],$pricelist[$value['service_inquiry3']]),$value['city_name'],$id);
+				// 	$response =  $this -> db -> insertDataIntoTable($values, 'order');
+
+				// 	$values['service'] = $value['service_inquiry1'];				
+				// 	$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($pricelist[$value['service_inquiry1']]),$value['city_name'],$id);
+				// 	$response =  $this -> db -> insertDataIntoTable($values, 'order');
+				// }
+				// if ($value['invoice_type']==-1) {
+				
+				
+				
+				
+ 				
+				
+				
 				// }
 
 				// else {
 				// 	$indx = 0;
-				// 	foreach ($serviceArr as $key => $service) {
-				// 		if($service != ''){
-				// 		$indx = $indx +1;
-				// 		$variant = array($value['varianttype'.$indx]);
-				// 		$servicename = 'service'.$indx;
-				// 		$values = array();
-				// 		$values['leadmanager_id'] = $value['id'];
-				// 		$values['name'] = $value['client_firstname'];
-				// 		$values['lead_source'] = $value['lead_source'];
-				// 		$values['mobile_no'] = $value['client_mobile_no'];
-				// 		$values['alternate_no'] = $value['alternate_no'];
-				// 		$values['email_id'] = $value['client_email_id'];
-				// 		$values['address'] = $value['address'];
-				// 		$values['landmark'] = $value['landmark'];
-				// 		$values['location'] = $value['location'];
-				// 		$values['city'] = $value['city'];
-				// 		$values['state'] = $value['state'];
-				// 		$values['pincode'] = $value['pincode'];
-				// 		$values['service'] = $service;
-				// 		$values['service_date'] = $value['service'.$indx.'_date'];
-				// 		$values['service_time'] = $value['service'.$indx.'_time'];
-				// 		$values['price'] = $this->getPriceList($value['city'],array($value[$servicename]),$variant)-(0.15*$this->getPriceList($value['city'],array($value[$servicename]),$variant));
-				// 		$values['commission'] = $value['commission'];
-				// 		$values['taxed_cost'] = $this->getPriceList($value['city'],array($value[$servicename]),$variant);
-				// 		$values['order_id'] = $value['order_id'];
-				// 		$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($value[$servicename]),$value['city_name'],$id);
-		 	// 			$values['author_id'] = $_SESSION['tmobi']['UserId'];
-				// 		$values['author_name'] = "";
-				// 		$values['insert_date']		= date('Y-m-d H:i:s');
-				// 		$values['update_date']		= date('Y-m-d H:i:s');
-				// 		$values['status']= 0;
-				// 		$values['ip']= getIP();
+					// foreach ($serviceArr as $key => $service) {
 
-				// 		$response =  $this -> db -> insertDataIntoTable($values, 'order',true);
-				// 		}
-				// 	}
+
+					// 	if($service != ''){
+					// 	$katgory = $this->getcategoryforServiceId($service)
+					// 	switch ($katgory) {
+					// 	case 'value':
+					// 		# code...
+					// 		break;
+						
+					// 	default:
+					// 		# code...
+					// 		break;
+					// 	}
+					// 	$indx = $indx +1;
+					// 	$variant = array($value['varianttype'.$indx]);
+					// 	$servicename = 'service'.$indx;
+					// 	$values = array();
+					// 	$values['leadmanager_id'] = $value['id'];
+					// 	$values['name'] = $value['client_firstname'];
+					// 	$values['lead_source'] = $value['lead_source'];
+					// 	$values['mobile_no'] = $value['client_mobile_no'];
+					// 	$values['alternate_no'] = $value['alternate_no'];
+					// 	$values['email_id'] = $value['client_email_id'];
+					// 	$values['address'] = $value['address'];
+					// 	$values['landmark'] = $value['landmark'];
+					// 	$values['location'] = $value['location'];
+					// 	$values['city'] = $value['city'];
+					// 	$values['state'] = $value['state'];
+					// 	$values['pincode'] = $value['pincode'];
+					// 	$values['service'] = $service;
+					// 	$values['service_date'] = $value['service'.$indx.'_date'];
+					// 	$values['service_time'] = $value['service'.$indx.'_time'];
+					// 	$values['price'] = $this->getPriceList($value['city'],array($value[$servicename]),$variant)-(0.15*$this->getPriceList($value['city'],array($value[$servicename]),$variant));
+					// 	$values['commission'] = $value['commission'];
+					// 	$values['taxed_cost'] = $this->getPriceList($value['city'],array($value[$servicename]),$variant);
+					// 	$values['order_id'] = $value['order_id'];
+					// 	$values['invoice_id'] = $this->generateInvoiceId($value['client_firstname'],$value['client_lastname'],array($value[$servicename]),$value['city_name'],$id);
+		 		// 		$values['author_id'] = $_SESSION['tmobi']['UserId'];
+					// 	$values['author_name'] = "";
+					// 	$values['insert_date']		= date('Y-m-d H:i:s');
+					// 	$values['update_date']		= date('Y-m-d H:i:s');
+					// 	$values['status']= 0;
+					// 	$values['ip']= getIP();
+
+					// 	$response =  $this -> db -> insertDataIntoTable($values, 'order',true);
+					// 	}
+					// }
 				// 	//print_r($values);
 				// 		// exit();
 				// }
@@ -782,9 +887,9 @@ Click to pay online
 	}
 
 	function get_variant_type(){
-		$keyValueArray['sqlclause'] = 'category_type=(select pricelist.category_type from pricelist where pricelist.id="'.$_POST['id'].'") group by pricelist.varianttype';
-		$joinArray[] = array('type'=>'left','table'=>'variantmaster','condition'=>'variantmaster.id=pricelist.varianttype');
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, 'pricelist', " variantmaster.varianttype,variantmaster.id", '', '',$joinArray, false);
+		$keyValueArray['sqlclause'] = 'name="'.$_POST['id'].'" group by pricelist.varianttype';
+		//$joinArray[] = array('type'=>'left','table'=>'variantmaster','condition'=>'variantmaster.id=pricelist.varianttype');
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, 'pricelist', "pricelist.varianttype", '', '',$joinArray, false);
 		return $dataArr;
 	}
 

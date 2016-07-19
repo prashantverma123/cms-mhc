@@ -96,7 +96,11 @@ $role=$memcache->get('role');
 						<label class="control-label">City<span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="city" name="city">
-						   <?php echo optionsGeneratorNew($cities,$data['city']); //echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city']," where status='0'"); ?>
+						   <?php 
+						   if($memcache)
+						   echo optionsGeneratorNew($cities,$data['city']);
+							else
+						    echo $modelObj->optionsGenerator('city', 'name', 'id',$data['city']," where status='0'"); ?>
 							</select>
 						</div>
 					 </div>
@@ -106,7 +110,11 @@ $role=$memcache->get('role');
 						<label class="control-label">Role<span class="required">*</span></label>
 						<div class="controls">
 							<select tabindex="1" class="large m-wrap" id="role" name="role">
-							<?php echo optionsGenerator($role,$data['role']); //echo $modelObj->optionsGenerator('role', 'name', 'role',$data['role'],""); ?>
+							<?php 
+							if($memcache)
+							echo optionsGeneratorNew($role,$data['role']); 
+							else
+							echo $modelObj->optionsGenerator('role', 'name', 'role',$data['role'],""); ?>
 							</select>
 						</div>
 					 </div>
