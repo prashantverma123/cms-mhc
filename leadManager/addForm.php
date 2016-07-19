@@ -292,7 +292,7 @@ $varianttype = $memcache->get('varianttype');
 						<div class="control-group">
 						 <label class="control-label">Variant Type  <span class="required">*</span></label>
 						 <div class="controls">
-							 <select tabindex="18" class="medium m-wrap" id="varianttype" name="varianttype" onchange="showPrice();">
+							 <select tabindex="18" class="medium m-wrap" id="varianttype" name="varianttype[]" onchange="showPrice();">
 								<?php
 									if($leadmanager_id != '')
 									echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype']," where status='0'"); ?>
@@ -304,8 +304,8 @@ $varianttype = $memcache->get('varianttype');
 		 				<div class="control-group">
 		 				 <label class="control-label">Service Booked <span class="required">*</span></label>
 		 				 <div class="controls">
-		 						<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="21" type="radio" id="inquiry11" name="service_inquiry_booked" value="yes" <?php if($data['service_inquiry_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
-		 						<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="22" type="radio" id="inquiry12" name="service_inquiry_booked" value="no" <?php if($data['service_inquiry_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
+		 						<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="21" type="radio" name="service_inquiry_booked[]" value="yes" <?php if($data['service_inquiry_booked']=='yes'): echo "checked"; else: ""; endif; ?> />Yes</label>
+		 						<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="22" type="radio" name="service_inquiry_booked[]" value="no" <?php if($data['service_inquiry_booked']=='no'): echo "checked"; else: ""; endif; ?> />No</label>
 		 						<span class="help-block" id="service_inquiry_booked_error"> </span>
 		 				 </div>
 		 				</div>
@@ -316,7 +316,7 @@ $varianttype = $memcache->get('varianttype');
 		 				<div class="control-group">
 		 				 <label class="control-label">Service Price <!--<span class="required">*</span>--></label>
 		 				 <div class="controls">
-							<input type="text" tabindex="38" name="service_price" id="service_price" class="m-wrap span12"><?php echo isset($data)?trim($data['service_price']):''; ?></textarea>
+							<input type="text" tabindex="38" name="service_price[]" class="m-wrap span12"><?php echo isset($data)?trim($data['service_price']):''; ?></textarea>
 		 					<span class="help-block" id="service_price"> </span>
 		 				 </div>
 		 				</div>
@@ -325,8 +325,8 @@ $varianttype = $memcache->get('varianttype');
 		 				<div class="control-group">
 			 				<label class="control-label">Additional Variant </label>
 			 				 <div class="controls">
-			 					<input tabindex="23" type="text" placeholder="Please Enter Variant" value="<?php echo isset($data)?$data['sqft']:''; ?>" id="sqft" name="sqft" class="m-wrap span12">
-			 					<span class="help-block" id="sqft1_error"> </span>
+			 					<input tabindex="23" type="text" placeholder="Please Enter Variant" value="<?php echo isset($data)?$data['sqft']:''; ?>" name="sqft[]" class="m-wrap span12">
+			 					<span class="help-block"> </span>
 			 				</div>
 		 				</div>
 		 			</div>
@@ -737,12 +737,12 @@ function addServices(){
 		echo $modelObj->optionsGenerator('variantmaster', 'varianttype', 'id',$data['varianttype'],' where status="0"'); ?>";
 	t +='</select></div></div></div><div class="span4"><div class="control-group">';
 	t +='<label class="control-label">Service Booked <span class="required">*</span></label><div class="controls">';
-	t +='<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="21" type="radio" id="inquiry11" name="service_inquiry_booked" value="yes" <?php if($data["service_inquiry_booked"]=="yes"): echo "checked"; else: ""; endif; ?> />Yes</label>';
-	t +='<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="22" type="radio" id="inquiry12" name="service_inquiry_booked" value="no" <?php if($data["service_inquiry_booked"]=="no"): echo "checked"; else: ""; endif; ?> />No</label>';
-	t +='<span class="help-block" id="service_inquiry_booked_error"> </span></div></div></div></div>';
+	t +='<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="21" type="radio" name="service_inquiry_booked[]" value="yes" <?php if($data["service_inquiry_booked"]=="yes"): echo "checked"; else: ""; endif; ?> />Yes</label>';
+	t +='<label class="checkbox-inline" style="float:left;width:50px"><input tabindex="22" type="radio" name="service_inquiry_booked[]" value="no" <?php if($data["service_inquiry_booked"]=="no"): echo "checked"; else: ""; endif; ?> />No</label>';
+	t +='<span class="help-block"> </span></div></div></div></div>';
 
 	t +='<div class="row-fluid"><div class="span6 "><div class="control-group"><label class="control-label">Service Price</label>';
-	t +='<div class="controls"><input type="text" tabindex="38" name="service_price" id="service_price" class="m-wrap span12"><?php echo isset($data)?trim($data["service_price"]):""; ?></textarea>';
+	t +='<div class="controls"><input type="text" tabindex="38" name="service_price[]" class="m-wrap span12"><?php echo isset($data)?trim($data["service_price"]):""; ?></textarea>';
 	t +='<span class="help-block" id="service_price"> </span></div></div></div>';
 	t +='<div class="span6 "><div class="control-group"><label class="control-label">Additional Variant </label>';
 	t +='<div class="controls"><input tabindex="23" type="text" placeholder="Please Enter Variant" value="<?php echo isset($data)?$data["sqft"]:""; ?>" name="sqft[]" class="m-wrap span12"><span class="help-block" id="sqft1_error"> </span></div></div></div></div>';

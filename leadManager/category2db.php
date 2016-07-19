@@ -15,7 +15,7 @@ switch($action){
 
 	break;
 	case 'saveLeadManager':
-
+			print_r($_POST);exit;
 			if($_POST['mhcclient_id'] == ''){
 				$clientArr['client_salutation'] 	= $_POST['client_salutation'];
 				$clientArr['client_firstname'] 		= $_POST['client_firstname'];
