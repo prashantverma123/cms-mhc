@@ -15,7 +15,7 @@ switch($action){
 
 	break;
 	case 'saveLeadManager':
-			print_r($_POST);exit;
+			//print_r($_POST);exit;
 			if($_POST['mhcclient_id'] == ''){
 				$clientArr['client_salutation'] 	= $_POST['client_salutation'];
 				$clientArr['client_firstname'] 		= $_POST['client_firstname'];
@@ -66,72 +66,88 @@ switch($action){
 				$insertArr['followup_by'] 	= $_POST['followup_by'];
 				$insertArr['job_status']	= 'pending';
 				$insertArr['lead_stage']    = $_POST['lead_stage'];
-				$insertArr['reminder']    	= $_POST['reminder'];
-				if($_POST['service1_date']!=''){
-					$insertArr['service1_date'] = date("Y-m-d", strtotime($_POST['service1_date']));
-					$insertArr['service1_time'] 		= $_POST['service2_time'];
-				}
-				else{
-					$insertArr['service1_date'] = null;
-					$insertArr['service1_time'] = null;
-				}
-				
-				if($_POST['service2_date']!=''){
-					$insertArr['service2_date'] 		=  isset($_POST['service2_date'])?date("Y-m-d", strtotime($_POST['service2_date'])):"";
-					$insertArr['service2_time'] 		=  $_POST['service1_time'];
+				if($_POST['reminder']!=''){
+					$insertArr['reminder'] = date("Y-m-d", strtotime($_POST['reminder']));
 				}else{
-					$insertArr['service2_date'] =null;
-					$insertArr['service2_time'] = null;
+					$insertArr['reminder'] = null;
 				}
 				
-				if($_POST['service3_date']!=''){
-					$insertArr['service3_date'] 		=  isset($_POST['service3_date'])?date("Y-m-d", strtotime($_POST['service3_date'])):"";
-					$insertArr['service3_time'] 		= $_POST['service3_time'];
-				}else{
-					$insertArr['service3_date'] =null;
-					$insertArr['service3_time'] = null;
-				}
-				
-
+				$insertArr['additional_note'] 	= $_POST['additional_note'];
 				$insertArr['teamLeader_deployment'] 		= $_POST['teamLeader_deployment'];
 				$insertArr['supervisor_deployment'] 		= $_POST['supervisor_deployment'];
 				$insertArr['janitor_deployment'] 		= $_POST['janitor_deployment'];
-				
-				$insertArr['additional_note'] 	= $_POST['additional_note'];
-				$insertArr['service_inquiry1'] 	= $_POST['service_inquiry1'];
-				$insertArr['sqft1'] 	= $_POST['sqft1'];
-				$insertArr['service_inquiry1_booked'] 	= $_POST['service_inquiry1_booked'];
-
-				$insertArr['service_inquiry2'] 	= $_POST['service_inquiry2'];
-				$insertArr['sqft2'] 	= $_POST['sqft2'];
-				$insertArr['service_inquiry2_booked'] 	= $_POST['service_inquiry2_booked'];
-				$insertArr['service_inquiry3'] 	= $_POST['service_inquiry3'];
-				$insertArr['sqft3'] 	= $_POST['sqft3'];
-				$insertArr['service_inquiry3_booked'] 	= $_POST['service_inquiry3_booked'];
 				$insertArr['promo_code'] 	= $_POST['promo_code'];
 				$insertArr['discount'] 	= $_POST['discount'];
 				$insertArr['price'] 	= $_POST['price'];
 				$insertArr['invoice_mode'] 	= $_POST['invoice_mode'];
+
 				if($_POST['invoice_mode'] == 'P')
-				$insertArr['partner_amount'] 	= $_POST['partner_amount'];
-				$insertArr['commission'] 	= $_POST['commission'];
+				$insertArr['lead_partner_receivable'] 	= $_POST['lead_partner_receivable'];
+				
+				$insertArr['lead_partner_payable'] 	= $_POST['lead_partner_payable'];
+				$insertArr['lead_client_payment'] 	= $_POST['lead_client_payment'];
+				
+				//$insertArr['commission'] 	= $_POST['commission'];
 				$insertArr['taxed_cost'] 	= $_POST['taxed_cost'];
 				$insertArr['invoice_type'] 	= $_POST['invoice_type'];
-				$insertArr['varianttype1'] = $_POST['varianttype1'];
-				$insertArr['varianttype2'] = $_POST['varianttype2'];
-				$insertArr['varianttype3'] = $_POST['varianttype3'];
 				$insertArr['is_reminder']    = $_POST['is_reminder'];
 				$insertArr['order_id'] = uniqid ('MHC'.rand(0,9));;
 
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
 				$insertArr['author_name']		= $_SESSION['tmobi']['AdminName'];
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
-				//$insertArr['update_date']		= date('Y-m-d H:i:s');
 				$insertArr['status']= 0;
 				$insertArr['ip']= getIP();
 				$insertArr['mhcclient_id'] = $mhcclientid;
 				//print_r($insertArr);exit;
 				$returnVal = $modelObj->insertTable($insertArr);
+
+				/***SERVICE STARTS HERE***/
+				if(count($_POST['service_inquiry']) > 0):
+						$stmt = "INSERT INTO service (`id`, `leadmanager_id`, `service_inquiry`, `service_date`, `service_time`, `contract_start_date`,`contract_end_date`,`no_of_service`,`service_price`,`client_payment_expected`,`partner_receivable`,`partner_payable`, `service_discount`, `service_booked`, `varianttype_id`, `sqft`, `frequency`,`is_amc`,`service_duration`) VALUES ";
+						foreach ($_POST['service_inquiry'] as $k =>$service) {
+							if($_POST['service_inquiry'][$k] != '' && $_POST['varianttype'][$k]!=''):
+								$service_inquiry 	= $_POST['service_inquiry'][$k];
+								$service_price	= $_POST['service_price'][$k];
+								$service_discount 	= $_POST['service_discount'][$k];
+								$frequency	= $_POST['frequency'][$k];
+								$inquiry_booked 	= $_POST['service_inquiry_booked'.$k];
+								$client_pay_expected = $_POST['client_payment_expected'][$k];
+								$partner_payable = $_POST['partner_payable'][$k];
+								$no_of_service = $_POST['no_of_service'][$k];
+								$service_duration = $_POST['service_duration'][$k];
+								$partner_receivable = $_POST['partner_receivable'][$k];
+								if($_POST['contract_start_date'][$k]!=''){
+									$contract_start =date("Y-m-d", strtotime($_POST['contract_start_date'][$k]));
+								}else{
+									$contract_start = null;
+								}
+								if($_POST['contract_end_date'][$k]!=''){
+									$contract_end =date("Y-m-d", strtotime($_POST['contract_end_date'][$k]));
+								}else{
+									$contract_end = null;
+								}
+								$is_amc = $_POST['is_amc'.$k];
+								if($_POST['service_date'][$k]!=''){
+									$service_date = date("Y-m-d", strtotime($_POST['service_date'][$k]));
+									$service_time		= $_POST['service_time'][$k];
+								}
+								else{
+									$service_date= null;
+									$service_time = null;
+								}
+								$varianttype = $_POST['varianttype'][$k];
+								$sqft 	= $_POST['sqft'][$k];
+								$stmt .= "('','$returnVal', '$service_inquiry', '$service_date', '$service_time','$contract_start','$contract_end', '$no_of_service','$service_price','$client_pay_expected','$partner_receivable','$partner_payable', '$service_discount', '$inquiry_booked', '$varianttype', '$sqft', '$frequency','$is_amc','$service_duration')";
+								if(count($_POST['service_inquiry']) > $k+1){
+									$stmt .= ",";
+								}
+							endif;
+						}
+						//echo $stmt;exit;
+						$services = $modelObj->insertServiceTable($stmt);
+				endif;
+				/***SERVICE ENDS HERE***/
 				//die;
 				$arrReturn['result'] = 'success';
 				$arrReturn['action'] = 'saveEventName';
@@ -145,66 +161,123 @@ switch($action){
 				$updateArr['followup_by'] 	= $_POST['followup_by'];
 				//$updateArr['job_status']	= $_POST['job_status'];
 				$updateArr['lead_stage']    = $_POST['lead_stage'];
-				$updateArr['reminder']    	= $_POST['reminder'];
-	/*			$updateArr['service1_date'] 		=  date("Y-m-d", strtotime($_POST['service1_date']));
-				$updateArr['service1_time'] 		= $_POST['service1_time'];
-				$updateArr['service2_date'] 		=  date("Y-m-d", strtotime($_POST['service2_date']));
-				$updateArr['service2_time'] 		= $_POST['service2_time'];
-				$updateArr['service3_date'] 		=  date("Y-m-d", strtotime($_POST['service3_date']));
-				$updateArr['service3_time'] 		= $_POST['service3_time'];*/
-
-				if($_POST['service1_date']!=''){
-					$updateArr['service1_date'] = date("Y-m-d", strtotime($_POST['service1_date']));
-					$updateArr['service1_time'] 		= $_POST['service2_time'];
-				}
-				else{
-					$updateArr['service1_date'] = null;
-					$updateArr['service1_time'] = null;
-				}
-				
-				if($_POST['service2_date']!=''){
-					$updateArr['service2_date'] 		=  isset($_POST['service2_date'])?date("Y-m-d", strtotime($_POST['service2_date'])):"";
-					$updateArr['service2_time'] 		=  $_POST['service1_time'];
+				if($_POST['reminder']!=''){
+					$updateArr['reminder'] = date("Y-m-d", strtotime($_POST['reminder']));
 				}else{
-					$updateArr['service2_date'] =null;
-					$updateArr['service2_time'] = null;
+					$updateArr['reminder'] = null;
 				}
-				
-				if($_POST['service3_date']!=''){
-					$updateArr['service3_date'] 		=  isset($_POST['service3_date'])?date("Y-m-d", strtotime($_POST['service3_date'])):"";
-					$updateArr['service3_time'] 		= $_POST['service3_time'];
-				}else{
-					$updateArr['service3_date'] =null;
-					$updateArr['service2_time'] = null;
-				}
-
-
 				$updateArr['teamLeader_deployment'] 		= $_POST['teamLeader_deployment'];
 				$updateArr['supervisor_deployment'] 		= $_POST['supervisor_deployment'];
 				$updateArr['janitor_deployment'] 		= $_POST['janitor_deployment'];
-				
 				$updateArr['additional_note'] 	= $_POST['additional_note'];
-				$updateArr['service_inquiry1'] 	= $_POST['service_inquiry1'];
-				$updateArr['sqft1'] 	= $_POST['sqft1'];
-				$updateArr['service_inquiry1_booked'] 	= $_POST['service_inquiry1_booked'];
-				$updateArr['sqft2'] 	= $_POST['sqft2'];
-				$updateArr['sqft3'] 	= $_POST['sqft3'];
-				$updateArr['service_inquiry2'] 	= $_POST['service_inquiry2'];
-				$updateArr['service_inquiry2_booked'] 	= $_POST['service_inquiry2_booked'];
-				$updateArr['service_inquiry3'] 	= $_POST['service_inquiry3'];
-				$updateArr['service_inquiry3_booked'] 	= $_POST['service_inquiry3_booked'];
+				$updateArr['service_duration'] = $_POST['service_duration'][$k];
+				if(count($_POST['service_inquiry']) > 0):
+						$count =count($_POST['service_inquiry']);
+						if(in_array(null, $_POST['service_inquiry'])){
+							$count =0;
+							foreach ($_POST['service_inquiry'] as $tt){
+								if($tt!=''){
+									$count = $count+1;
+								}
+							}
+						}
+						$stmt = "INSERT INTO service (`id`, `leadmanager_id`, `service_inquiry`, `service_date`, `service_time`, `contract_start_date`,`contract_end_date`,`no_of_service`,`service_price`,`client_payment_expected`,`partner_receivable`,`partner_payable`, `service_discount`, `service_booked`, `varianttype_id`, `sqft`, `frequency`,`is_amc`,`service_duration`) VALUES ";
+						//$count = count($_POST['service_inquiry']);
+
+						foreach ($_POST['service_inquiry'] as $k =>$service) {
+							
+							$serviceUpdateArr = array();
+							if($_POST['service_id'][$k]!=''){
+								$serviceUpdateArr['service_inquiry'] 	= $_POST['service_inquiry'][$k];
+								$serviceUpdateArr['service_price']	= $_POST['service_price'][$k];
+								$serviceUpdateArr['service_discount'] 	= $_POST['service_discount'][$k];
+								$serviceUpdateArr['frequency']	= $_POST['frequency'][$k];
+								$serviceUpdateArr['service_booked'] 	= $_POST['service_inquiry_booked'.$k];
+
+								if($_POST['service_date'][$k]!=''){
+									$serviceUpdateArr['service_date'] = date("Y-m-d", strtotime($_POST['service_date'][$k]));
+									$serviceUpdateArr['service_time']		= $_POST['service_time'][$k];
+								}
+								else{
+									$serviceUpdateArr['service_date']= null;
+									$serviceUpdateArr['service_time'] = null;
+								}
+								if($_POST['contract_start_date'][$k]!=''){
+									$serviceUpdateArr['contract_start'] =date("Y-m-d", strtotime($_POST['contract_start_date'][$k]));
+								}else{
+									$serviceUpdateArr['contract_start'] = null;
+								}
+								if($_POST['contract_end_date'][$k]!=''){
+									$serviceUpdateArr['contract_end'] =date("Y-m-d", strtotime($_POST['contract_end_date'][$k]));
+								}else{
+									$serviceUpdateArr['contract_end'] = null;
+								}
+								$serviceUpdateArr['varianttype_id'] = $_POST['varianttype'][$k];
+								$serviceUpdateArr['sqft'] 	= $_POST['sqft'][$k];
+								$serviceUpdateArr['client_payment_expected'] = $_POST['client_payment_expected'][$k];
+								$serviceUpdateArr['partner_payable'] = $_POST['partner_payable'][$k];
+								$serviceUpdateArr['partner_receivable'] = $_POST['partner_receivable'][$k];
+								$serviceUpdateArr['is_amc'] = $_POST['is_amc'.$k];
+								$serviceUpdateArr['no_of_service'] = $_POST['no_of_service'][$k];
+								$serviceWhereArr = array('id' => $_POST['service_id'][$k] );
+								$modelObj->updateServiceTable($serviceUpdateArr,$serviceWhereArr);
+							}else{	
+							if($_POST['service_inquiry'][$k] != '' && $_POST['varianttype'][$k]!=''):
+								$service_inquiry 	= $_POST['service_inquiry'][$k];
+								$service_price	= $_POST['service_price'][$k];
+								$service_discount 	= $_POST['service_discount'][$k];
+								$frequency	= $_POST['frequency'][$k];
+								$inquiry_booked 	= $_POST['service_inquiry_booked'.$k];
+								if($_POST['service_date'][$k]!=''){
+									$service_date = date("Y-m-d", strtotime($_POST['service_date'][$k]));
+									$service_time		= $_POST['service_time'][$k];
+								}
+								else{
+									$service_date= null;
+									$service_time = null;
+								}
+								if($_POST['contract_start_date'][$k]!=''){
+									$contract_start =date("Y-m-d", strtotime($_POST['contract_start_date'][$k]));
+								}else{
+									$contract_start = null;
+								}
+								if($_POST['contract_end_date'][$k]!=''){
+									$contract_end =date("Y-m-d", strtotime($_POST['contract_end_date'][$k]));
+								}else{
+									$contract_end = null;
+								}
+								$varianttype = $_POST['varianttype'][$k];
+								$sqft 	= $_POST['sqft'][$k];
+								$client_pay_expected = $_POST['client_payment_expected'][$k];
+								$no_of_service = $_POST['no_of_service'];
+								$partner_payable = $_POST['partner_payable'][$k];
+								$partner_receivable = $_POST['partner_receivable'][$k];
+								$is_amc = $_POST['is_amc'.$k];
+								$stmt .= "('','$leadmanager_id', '$service_inquiry', '$service_date', '$service_time','$contract_start','$contract_end', '$no_of_service','$service_price','$client_pay_expected','$partner_receivable','$partner_payable', '$service_discount', '$inquiry_booked', '$varianttype', '$sqft', '$frequency','$is_amc','$service_duration')";
+								if($count > $k+1){
+									$stmt .= ",";
+								}
+							endif;
+							}
+						}
+						$services = $modelObj->insertServiceTable($stmt);
+				endif;
+				/***SERVICE ENDS HERE***/
 				$updateArr['promo_code'] 	= $_POST['promo_code'];
 				$updateArr['discount'] 	= $_POST['discount'];
 				$updateArr['price'] 	= $_POST['price'];
 				$updateArr['invoice_mode'] 	= $_POST['invoice_mode'];
 				if($_POST['invoice_mode'] == 'P')
-				$updateArr['partner_amount'] 	= $_POST['partner_amount'];
-				$updateArr['commission'] 	= $_POST['commission'];
+				$updateArr['lead_partner_receivable'] 	= $_POST['lead_partner_receivable'];
+
+				$updateArr['lead_partner_payable'] 	= $_POST['lead_partner_payable'];
+				$updateArr['lead_client_payment'] 	= $_POST['lead_client_payment'];
+				//$updateArr['commission'] 	= $_POST['commission'];
 				$updateArr['taxed_cost'] 	= $_POST['taxed_cost'];
 				$updateArr['invoice_type'] 	= $_POST['invoice_type'];
-				$updateArr['varianttype1'] = $_POST['varianttype1'];
+				/*$updateArr['varianttype1'] = $_POST['varianttype1'];
 				$updateArr['varianttype2'] = $_POST['varianttype2'];
-				$updateArr['varianttype3'] = $_POST['varianttype3'];
+				$updateArr['varianttype3'] = $_POST['varianttype3'];*/
 				$updateArr['is_reminder']    = $_POST['is_reminder'];
 				$updateArr['update_date']		= date('Y-m-d H:i:s');
 				//print_r($updateArr);exit;
@@ -224,7 +297,11 @@ switch($action){
 		$arrReturn['result'] = 'success';
 		break;
 		case "set_lead_reminders":
-		$updateArr['reminder'] 	= $_POST['reminder'];
+		if($_POST['reminder']!=''){
+			$updateArr['reminder'] = date("Y-m-d", strtotime($_POST['reminder']));
+		}else{
+			$updateArr['reminder'] = null;
+		}
 		$whereArr = array('id' => $leadmanager_id );
 		$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 		$arrReturn['result'] = 'success';
@@ -237,11 +314,7 @@ switch($action){
 		case "getPrice":
 		$city = $_POST['city'];
 		$inq[] = $_POST['inq1'];
-		$inq[] = $_POST['inq2'];
-		$inq[] = $_POST['inq3'];
 		$varianttype[] = $_POST['varianttype1'];
-		$varianttype[] = $_POST['varianttype2'];
-		$varianttype[] = $_POST['varianttype3'];
 		$returnVal = $modelObj->getPriceList($city,$inq,$varianttype);
 		$arrReturn['result'] = $returnVal;
 		break;

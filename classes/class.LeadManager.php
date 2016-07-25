@@ -13,6 +13,7 @@ class LeadManager {
 		$this -> className = "leadmanager";
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();
+		$this -> dashObj = new Dashboard();
 		checkRole('leadmanager');
 	}
 	/**************************** END OF CONSTRUCTOR **************************/
@@ -142,13 +143,13 @@ class LeadManager {
 		}else{
 			$sort = 'leadmanager.insert_date DESC';
 		}
-		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
+		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", $sort, $limit, false);
 		//$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
 		//$joinArray[] = array('type'=>'left','table'=>'leadstage','condition'=>'leadstage.id=leadmanager.lead_stage');
 		//$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
 		//$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
-		//$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
-		//$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*", $sort, $limit,$joinArray, false);
+		//$joinArray[] = array('type'=>'left','table'=>'service','condition'=>'service.leadmanager_id=leadmanager.id');
+		$dataArr = $this -> db ->getDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*", $sort, $limit);
 
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
@@ -158,7 +159,7 @@ class LeadManager {
 			}
 		}
 		//$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " client_firstname ASC ", '', false);
-		$countAll = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, " * ", "", '',$joinArray, false);
+		$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", "", '');
 		$result['rows'] = $this -> finalData;
 		$result['count'] = count($countAll);
 		//echo '<pre>'; print_r($result);
@@ -203,17 +204,17 @@ class LeadManager {
 		if (intval($id)) {
 			$keyValueArray = array();
 			$keyValueArray['leadmanager.id'] = intval($id);
-			$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
+			/*$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=leadmanager.lead_source');
 			$joinArray[] = array('type'=>'left','table'=>'leadstage','condition'=>'leadstage.id=leadmanager.lead_stage');
+*/
+			$dataArr = $this -> db ->getDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*", $sort, $limit,false);
 
-			/*$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*,leadsource.name as leadsource_name ", $sort, $limit,$joinArray, true);*/
-
-			$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.name as leadsource_name,leadstage.name as leadstage_name",'','',$joinArray,false);
+			//$dataArr = $this -> db -> getAssociatedDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*,leadsource.name as leadsource_name,leadstage.name as leadstage_name",'','',$joinArray,false);
 			if (count($dataArr)) {
 				$json = json_encode($dataArr);
 			}
 		}
-		$this->logs->writelogs($this->folderName,"Edited data: ".$json);
+		//$this->logs->writelogs($this->folderName,"Edited data: ".$json);
 		return $json;
 	}
 
@@ -340,7 +341,16 @@ class LeadManager {
 		$category = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "category_type", '', '', false);
 
 		return $category;
-	}		
+	}	
+
+	function getServiceDetailsforLead($leadId){
+
+		$keyValueArray['leadmanager_id'] = $leadId;
+
+		$servicedetails = $this -> db -> getDataFromTable($keyValueArray, 'service', "service_inquiry,varianttype_id", '', '', false);
+
+		return $servicedetails;
+	}	
 
     function insertIntoOrder($id){
     	$memcache = new Memcache;
@@ -563,7 +573,7 @@ class LeadManager {
 			 if($inq != ""){
 				 $keyValueArray['name'] = $inq;
 				 $keyValueArray['varianttype'] = $varianttype[$indx];
-				 $dataArr = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "taxed_cost", '', '', false);
+				 $dataArr = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "taxed_cost", '', '',false);
 				 // print_r($dataArr);
 				 // print_r($varianttype[$indx]);
 				 $this->logs->writelogs($this->folderName,"Prices of the services: ".json_encode($dataArr) );
@@ -595,7 +605,54 @@ class LeadManager {
 		//  return $total;
 	 // }
 
+	 public function optionsGeneratorforLeadsource($table, $display_field, $value_field, $selected_value="", $conditions="") {
+			       
+			       $res = $this -> db ->multiquery("SELECT id,name,parent_id FROM leadsource");  // add WHERE clauses if needed
+					$names = array();
+					$parents = array();
+					$children = array();
+					
+					while ( $row = mysqli_fetch_object( $res ) ) {
+						
+					    $names[ $row->id ] = $row->name;
+					    if ( $row->parent_id == -1 ||$row->parent_id == 0 ) {
+					        $parents[] = $row->id;
+					    } else {
+					        if ( !array_key_exists( $row->parent_id, $children ) )
+					            $children[ $row->parent_id ] = array();
+					        $children[ $row->parent_id ][] = $row->id;
+					    }
+					}
 
+				   $options_str = "";			       
+			       $options_str = "<option value=''>Please Select</option>";
+					foreach ( $parents as $parent_id ) {
+					    //print_r($names[$parent_id]);
+
+					    if ( array_key_exists( $parent_id, $children ) ) {
+					    	$options_str.='<optgroup label="'. $names[$parent_id] .'">';
+					        foreach ( $children[ $parent_id ] as $child_id ) {
+
+							    $options_str.="<option value='" . $child_id . "'";
+					           
+					           if ($selected_value != '' && $selected_value == $child_id) $options_str.=' selected ';
+					           
+					           $options_str.='>' . $names[$child_id] . '</option>';
+					           // print_r($names[$child_id]);
+					        }
+					        $options_str.='</optgroup>';
+					    }
+					    else {
+				       		$options_str.="<option value='" . $parent_id . "'";
+				           if ($selected_value != '' && $selected_value == $parent_id)
+				               $options_str.=' selected ';
+				           $options_str.='>' . $names[$parent_id] . '</option>';
+				       	}
+					}
+				
+		       
+		       return $options_str;
+	    }
 
 	function send_invoice_email($id){
 		$keyValueArray = array();
@@ -942,8 +999,12 @@ Click to pay online
 
 		if($response){
 			$memcache = new Memcache;
-			$memcache->connect('localhost', 11211);
-			$mhcclientarr = $memcache->get('mhcclient');
+			@$memcacheConn = $memcache->connect('localhost', 11211);
+			if($memcacheConn):
+				$mhcclientarr = $memcache->get('mhcclient');
+		    else:
+		    	$mhcclientarr = $this -> dashObj->mhcclient();
+		    endif;
 			foreach ($mhcclientarr as $key =>$client) {
 				if($key == $response){
 					unset($mhcclientarr[$key]);
@@ -988,6 +1049,28 @@ Click to pay online
 		$response = $this -> db -> getDataFromTable($whereArr, $tablename,"address");
 		//$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
 		return $response;
+	}
+
+	public function insertServiceTable($query){
+		return $this -> db ->query($query);
+	}
+
+	public function updateServiceTable($values,$whereArr){
+		$tablename = "service";
+		$response = $this -> db -> updateDataIntoTable($values, $whereArr, $tablename);
+		return $response;
+	}
+
+	public function getServiceTable($id) {
+		$tablename = "service";
+		$whereArr = array('leadmanager_id'=>$id);
+		$response = $this -> db -> getDataFromTable($whereArr, $tablename,"*");
+		//$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
+		return $response;
+	}
+
+	public function deleteServiceTable($query){
+		return $this -> db ->query($query);
 	}
 }
 ?>

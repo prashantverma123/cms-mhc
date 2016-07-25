@@ -40,7 +40,7 @@ class Dashboard {
 
 	public function memcacheData(){
 		$memcache = new Memcache;
-		$memcache->connect('localhost', 11211) or die ("Could not connect");
+		@$memcache->connect('localhost', 11211);
 		$keyValueArray['status'] = '0';
 		if(!$memcache->get('city')){
 			$cities = $this -> db -> getDataFromTable($keyValueArray, 'city', "distinct name as display, id as value", '', '');
@@ -120,6 +120,16 @@ class Dashboard {
 			$memcache->set('taxes',$taxes);
 		}
 
+		if(!$memcache->get('total_tax')){
+			$whereArr = array();
+			$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
+			$alltax = 0;
+			foreach ($taxes as $tax) {
+				$alltax = $alltax + $tax['value'];
+			}
+			$memcache->set('total_tax',$alltax);
+		}
+
 		if(!$memcache->get('mhcclient')){
 			$whereArr = array();
 			$mhcclients = $this -> db -> getDataFromTable($whereArr, 'mhcclient', "*", "", '', false);
@@ -194,5 +204,23 @@ class Dashboard {
         	}	
         	return $pricelists;
 	}
+	function taxes(){
+		$whereArr = array();
+		$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
+		return $taxes;
+	}
+
+	function total_tax(){
+		$whereArr = array();
+		$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
+		$alltax = 0;
+		if(count($taxes) > 0):
+		foreach ($taxes as $tax) {
+			$alltax = $alltax + $tax['value'];
+		}
+		endif;
+		return $alltax;
+	}
+
 }
 ?>

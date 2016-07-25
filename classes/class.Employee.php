@@ -85,14 +85,10 @@ class Employee {
 .name ASC';
 		}
 		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", $limit, true);
-		$joinArray[] = array('type'=>'left','table'=>'attendance','condition'=>'attendance.employee_id=crmemployee
-
-.id AND DATE(attendance.date)=CURRENT_DATE');
+		//$joinArray[] = array('type'=>'left','table'=>'attendance','condition'=>'attendance.employee_id=crmemployee.id AND DATE(attendance.date)=CURRENT_DATE');
 /*$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=crmemployee.city');
 $joinArray[] = array('type'=>'left','table'=>'designation','condition'=>'designation.id=crmemployee.designation');*/
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, " crmemployee
-
-.*,attendance.attendance", $sort, $limit,$joinArray, false);
+		$dataArr = $this -> db ->getDataFromTable($keyValueArray, $this -> tableName, " crmemployee.*", $sort, $limit,false);
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;
@@ -100,11 +96,11 @@ $joinArray[] = array('type'=>'left','table'=>'designation','condition'=>'designa
 				$this -> finalData[] = $dataArr[$p];
 			}
 		}
-		$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " * ", " name ASC ", '', false);
+		$countAll = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, " name ", " name ASC ", '', false);
 		$result['rows'] = $this -> finalData;
 		$result['count'] = count($countAll);
 		//echo '<pre>'; print_r($this -> finalData);
-		$this->logs->writelogs($this->folderName,"database returned: ". count($countAll));
+		//$this->logs->writelogs($this->folderName,"database returned: ". count($countAll));
 		return $result;
 	}// eof getDefault
 
@@ -190,22 +186,34 @@ $joinArray[] = array('type'=>'left','table'=>'designation','condition'=>'designa
 		return $rowCount;
 	}// eof toggleStatus
 
-	public function get_employee_attendance($emp_id,$attendance){
+	public function get_employee_attendance($emp_id,$attendance,$date){
 		$keyValueArray['employee_id'] = $emp_id;
-		$keyValueArray['DATE(date)'] = date('Y-m-d');
+		$keyValueArray['date'] = $date;
 		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName1, " attendance,date ",'','',false);
-		//print_r($dataArr);exit;
 		if(count($dataArr) > 0){
 			$updateArr['attendance'] = $attendance;
-			$whereArr = array('employee_id' => $emp_id);
+			$updateArr['update_date'] = date('Y-m-d h:i:s');
+			$updateArr['author_id']			= $_SESSION['tmobi']['UserId'];
+			$updateArr['author_name']		= $_SESSION['tmobi']['AdminName'];
+			$whereArr = array('employee_id' => $emp_id,'date'=>$date);
 			return $this -> db -> updateDataIntoTable($updateArr, $whereArr, $this -> tableName1);
 		}else{
 			$insertArr['employee_id'] = $emp_id;
 			$insertArr['attendance'] = $attendance;
-			$insertArr['date'] = date('Y-m-d h:i:s');
+			$insertArr['date'] = $date;
+			$insertArr['insert_date'] = date('Y-m-d h:i:s');
+			$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
+			$insertArr['author_name']		= $_SESSION['tmobi']['AdminName'];
  			return $this -> db -> insertDataIntoTable($insertArr, $this -> tableName1);
 		}
 
+	}
+
+	public function get_attendance_by_id($id){
+		$keyValueArray['sqlclause'] = 'WEEKOFYEAR(date)=WEEKOFYEAR(NOW())';
+		$keyValueArray['employee_id'] = $id;
+		//SELECT * FROM attendance WHERE WEEKOFYEAR(date)=WEEKOFYEAR(NOW()) AND employee_id='1' 
+		return $dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName1, " attendance,date ",'date ASC','',false);
 	}
 	/**
 	* pagination

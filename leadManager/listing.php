@@ -4,13 +4,12 @@ $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
 if($memcache){
+	$statuses = $memcache->getStats();
 	$leadstage = $memcache->get('leadstage');
 	$mhcclient = $memcache->get('mhcclient');
 	$leadsources = $memcache->get('leadsource');
 	$pricelist = $memcache->get('pricelist_dropdown');
 	$variant = $memcache->get('varianttype');
-
-	
 }else{
 	$leadstage = $dashboardObj->leadstage();
 	$mhcclient = $dashboardObj->mhcclient();
@@ -110,33 +109,31 @@ if($memcache){
 						<label for="">Reminder:</label>
 						<input id="datePicker<?php echo $key['id']; ?>" class="datePicker" type="date" />
 						<input type="button" class="test" value="Set" data-id="<?php echo $key['id']; ?>"/>
-						
-						
-						<!-- <select name="reminder<?php echo $key['id']; ?>" id="reminder<?php echo $key['id']; ?>" tabindex="1" class="medium m-wrap leadstage" onchange="" data-id="<?php echo $key['id']; ?>">
-							<option value="1D" <?php if($key['reminder']=='1D'): echo "selected"; else: echo "";endif; ?>>1D</option>
-							<option value='3D' <?php if($key['reminder']=='3D'): echo "selected"; else: echo "";endif; ?>>3D</option>
-							<option value='5D' <?php if($key['reminder']=='5D'): echo "selected"; else: echo "";endif; ?>>5D</option>
-							<option value='1W' <?php if($key['reminder']=='1W'): echo "selected"; else: echo "";endif; ?>>1W</option>
-							<option value='2W' <?php if($key['reminder']=='2W'): echo "selected"; else: echo "";endif; ?>>2W</option>
-							<option value='3W' <?php if($key['reminder']=='3W'): echo "selected"; else: echo "";endif; ?>>3W</option>
-							<option value='1M' <?php if($key['reminder']=='1M'): echo "selected"; else: echo "";endif; ?>>1M</option>
-							<option value='3M' <?php if($key['reminder']=='1M'): echo "selected"; else: echo "";endif; ?>>3M</option>
-						</select> -->
+				
 					</div>
 				</td>
 				<td class="hidden-480"><b><?php print $mhcclientInfo['client_firstname'].' ' .$mhcclientInfo['client_lastname'].'</b></br>'.$mhcclientInfo['client_mobile_no'].'</br>'.$mhcclientInfo['address'];?></td>
 				<!-- <td class="hidden-480"><?php //print $key['client_mobile_no'];?></td> -->
 				<td class="hidden-480">
-					<?php if($pricelist[$key['service_inquiry1']] != '')
+					<?php /*if($pricelist[$key['service_inquiry1']] != '')
 						echo $pricelist[$key['service_inquiry1']].':'.$variant[$key['varianttype1']]."<br />";
 						if($pricelist[$key['service_inquiry2']] != '')
 						echo $pricelist[$key['service_inquiry2']].':'.$variant[$key['varianttype2']]."<br />";
 						if($pricelist[$key['service_inquiry3']] != '')
-						echo $pricelist[$key['service_inquiry3']].':'.$variant[$key['varianttype3']]."<br />";
+						echo $pricelist[$key['service_inquiry3']].':'.$variant[$key['varianttype3']]."<br />";*/
 					?>
+					<?php 
+					$services = $modelObj->getServiceDetailsforLead($key['id']);
+						foreach ($services as $key => $value) {
+							echo $pricelist[$services[$key]['service_inquiry']].':'.$variant[$services[$key]['varianttype_id']]."<br />";
+							
+						}
+						
+					?>
+
 					</td>
 				<!-- <td class="hidden-480"><?php //print date('d M Y',strtotime($key['service1_date']));?></td> -->
-				<td class="hidden-480"><?php if($key['service1_date'] != "0000-00-00")print date('d M Y',strtotime($key['service1_date'])). ' </br>'.date('h:i A',strtotime($key['service1_time']));?></td>
+				<td class="hidden-480"><?php if($key['service1_date'] != "0000-00-00" && $key['service1_date']!='')print date('d M Y',strtotime($key['service1_date'])). ' </br>'.date('h:i A',strtotime($key['service1_time']));?></td>
 				 <td id="confirmed<?php echo $key['id']; ?>">
 				 	<?php if($key['job_status']=='confirmed'): ?>
 				 	<select name="job_status<?php echo $key['id']; ?>" style="width:94px !important" id="job_status<?php echo $key['id']; ?>" tabindex="1" class="small m-wrap " onchange="update_status('<?php echo $key['id']; ?>');">

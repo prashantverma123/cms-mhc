@@ -23,9 +23,9 @@ switch($action){
 				$insertArr['experties'] 		= $_POST['experties'];
 				$insertArr['gender'] 		= $_POST['gender'];
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
-				$insertArr['author_name']			= "Prashant";
+				$insertArr['author_name']		= $_SESSION['tmobi']['AdminName'];
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
-				$insertArr['update_date']		= date('Y-m-d H:i:s');
+				
 				$insertArr['status']= 0;
 				$insertArr['ip']= getIP();
 				$returnVal = $modelObj->insertTable($insertArr);
@@ -43,7 +43,7 @@ switch($action){
 				$updateArr['city'] 		= $_POST['city'];
 				$updateArr['gender']	 	= $_POST['gender'];
 				$updateArr['experties']	 	= $_POST['experties'];
-
+				$updateArr['update_date']		= date('Y-m-d H:i:s');
 
 				$whereArr = array('id' => $employee_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);
@@ -56,7 +56,8 @@ switch($action){
 	break;
 	case "save_attendance":
 		$attendance 	= isset($_POST['attendance']) ? $_POST['attendance'] : '';
-		$result = $modelObj->get_employee_attendance($employee_id,$attendance);
+		$date 	= isset($_POST['date']) ? $_POST['date'] : '';
+		$result = $modelObj->get_employee_attendance($employee_id,$attendance,$date);
 		$arrReturn['result'] = $result;
 	break;
 }

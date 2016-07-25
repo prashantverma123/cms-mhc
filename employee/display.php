@@ -75,17 +75,21 @@ $titlename 		= 'Add Employee Basic Info';
                         <?php if(in_array('add',$actionArr)): ?>
                         <li class="<?php if($employee_id > 0){ echo 'active'; } ?>"  id="li_pat1"><a data-toggle="tab" href="#tab_2"  onclick="change_tab(1);">Add/Edit Employee</a></li>
                         <?php endif; ?>
+                        <li class="<?php if($flag == 'attendance'){ echo 'active'; } ?>"  id="li_pat2"><a data-toggle="tab" href="#tab_3" onClick="change_tab(2);">Employee Attendance</a></li>
                      </ul>
                      <div class="tab-content">
                         <div id="tab_1" class="tab-pane <?php if($employee_id == '' || $employee_id =='0'){ echo 'active'; } ?>">
                            <?php include_once('listing.php');?>
                         </div>
                         <div id="tab_2" class="tab-pane <?php if($employee_id > 0){ echo 'active'; } ?>">
-						<?php
-							 $employee_id   = decryptdata($employee_id);
-							 include_once($filename);
-							 $employee_id   = encryptdata($employee_id);
-						?>
+                					<?php
+                						 $employee_id   = decryptdata($employee_id);
+                						 include_once($filename);
+                						 $employee_id   = encryptdata($employee_id);
+                					?>
+                        </div>
+                        <div id="tab_3" class="tab-pane <?php if($flag == 'attendance'){ echo 'active'; } ?>">
+                        <?php include_once('attendance.php');?>
                         </div>
                      </div>
                   </div>
@@ -126,12 +130,23 @@ function change_tab(id){ //alert(id);
 				$('#tab_2').removeClass('active');
 				$('#li_pat0').addClass('active');
 				$('#li_pat1').removeClass('active');
+          $('#tab_3').removeClass('active');
+        $('#li_pat2').removeClass('active');
 			}else if(id=1 ){//alert(id);
 				$('#tab_2').addClass('active');
 				$('#tab_1').removeClass('active');
 				$('#li_pat1').addClass('active');
 				$('#li_pat0').removeClass('active');
-			}
+         $('#tab_3').removeClass('active');
+        $('#li_pat2').removeClass('active');
+			}else if(id=2 ){//alert(id);
+        $('#tab_3').addClass('active');
+        $('#li_pat2').addClass('active');
+        $('#tab_2').removeClass('active');
+        $('#tab_1').removeClass('active');
+        $('#li_pat1').removeClass('active');
+        $('#li_pat0').removeClass('active');
+      }
 	}
 }
 

@@ -1,11 +1,11 @@
 <?php
 include_once('../config.php');
 include_once('variable.php');
-$lead_id   	= isset($_GET['lead_id']) ? $_GET['lead_id'] : '';
-$original_lead_id =  decryptdata($lead_id);
+$tax_id   	= isset($_GET['tax_id']) ? $_GET['tax_id'] : '';
+$original_tax_id =  decryptdata($tax_id);
 $flag   		= isset($_GET['flag']) ? $_GET['flag'] : '';
 $filename 		= 'addForm.php';
-$titlename 		= 'Add Lead Stage Info';
+$titlename 		= 'Add Tax';
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -14,7 +14,7 @@ $titlename 		= 'Add Lead Stage Info';
 <!-- BEGIN HEAD -->
 <head>
    <meta charset="utf-8" />
-   <title>T- Lead Stage Control Panel |  <?php print $titlename;?> </title>
+   <title>T- Tax Control Panel |  <?php print $titlename;?> </title>
    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
    <meta content="" name="description" />
    <meta content="" name="author" />
@@ -59,7 +59,7 @@ $titlename 		= 'Add Lead Stage Info';
 
                   <!-- END BEGIN STYLE CUSTOMIZER -->
                   <h3 class="page-title">
-                    Lead Stage
+                    Tax
                      <?php /*?><small>advance form layout samples</small><?php */?>
                   </h3>
 
@@ -71,21 +71,21 @@ $titlename 		= 'Add Lead Stage Info';
                <div class="span12">
                   <div class="tabbable tabbable-custom boxless">
                      <ul class="nav nav-tabs">
-                        <li class="<?php if($lead_id == '' || $lead_id =='0'){ echo 'active'; } ?>"  id="li_pat0"><a data-toggle="tab" href="#tab_1" onClick="change_tab(0);">Leads Listing</a></li>
+                        <li class="<?php if($tax_id == '' || $tax_id =='0'){ echo 'active'; } ?>"  id="li_pat0"><a data-toggle="tab" href="#tab_1" onClick="change_tab(0);">Tax Listing</a></li>
                         <?php if(in_array('add',$actionArr)): ?>
-                        <li class="<?php if($lead_id > 0){ echo 'active'; } ?>"  id="li_pat1"><a data-toggle="tab" href="#tab_2"  onclick="change_tab(1);">Add/Edit Leads</a></li>
+                        <li class="<?php if($tax_id > 0){ echo 'active'; } ?>"  id="li_pat1"><a data-toggle="tab" href="#tab_2"  onclick="change_tab(1);">Add/Edit Tax</a></li>
                         <?php endif; ?>
                      </ul>
                      <div class="tab-content">
-                        <div id="tab_1" class="tab-pane <?php if($lead_id == '' || $lead_id =='0'){ echo 'active'; } ?>">
+                        <div id="tab_1" class="tab-pane <?php if($tax_id == '' || $tax_id =='0'){ echo 'active'; } ?>">
                            <?php include_once('listing.php');?>
                         </div>
-                        <div id="tab_2" class="tab-pane <?php if($lead_id > 0){ echo 'active'; } ?>">
-						<?php
-  							 $lead_id   = decryptdata($lead_id);
-							 include_once($filename);
-							 $lead_id   = encryptdata($lead_id);
-						?>
+                        <div id="tab_2" class="tab-pane <?php if($tax_id > 0){ echo 'active'; } ?>">
+            						<?php
+              							 $tax_id   = decryptdata($tax_id);
+            							 include_once($filename);
+            							 $tax_id   = encryptdata($tax_id);
+            						?>
                         </div>
                      </div>
                   </div>
