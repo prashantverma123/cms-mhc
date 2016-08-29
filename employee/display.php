@@ -6,6 +6,12 @@ $original_employee_id =  decryptdata($employee_id);
 $flag   		= isset($_GET['flag']) ? $_GET['flag'] : '';
 $filename 		= 'addForm.php';
 $titlename 		= 'Add Employee Basic Info';
+$memcache_cities = $memcache->get('city');
+if(!$cities)
+$memcache_cities = $dashboardObj->city();
+$memcache_designation = $memcache->get('designation');
+if(!$designation)
+  $memcache_designation = $dashboardObj->designation();
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->

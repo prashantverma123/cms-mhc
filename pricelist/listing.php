@@ -3,14 +3,24 @@ $session = Session::getInstance();
 $session->start();
 $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
-$cities = $memcache->get('city');
+
+/*if($memcacheConn):
 $leadsources = $memcache->get('leadsource');
 $categories = $memcache->get('category');
 $varianttype = $memcache->get('varianttype');
+$cities = $memcache->get('city');
+else:
+$leadsources = $dashObj->leadsource();
+$categories = $dashObj->category();
+$varianttype =  $dashObj->varianttype();
+$cities =  $dashObj->city();
+endif;*/
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
-	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>Ascending</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>Descending</option></select>
+	<!-- <select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>Ascending</option><option value="desc" <?php //if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>Descending</option></select> -->
+	<label class="checkbox-inline" style="float:left;width:94px;margin-top:8px;"><input tabindex="1" type="radio" name="sort" value="asc" <?php if($_GET['sort'] == 'asc'): echo "checked"; else: ""; endif; ?>>Ascending</label>
+	<label class="checkbox-inline" style="float:left;width:104px;margin-top:8px;"><input tabindex="1" type="radio" name="sort" value="desc" <?php if($_GET['sort'] == 'desc'): echo "checked"; else: ""; endif; ?>>Descending</label>
 		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
 		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
 	<button type="submit">Submit</button>
@@ -23,6 +33,7 @@ $varianttype = $memcache->get('varianttype');
 				 <th>Service Name</th>
 				 <th class="hidden-480">Lead Source</th>
 				 <th class="hidden-480">Category</th>
+				 <th class="hidden-480">Variant Type</th>
 				 <th class="hidden-480">City</th>
 				 <th class="hidden-480">Price</th>
 				 <th class="hidden-480">Commission</th>
@@ -57,6 +68,7 @@ $varianttype = $memcache->get('varianttype');
 				 <td><?php print $key['name'];?></td>
 				 <td class="hidden-480"><?php print $leadsources[$key['lead_source']];?></td>
 				 <td class="hidden-480"><?php print $categories[$key['category_type']];?></td>
+				 <td class="hidden-480"><?php print $varianttype[$key['varianttype']];?></td>
 				 <td class="hidden-480"><?php print $cities[$key['city']];?></td>
 				 <td class="hidden-480"><?php print $key['price'];?></td>
 				 <td class="hidden-480"><?php print $key['commission'];?></td>

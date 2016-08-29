@@ -6,6 +6,27 @@ $original_order_id =  decryptdata($order_id);
 $flag   		= isset($_GET['flag']) ? $_GET['flag'] : '';
 $filename 		= 'addForm.php';
 $titlename 		= 'Add Order Details';
+  //$leadstage = $memcache->get('leadstage');
+  $mhcclient = $memcache->get('mhcclient');
+
+  if(!$mhcclient)
+  $mhcclient = $dashboardObj->mhcclient();
+  $leadsources = $memcache->get('leadsource');
+  if(!$leadsources)
+  $leadsources = $dashboardObj->leadsource();
+  $pricelist = $memcache->get('pricelist');
+  if(!$pricelist)
+  $pricelist = $dashboardObj->pricelist();
+  $lead_dropdown = $memcache->get('pricelist_dropdown');
+  if(!$lead_dropdown)
+  $lead_dropdown = $dashboardObj->pricelistAll();
+  $cities = $memcache->get('city');
+   if(!$cities)
+  $cities = $dashboardObj->city();
+  $memcache_vendor = $memcache->get('vendor');
+  if(!$memcache_vendor)
+  $memcache_vendor = $dashboardObj->vendor();
+
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -81,24 +102,32 @@ $titlename 		= 'Add Order Details';
             <div class="row-fluid">
 
                <div class="span12">
+                <div style="float:right"><span>Total Orders:</span><span class="orderscount" id="orderscount">0</span></div>
+
                   <div class="tabbable tabbable-custom boxless">
                      <ul class="nav nav-tabs">
+                       <!--  <li id="li_pat2"><a data-toggle="tab" href="#tab_3" onClick="change_tab(2);">AMC Listing</a></li> -->
                         <li class="<?php if($order_id == '' || $order_id =='0'){ echo 'active'; } ?>"  id="li_pat0"><a data-toggle="tab" href="#tab_1" onClick="change_tab(0);">Orders Listing</a></li>
                         <?php if(in_array('add',$actionArr)): ?>
                         <li class="<?php if($order_id > 0){ echo 'active'; } ?>"  id="li_pat1"><a data-toggle="tab" href="#tab_2"  onclick="change_tab(1);">Add/Edit Orders</a></li>
                         <?php endif; ?>
+                        
                      </ul>
                      <div class="tab-content">
+                      <!--  <div id="tab_3" class="tab-pane">
+                         <?php //$is_amc='1'; include_once('listing.php');?>
+                        </div> -->
                         <div id="tab_1" class="tab-pane <?php if($order_id == '' || $order_id =='0'){ echo 'active'; } ?>">
-                           <?php include_once('listing.php');?>
+                           <?php $is_amc='0'; include('listing.php');?>
                         </div>
                         <div id="tab_2" class="tab-pane <?php if($order_id > 0){ echo 'active'; } ?>">
-						<?php
-							 $order_id   = decryptdata($order_id);
-							 include_once($filename);
-							 $order_id   = encryptdata($order_id);
-						?>
+            						<?php
+            							 $order_id   = decryptdata($order_id);
+            							 include_once($filename);
+            							 $order_id   = encryptdata($order_id);
+            						?>
                         </div>
+                        
                      </div>
                   </div>
                </div>
@@ -181,14 +210,25 @@ function change_tab(id){ //alert(id);
 				$('#li_new').removeClass('active');
 				$('#tab_1').addClass('active');
 				$('#tab_2').removeClass('active');
+        $('#tab_3').removeClass('active');
 				$('#li_pat0').addClass('active');
 				$('#li_pat1').removeClass('active');
+        $('#li_pat2').removeClass('active');
 			}else if(id=1 ){//alert(id);
 				$('#tab_2').addClass('active');
 				$('#tab_1').removeClass('active');
+        $('#tab_3').removeClass('active');
 				$('#li_pat1').addClass('active');
 				$('#li_pat0').removeClass('active');
-			}
+        $('#li_pat2').removeClass('active');
+			}else if(id=2 ){//alert(id);
+        $('#tab_3').addClass('active');
+        $('#tab_1').removeClass('active');
+         $('#tab_2').removeClass('active');
+        $('#li_pat2').addClass('active');
+        $('#li_pat0').removeClass('active');
+        $('#li_pat1').removeClass('active');
+      }
 	}
 }
 

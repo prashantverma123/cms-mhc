@@ -480,10 +480,12 @@ function replacespecialcharsurl($str){
 	* To send an email
 	*@param string,$string,$string,$string
 	*/
-	function sendEmail($to,$from,$subject,$body){
+	function sendEmail($to,$from,$subject,$body,$cc=''){
 		$headers  = 'From: '.$from . "\r\n" .
+		'Cc: '.$cc. "\r\n".
 		            'MIME-Version: 1.0' . "\r\n" .
 		            'Content-type: text/html; charset=utf-8';
+
 		if(mail($to, $subject, $body, $headers))
 		    return true;
 		else

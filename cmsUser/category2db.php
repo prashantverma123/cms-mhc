@@ -23,8 +23,9 @@ switch($action){
 				$insertArr['password'] 			= md5($_POST['password']);
 				$insertArr['city'] 			= $_POST['city'];
 				$insertArr['role'] 			= $_POST['role'];
+				$insertArr['is_vendor'] 	= $_POST['is_vendor'];
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
-				$insertArr['update_date']		= date('Y-m-d H:i:s');
+				//$insertArr['update_date']		= date('Y-m-d H:i:s');
 				$insertArr['status']= 0;
 				$insertArr['ip']= getIP();
 				$returnVal = $modelObj->insertTable($insertArr);
@@ -44,7 +45,7 @@ switch($action){
 				$updateArr['password'] 		= $_POST['password'];
 				$updateArr['city'] 		= $_POST['city'];
 				$updateArr['role'] 		= $_POST['role'];
-
+				$updateArr['is_vendor'] 	= $_POST['is_vendor'];
 				$updateArr['update_date']	= date('Y-m-d H:i:s');
 				$updateArr['ip']= getIP();
 

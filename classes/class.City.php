@@ -125,7 +125,7 @@ class City {
 	}
 
 	public function insertTable($values) {
-		$id = $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$id = $this -> db -> insertDataIntoTable($values, $this -> tableName,true);
 		$memcache = new Memcache;
 		$memcache->connect('localhost', 11211);
 		if($id){

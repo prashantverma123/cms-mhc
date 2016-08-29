@@ -5060,8 +5060,7 @@ Bootstrap Datepickers Restyle(in v1.2.4)
 .cmsuser{color: #001a66;background-color: #ccd9ff;border-color: #99b3ff;}
 .leadstage{color: #cc7a00;background-color: #fff5e6;border-color: #ffe0b3;}
 .order-complaint {
-    height: 100px;
-    width: 50%;
+    height: 200px;
     overflow-y: auto;
 }
 .complaint-head{padding: 15px;text-align: center;font-weight: bold;width:50%;}
@@ -5071,3 +5070,141 @@ Bootstrap Datepickers Restyle(in v1.2.4)
 .invoicebtn{cursor: pointer;text-align: center;padding: 5px 4px !important;font-size:12px !important;}
 
 .payment_status{margin-top: 10px;}
+
+/*------------------Dashboard css starts here----------------------------*/
+.black:hover, .black [class="box-header"], .black.box, .slider.black .ui-slider-range, .progress.black .ui-progressbar-value .sliderVertical.black .ui-slider-range, .progressSlim.black .ui-progressbar-value {
+      background: #00a300 none repeat scroll 0 0 !important;
+    border-color: #00a300 !important;
+    
+}
+ .black.box h2{
+  color: #fff;
+ }
+.box-header {
+    background: #eee none repeat scroll 0 0;
+    box-shadow: none;
+    font-size: 16px;
+    height: 16px;
+    line-height: 16px;
+    overflow: hidden;
+    padding: 10px;
+}
+.box-header h2 {
+    float: left;
+    font-weight: 300;
+    margin-top: 0;
+       font-size: 16px;
+    line-height: 16px;
+    padding:0px !important;
+}
+
+.box-header .break {
+    border-left: 1px solid #fff;
+    margin: -12px 10px -10px;
+    padding: 12px 0 10px;
+}
+
+.box-header .box-icon a {
+    margin: 0 5px;
+}
+a {
+    color: #646464;
+}
+.box-content {
+    background: #fff none repeat scroll 0 0 !important;
+    margin-top: -1px;
+    padding: 10px;
+    position: relative;
+    z-index: 50;
+    color:#222;
+}
+
+.green, .green [class="box-header"], .green.box, .slider.green .ui-slider-range, .progress.green .ui-progressbar-value, .sliderVertical.green .ui-slider-range, .progressSlim.green .ui-progressbar-value, .label-success, .badge-success {
+    background: #00a300 none repeat scroll 0 0 !important;
+    border-color: #00a300 !important;
+}
+.green.box h2{
+  color: #fff;
+}
+.yellow, .yellow [class="box-header"], .yellow.box, .slider.yellow .ui-slider-range, .progress.yellow .ui-progressbar-value, .sliderVertical.yellow .ui-slider-range, .progressSlim.yellow .ui-progressbar-value, .label-warning, .badge-warning {
+    background: #ffc40d none repeat scroll 0 0 !important;
+    border-color: #ffc40d !important;
+}
+.yellow.box h2{
+  color: #fff;
+}
+.red, .red [class="box-header"], .red.box, .slider.red .ui-slider-range, .progress.red .ui-progressbar-value, .sliderVertical.red .ui-slider-range, .progressSlim.red .ui-progressbar-value, .label-important, .badge-important {
+    background: #eb3c00 none repeat scroll 0 0 !important;
+    border-color: #eb3c00 !important;
+    
+}
+.red.box h2{
+  color: #fff;
+}
+.blue, .blue [class="box-header"], .blue.box, .slider.blue .ui-slider-range, .progress.blue .ui-progressbar-value, .sliderVertical.blue .ui-slider-range, .progressSlim.blue .ui-progressbar-value, .label-info, .badge-info {
+    background: #2d89ef none repeat scroll 0 0 !important;
+    border-color: #2d89ef !important;
+}
+ .blue.box h2{
+  color: #fff;
+ }
+.box-header .box-icon {
+    float: right;
+    margin-top: 1px;
+}
+
+
+/*#dashboard1{
+    overflow: hidden;
+    display: block;
+}
+ #dashboard1 thead {
+    background-color: #EFEFEF;
+    display: block;
+}
+ #dashboard1 tbody {
+    display: block;
+     overflow: hidden;
+     height: 140px;
+} 
+#dashboard1 tr{
+  overflow: hidden;
+}
+#dashboard1 td {
+    min-width: 100px;
+    height: 25px;
+}
+#dashboard1 th{
+  min-width: 100px;
+    height: 25px;
+}*/
+#dashboard1 {
+    border-collapse: collapse;
+    width: 475px;
+   overflow-x: scroll;
+  overflow: hidden;
+    display: block;
+}
+#dashboard1 thead {
+    background-color: #EFEFEF;
+}
+#dashboard1  thead{
+    display: block;
+}
+#dashboard1  tbody {
+    overflow-y: scroll;
+    overflow-x: hidden;
+   height: 140px;
+      display: block;
+}
+#dashboard1 td{
+    min-width: 100px;
+    height: 25px;
+    border: 1px;
+}
+#dashboard1 th {
+    min-width: 100px;
+    height: 25px;
+    border: 1px;
+}
+/*------------------Dashboard css ends here----------------------------*/

@@ -32,9 +32,34 @@ class Dashboard {
 		/*if($_SESSION['tmobi']['city'] != '')
 			$keyValueArray['city'] = $_SESSION['tmobi']['city'];*/
 		$keyValueArray['status'] = '0';
-		$keyValueArray['reminder'] = date('Y-m-d strtotime("+1 day")');
+		$todaysDate = date('Y-m-d',strtotime("+1 days"));
+		$keyValueArray['reminder'] = $todaysDate;
 
-		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $table, "id,name,email_id,mobile_no,order_feedback,TIMESTAMPDIFF(HOUR,job_start, job_end) as duration", "", '', false);
+		
+
+		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $table, "id,name,email_id,mobile_no,order_feedback,TIMESTAMPDIFF(HOUR,job_start, job_end) as duration", "", '', false);
+		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $table, "id,mhcclient_id,lead_owner", "", '', false);
+		return $dataArr;
+	}
+
+	public function getyesterdayfollowups(){
+		$table = 'leadmanager';
+		$keyValueArray['status'] = '0';
+		$todaysDate = date('Y-m-d',strtotime("-1 days"));
+		$keyValueArray['reminder'] = $todaysDate;
+		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $table, "id,mhcclient_id,lead_owner", "", '', false);
+		return $dataArr;
+	}
+
+	public function getdayfollowups(){
+		$table = 'leadmanager';
+		/*if($_SESSION['tmobi']['city'] != '')
+			$keyValueArray['city'] = $_SESSION['tmobi']['city'];*/
+		$keyValueArray['status'] = '0';
+		$keyValueArray['reminder'] = date('Y-m-d');
+
+		//$dataArr = $this -> db -> getDataFromTable($keyValueArray, $table, "id,name,email_id,mobile_no,order_feedback,TIMESTAMPDIFF(HOUR,job_start, job_end) as duration", "", '', false);
+		$dataArr = $this -> db -> getDataFromTable($keyValueArray, $table, "id,mhcclient_id,lead_owner", "", '', false);
 		return $dataArr;
 	}
 
@@ -85,7 +110,17 @@ class Dashboard {
         	}	
 			$memcache->set('pricelist_dropdown',$pricelists);
 		}
+		if(!$memcache->get('manpower')){
+			$stmt = "select name as display,id as value,teamleader_deployment,supervisor_deployment,janitor_deployment from pricelist where status!='-1'";
+        	$this -> db ->query($stmt);
+        	while ($result = $this-> db ->fetch()) {
+            	//$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+            	$pricelists[$result['value']] = array('name'=>$result['display'],'teamlead'=>$result['teamleader_deployment'],'janitor'=>$result['janitor_deployment'],'supervisor'=>$result['supervisor_deployment']);
+        	}	
+			$memcache->set('manpower',$pricelists);
+		}
 		if(!$memcache->get('designation')){
+			$keyValueArray['status'] = '0';
 			$designations = $this -> db -> getDataFromTable($keyValueArray, 'designation', "distinct name as display, id as value", '', '');
 			foreach ($designations as $designation) {
 				$designationarr[$designation['value']] =  $designation['display'];
@@ -121,11 +156,11 @@ class Dashboard {
 		}
 
 		if(!$memcache->get('total_tax')){
-			$whereArr = array();
+			$whereArr = array('status'=>'0');
 			$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
 			$alltax = 0;
 			foreach ($taxes as $tax) {
-				$alltax = $alltax + $tax['value'];
+				 $alltax = $alltax + (float)$tax['value'];
 			}
 			$memcache->set('total_tax',$alltax);
 		}
@@ -134,10 +169,36 @@ class Dashboard {
 			$whereArr = array();
 			$mhcclients = $this -> db -> getDataFromTable($whereArr, 'mhcclient', "*", "", '', false);
 			foreach ($mhcclients as $mhcclient) {
-				$mhcclientarr[$mhcclient['id']] =  array('client_firstname'=>$mhcclient['client_firstname'],'client_lastname'=>$mhcclient['client_lastname'],'client_mobile_no'=>$mhcclient['client_mobile_no'],'address'=>$mhcclient['address'],'city'=>$mhcclient['city'],'client_email_id'=>$mhcclient['client_email_id'],'pincode'=>$mhcclient['pincode']);
+				$mhcclientarr[$mhcclient['id']] =  array('client_firstname'=>$mhcclient['client_firstname'],'client_lastname'=>$mhcclient['client_lastname'],'client_mobile_no'=>$mhcclient['client_mobile_no'],'address'=>$mhcclient['address'],'city'=>$mhcclient['city'],'client_email_id'=>$mhcclient['client_email_id'],'pincode'=>$mhcclient['pincode'],'landmark'=>$mhcclient['landmark'],'location'=>$mhcclient['location']);
 			}
 			$memcache->set('mhcclient',$mhcclientarr);
 		}
+
+		if(!$memcache->get('vendor')){
+			//$memcache->delete('vendor');
+			$whereArr = array('is_partner'=>'0');
+			$vendor = $this -> db -> getDataFromTable($whereArr, 'leadsource', "id as value,name as display", "", '', false);
+			foreach ($vendor as $value) {
+				$vendorarr[$value['value']] =  $value['display'];
+			}
+
+			
+			$memcache->set('vendor',$vendorarr);
+		}
+
+		if(!$memcache->get('partneremails')){
+			$whereArr = array();
+			$varianttype = $this -> db -> getDataFromTable($whereArr, 'partner_emails', "source_id", "", '', false);
+			foreach ($varianttype as $value) {
+				$whereArr1 = array('source_id'=>$value['source_id']);
+				$emails = $this -> db -> getDataFromTable($whereArr1, 'partner_emails', "city,email_id", "", '', false);
+				foreach ($emails as $email) {
+					$arr[$value['source_id']][$email['city']] = $email['email_id'];
+				}
+			}
+			$memcache->set('partneremails',$arr);
+		}
+
 		
 	}
 
@@ -172,7 +233,7 @@ class Dashboard {
 		$whereArr = array();
 		$mhcclients = $this -> db -> getDataFromTable($whereArr, 'mhcclient', "*", "", '', false);
 			foreach ($mhcclients as $mhcclient) {
-				$mhcclientarr[$mhcclient['id']] =  array('client_firstname'=>$mhcclient['client_firstname'],'client_lastname'=>$mhcclient['client_lastname'],'client_mobile_no'=>$mhcclient['client_mobile_no'],'address'=>$mhcclient['address'],'city'=>$mhcclient['city'],'client_email_id'=>$mhcclient['client_email_id'],'pincode'=>$mhcclient['pincode']);
+				$mhcclientarr[$mhcclient['id']] =  array('client_firstname'=>$mhcclient['client_firstname'],'client_lastname'=>$mhcclient['client_lastname'],'client_mobile_no'=>$mhcclient['client_mobile_no'],'address'=>$mhcclient['address'],'city'=>$mhcclient['city'],'client_email_id'=>$mhcclient['client_email_id'],'pincode'=>$mhcclient['pincode'],'landmark'=>$mhcclient['landmark'],'location'=>$mhcclient['location']);
 			}
 		return $mhcclientarr;	
 	}
@@ -204,6 +265,22 @@ class Dashboard {
         	}	
         	return $pricelists;
 	}
+	function category(){
+			$categories = $this -> db -> getDataFromTable(array(), 'category', "distinct name as display, id as value", '', '');
+			foreach ($categories as $category) {
+				$categoryarr[$category['value']] =  $category['display'];
+			}
+			return $categoryarr;
+	}
+
+	function designation(){
+		$keyValueArray['status'] = '0';
+		$designations = $this -> db -> getDataFromTable($keyValueArray, 'designation', "distinct name as display, id as value", '', '');
+		foreach ($designations as $designation) {
+			$designationarr[$designation['value']] =  $designation['display'];
+		}
+		return $designationarr;
+	}
 	function taxes(){
 		$whereArr = array();
 		$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
@@ -220,6 +297,36 @@ class Dashboard {
 		}
 		endif;
 		return $alltax;
+	}
+
+	function manpower(){
+		$stmt = "select name as display,id as value,teamleader_deployment,supervisor_deployment,janitor_deployment from pricelist where status!='-1'";
+        	$this -> db ->query($stmt);
+        	while ($result = $this-> db ->fetch()) {
+            	//$pricelists[] = array('display' =>$result['display'] ,'value'=>$result['value']);
+            	$pricelists[$result['value']] = array('name'=>$result['display'],'teamlead'=>$result['teamleader_deployment'],'janitor'=>$result['janitor_deployment'],'supervisor'=>$result['supervisor_deployment']);
+        	}	
+			return $pricelists;
+	}
+
+	function vendor(){
+		$whereArr = array('is_partner'=>'0');
+		$vendors = $this -> db -> getDataFromTable($whereArr, 'leadsource', "id as value,name as display", "", '', false);
+		foreach ($vendors as $value) {
+			$arr[$value['value']] =  $value['display'];
+		}
+		return $arr;
+	}
+
+	function role() {
+
+		$roles = $this -> db -> getDataFromTable(array(), 'role', "distinct name as display, role as value", '', '');
+			foreach ($roles as $role) {
+				$rolearr[$role['value']] =  $role['display'];
+			}
+		
+		return $rolearr;
+
 	}
 
 }

@@ -20,6 +20,9 @@ switch($action){
 				$insertArr['city'] 			= $_POST['city'];
 				$insertArr['price'] 			= $_POST['price'];
 				$insertArr['varianttype'] 			= $_POST['varianttype'];
+				$insertArr['supervisor_deployment'] = $_POST['supervisor_deployment'];
+				$insertArr['janitor_deployment'] = $_POST['janitor_deployment'];
+				$insertArr['teamleader_deployment'] = $_POST['teamleader_deployment'];
 				$insertArr['commission'] 		= $_POST['commission'];
 				$insertArr['taxed_cost'] 		= $_POST['taxed_cost'];
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
@@ -44,6 +47,9 @@ switch($action){
 				$updateArr['price'] 		= $_POST['price'];
 				$updateArr['commission'] 		= $_POST['commission'];
 				$updateArr['taxed_cost']	 	= $_POST['taxed_cost'];
+				$updateArr['supervisor_deployment'] = $_POST['supervisor_deployment'];
+				$updateArr['janitor_deployment'] = $_POST['janitor_deployment'];
+				$updateArr['teamleader_deployment'] = $_POST['teamleader_deployment'];
 				$whereArr = array('id' => $pricelist_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);
 				$arrReturn['result'] = 'success';

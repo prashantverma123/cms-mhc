@@ -8,6 +8,7 @@ require_once 'payu.php';
 //echo "hello";exit();
 $m = isset($_GET['m'])?$_GET['m']:"";
 $l = $_GET['l']?$_GET['l']:"";
+$s = unserialize(decryptdata($_GET['s']));
 if($memcache){
 $cities = $memcache->get('city');
 $mhcclient = $memcache->get('mhcclient');
@@ -17,11 +18,22 @@ $pricelist = $memcache->get('pricelist_dropdown');
   $mhcclient = $dashboardObj->mhcclient();
   $pricelist = $dashboardObj->pricelist();
 }
-$row = $modelObj->get_order_details($m,$l);
-$client = $mhcclient[$row[0]['mhcclient_id']];
+//print_r($mhcclient);
+
+$services = implode(',', $s['service']);
+$o = implode('',$s['id']);
+if($s['invoice_type']== 0){
+  $udf4 = $s['order_id'];
+  $row = $modelObj->get_order_details($m,$l,'');
+}else{
+  $udf4 = $s['id'][0];
+  $row = $modelObj->get_order_details($m,$l,$udf4);
+}
+$client = $mhcclient[$s['mhcclient_id']];
+
 /* Payments made easy. */
 if ( count( $_POST ) ){ 
-  pay_page( array ('key' => $_POST['key'], 'txnid' => $_POST['txnid'], 'amount' => $_POST['amount'],'firstname' => $_POST['firstname'], 'email' => $_POST['email'], 'phone' => $_POST['phone'],'productinfo' => $_POST['productinfo'], 'surl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=s', 'furl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=f','udf1'=>decryptdata($m),'udf2'=>decryptdata($l)), 
+  pay_page( array ('key' => $_POST['key'], 'txnid' => $_POST['txnid'], 'amount' => $_POST['amount'],'firstname' => $_POST['firstname'], 'email' => $_POST['email'], 'phone' => $_POST['phone'],'productinfo' => $_POST['productinfo'], 'surl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=s', 'furl' => SITEPATH.'/payment/response.php?m='.urlencode($m).'&l='.urlencode($l).'&r=f','udf1'=>decryptdata($m),'udf2'=>decryptdata($l),'udf3'=>$s['invoice_type'],'udf4'=>$udf4), 
       SALT );
 }
 elseif($row[0]['payment_status'] == 'success') {
@@ -164,7 +176,7 @@ $('#frmMrHomeCarePayment').validate({
 <div class="formcontainer">
   <form method='POST' id="frmMrHomeCarePayment" name="frmMrHomeCarePayment">
     <input name='key' type='hidden' value="<?php echo KEY; ?>"> 
-        <input name='txnid' type='hidden' value='<?php echo isset($row[0]["order_id"])?$row[0]["order_id"]:"";?>'> 
+        <input name='txnid' type='hidden' value='<?php echo isset($s["order_id"])?$s["order_id"].$o:"";?>'> 
   	  <div class="col-2">
     <label>
       Firstname
@@ -208,13 +220,13 @@ $('#frmMrHomeCarePayment').validate({
   <div class="col-3">
     <label>
       Product Info
-      <input name='productinfo' id="productinfo" type='text' value='<?php echo isset($pricelist[$row[0]["service_inquiry1"]])?$pricelist[$row[0]["service_inquiry1"]]:""; echo " ";  echo isset($pricelist[$row[0]["service_inquiry2"]])?$pricelist[$row[0]["service_inquiry2"]]:""; echo " ";  echo isset($pricelist[$row[0]["service_inquiry3"]])?$pricelist[$row[0]["service_inquiry3"]]:""; ?>' tabindex="7">
+      <input name='productinfo' id="productinfo" type='text' value='<?php echo isset($services)?$services:""; echo " ";   ?>' tabindex="7">
     </label>
   </div>
   <div class="col-3">
   	<label>
       Amount
-      <input name='amount' type='text' value='<?php echo isset($row[0]["taxed_cost"])?$row[0]["taxed_cost"]:"";?>' readonly tabindex="8">
+      <input name='amount' type='text' value='<?php echo isset($s["taxed_cost"])?$s["taxed_cost"]:"";?>' readonly tabindex="8">
     </label>
     
   </div>

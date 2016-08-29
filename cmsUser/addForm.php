@@ -3,8 +3,13 @@ if($cmsuser_id > 0){
 	$returned_data = (array)json_decode($modelObj->getEditData($cmsuser_id));
 	$data = (array)$returned_data[0];
 }
+if($memcacheConn):
 $cities=$memcache->get('city');
 $role=$memcache->get('role');
+else:
+$cities=$dashObj->city();
+$role=$dashObj->role();
+endif;
 ?>
 	<div class="portlet box green">
 	  <div class="portlet-title">
@@ -63,9 +68,15 @@ $role=$memcache->get('role');
 						</div>
 					 </div>
 				  </div>
-				  <!--/span-->
-
-				  <!--/span-->
+				  <div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Is Vendor</label>
+						<div class="controls">
+						   <input type="checkbox" value="1" <?php if($data['is_vendor']=='1'): echo "checked"; else: ""; endif; ?> id="is_vendor" name="is_vendor" class="m-wrap span12">
+						   <span class="help-block" id="is_vendor_error"> </span>
+						</div>
+					 </div>
+				  </div>
 			   </div>
 			   <div class="row-fluid">
 			   		<?php if($cmsuser_id==''): ?>
@@ -88,7 +99,9 @@ $role=$memcache->get('role');
 							</div>
 						 </div>
 				 	</div>
-				 <?php endif; ?>
+				 <?php else: ?> 
+				 <input type="hidden" placeholder="Please Enter Password" value="<?php echo isset($data)?$data['password']:''; ?>" id="password" name="password" class="m-wrap span12">
+				<?php endif; ?>
 			   </div>
 			   <div class="row-fluid">
 					 <div class="span6 ">
@@ -120,6 +133,58 @@ $role=$memcache->get('role');
 					 </div>
 					  </div>
 
+					</div>
+					<div class="row-fluid">
+						<div class="span6 ">
+						<div class="control-group">
+							<label class="control-label">Role Matrix</label>
+							<table class="table table-striped table-bordered table-hover" id="">
+								<thead>
+								  <tr>
+									 <!--<th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" /></th>-->
+									 <th>Module</th>
+									 <th>Permissions</th>
+								  </tr>
+								</thead>
+								<tbody>
+					 <?php
+		  			$page = 0;
+		  			$recperpage=11;
+		  			$searchData= array();
+					$result_data = $aclObj->getListingData('menu_name', $page,$recperpage,$searchData,'','');
+					//print_r($result_data);
+					$accessControls = $aclObj->getAccessControl();
+					//print_r($accessControls['rows']);
+				    foreach ($result_data['rows'] as $key){
+						 ?>
+			 		
+							
+				<tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
+				<!-- <td><input type="checkbox" class="checkboxes" value="1" /></td>-->
+				 <td><?php print $key['name'];?></td>
+
+				 <?php $accessControl = $accessControls['rows'][$key['name']];
+				 $roles = $aclObj->getRole();
+				// print_r($accessControls);
+
+				 	 // foreach ($roles as $role) { 
+				 	
+				 ?>
+				
+				<td class="hidden-480">
+					<input type='checkbox' value='add' name="<?php print $key['name'];?>[]" data-role="<?php print $role['role'];?>" data-module="<?php print $key['name'];?>" onchange="updateACL(this,'insert');" />Add
+				  	<input type='checkbox' value='edit' name="<?php print $key['name'];?>[]" data-role="<?php print $role['role'];?>" data-module="<?php print $key['name'];?>" onchange="updateACL(this,'insert');" />Edit
+				  	<input type='checkbox' value='delete' name="<?php print $key['name'];?>[]" data-role="<?php print $role['role'];?>" data-module="<?php print $key['name'];?>" onchange="updateACL(this,'insert');" />Delete
+				</td>
+				 <?php  ?>
+			  </tr>
+		<?php } ?>	
+
+								</tbody>
+
+							</table>
+						 </div>
+						</div>	
 					</div>
 				  <!--/span-->
 
@@ -242,6 +307,37 @@ function saveData(frm_id, action){
 		window.location.href = "<?php echo SITEPATH;?>/<?php echo $modelObj->folderName; ?>/display.php?cmsuser_id="+res_cmsuser_id+"&flag=t";
 		<?php } ?>
     }
+
+    var roleMatrix = {};
+
+    function updateACL(obj,action){
+		var module = $(obj).data('module');
+		var role = $(obj).data('role');
+		var values = new Array();
+		
+		$.each($("input[name='"+module+"[]']:checked"), function() {
+  			values.push($(this).val());
+  		});
+		roleMatrix[module] = values;
+  		debugger;
+		// $.ajax({
+		// 	type: "POST",
+		// 	url: "<?php print SITEPATH.'/'.$aclObj->folderName.'/category2db.php';?>",
+		// 	data: 'action=add_update_acl&module='+module+'&role='+role+'&task='+action+'&values='+values,
+		// 	success: function(res){
+		// 		var obj = eval("("+res+")");
+		// 		if(obj.result == 'success'){
+		// 			alert("Access Control Updated!");
+		// 		}else{
+		// 			alert("Failed to update");
+		// 		}
+		// 	},
+		// 	error:function(){
+		// 		alert("failure");
+		// 	}
+
+		// });
+	}
 </script>
 <link type="text/css" href="<?php print JSFILEPATH;?>/jquery-ui-1.8.11.custom/css/ui-lightness/jquery-ui-1.8.11.custom.css" rel="stylesheet" />
 <link rel="start" href="<?php print JSFILEPATH;?>/jquery-ui-1.8.11.custom/development-bundle/themes/base/jquery.ui.all.css" />

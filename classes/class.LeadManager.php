@@ -14,7 +14,7 @@ class LeadManager {
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();
 		$this -> dashObj = new Dashboard();
-		checkRole('leadmanager');
+		//checkRole('leadmanager');
 	}
 	/**************************** END OF CONSTRUCTOR **************************/
 
@@ -27,7 +27,6 @@ class LeadManager {
 			$keyValueArray['notequal'] = $this -> tableName.".status != -1";
 		}
 	    $main_sql = '1=1';
-
 			if (count($filterData)>0) {
 				if($_SESSION['tmobi']['role'] !="admin")
 					$main_sql .= ' and ';
@@ -41,13 +40,23 @@ class LeadManager {
 						}
 					}
 					if($value != ''){
-					if($key == 'service_date'){
-						$keyValueArray['DATE(service1_date)'] = $value;
-						//$keyValueArray['DATE(service2_date)'] = $value;
-						//$keyValueArray['DATE(service3_date)'] = $value;
-					}else{
-						$main_sql .= 'leadmanager.'.$key." like '%".$value."%' ";
-					}
+						if($key == 'service_date'){ //To filter by service date
+							$service_sql = array();
+							$service_sql['DATE(service_date)'] = $value;
+							$serviceArr = $this -> db -> getDataFromTable($service_sql,'service', " leadmanager_id ", '', '', false);
+							if(count($serviceArr) > 0){
+								$main_sql .= " AND ";
+								foreach ($serviceArr as $c=>$service) {
+									$main_sql .= 'leadmanager.id="'.$service['leadmanager_id'].'"';
+									//$keyValueArray['id'] = $service['leadmanager_id'];
+									if($c < count($serviceArr)-1){
+										$main_sql .= " OR ";
+									}
+								}
+							}
+						}else{
+							$main_sql .= 'leadmanager.'.$key." like '%".$value."%' ";
+						}
 					}
 					if($k < count($filterData)){
 						$main_sql .= " OR ";
@@ -60,8 +69,8 @@ class LeadManager {
 
 		if(count($searchData)>0){
 			if($search){
-				//if($searchData['filter']!='')
-				//$main_sql .= ' and ';
+				if($searchData['filter']!='' && $_GET['filterby'] !='leadsource.name' && $_GET['filterby'] !='leadstage.name' && $_GET['filterby']!='client_firstname' && $_GET['filterby']!='client_mobile_no')
+				$main_sql .= ' and ';
 
 				$fields = explode(',',$search);
 
@@ -115,8 +124,54 @@ class LeadManager {
 								}
 							}
 						}
-						//else
-							//$main_sql .= $field." like '%".$searchData['filter']."%'";
+						else if($field == 'leadstage.name'){
+							$leadstage_sql = 'leadstage.name'." like '%".$searchData['filter']."%' ";
+							$leadstage_where['sqlclause'] = $leadstage_sql;
+							$leadstageArr = $this -> db -> getDataFromTable($leadstage_where,'leadstage', " id ", '', '', false);
+							if(count($leadstageArr) > 0){
+								$serviceArr = array();
+								foreach ($leadstageArr as $leadstage) {
+									
+									$serviceArr = $this -> db -> getDataFromTable(array('lead_stage'=>$leadstage['id']),'service', " leadmanager_id ", '', '', false);
+									$main_sql .= " AND ";
+									if(count($serviceArr)>0){
+										foreach ($serviceArr as $s=>$service) {
+											$main_sql .= 'leadmanager.id="'.$service['leadmanager_id'].'"';
+											//$keyValueArray['id'] = $service['leadmanager_id'];
+											if($s < count($serviceArr)-1){
+												$main_sql .= " OR ";
+											}
+										}
+									}
+								}
+							}else{
+								$main_sql .= " AND ";
+								$main_sql .= 'leadmanager.id=""';
+							}
+						}
+						else if($field == 'leadsource.name'){
+							$leadsourceArr = array();
+							$leadsource_sql = 'leadsource.name'." like '%".$searchData['filter']."%' ";
+							$leadsource_where['sqlclause'] = $leadsource_sql;
+							$leadsourceArr = $this -> db -> getDataFromTable($leadsource_where,'leadsource', " id ", '', '', false);
+							if(count($leadsourceArr) > 0){
+								/*foreach ($leadsourceArr as $leadsource) {
+									$keyValueArray['lead_source'] = $leadsource['id'];
+								}*/
+								$main_sql .= " AND ";
+								foreach ($leadsourceArr as $ss=>$leadsource) {
+									$main_sql .= 'leadmanager.lead_source="'.$leadsource['id'].'"';
+									//$keyValueArray['id'] = $service['leadmanager_id'];
+									if($ss < count($leadsourceArr)-1){
+										$main_sql .= " OR ";
+									}
+								}
+							}else{
+								$keyValueArray['lead_source'] = '';
+							}
+						}
+						else
+							$main_sql .= $field." like '%".$searchData['filter']."%'";
 						
 						if($j < count($fields)){
 							$mhcclient_sql .= " OR ";
@@ -149,7 +204,7 @@ class LeadManager {
 		//$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
 		//$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
 		//$joinArray[] = array('type'=>'left','table'=>'service','condition'=>'service.leadmanager_id=leadmanager.id');
-		$dataArr = $this -> db ->getDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*", $sort, $limit);
+		$dataArr = $this -> db ->getDataFromTable($keyValueArray, $this -> tableName, " leadmanager.*", $sort, $limit,false);
 
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
@@ -305,10 +360,24 @@ class LeadManager {
 	        return $options_str;
 	    }
 	    function generateInvoiceId($firstname,$lastname,$serviceArr,$city,$id){
-				//echo "Hi generating invoice"; exit();
+		    //echo "Hi generating invoice"; exit();
+	    	//print_r($city);
+		    $memcache = new Memcache;
+			$memcache->connect('localhost', 11211) or die ("Could not connect");
+			if($memcache){
+				$pricelist = $memcache->get('pricelist_dropdown');
+				$city_name = $memcache->get('city');
+				
+			}else{
+				$pricelist = $dashboard->pricelistAll();
+				$city_name = $dashboard->city();
+				
+			}
+
+
 			$service = "";
 				for ($i=0; $i < count($serviceArr); $i++) {
-					$words = explode(" ", $serviceArr[$i]);
+					$words = explode(" ", $pricelist[$serviceArr[$i]]);					
 					$acronym = "";
 					for($j = 0; $j<count($words); $j++){
 									$t = array();
@@ -330,7 +399,7 @@ class LeadManager {
 
 				$formattedservice = rtrim($service, ",");
 
-				$invoiceId = strtoupper($firstname[0]) .strtoupper($lastname[0]) . '/'.$formattedservice.'/2016-17'. '/'.strtoupper($city[0]). '/'.$id ;
+				$invoiceId = strtoupper($firstname[0]) .strtoupper($lastname[0]) . '/'.$formattedservice.'/2016-17'. '/'.strtoupper($city_name[$city][0]). '/'.$id ;
 				//echo $invoiceId;
 				return $invoiceId;
 			}
@@ -347,12 +416,121 @@ class LeadManager {
 
 		$keyValueArray['leadmanager_id'] = $leadId;
 
-		$servicedetails = $this -> db -> getDataFromTable($keyValueArray, 'service', "service_inquiry,varianttype_id", '', '', false);
+		$servicedetails = $this -> db -> getDataFromTable($keyValueArray, 'service', "*", '', '', false);
 
 		return $servicedetails;
 	}	
 
-    function insertIntoOrder($id){
+	function getServiceDetailsforLead1($leadId){
+		
+
+		$keyValueArray['leadmanager_id'] = $leadId;
+
+		$servicedetails = $this -> db -> getDataFromTable($keyValueArray, 'service', "service_inquiry,service_date,service_time,varianttype_id", '', '', false);
+
+		return $servicedetails;
+	}
+
+	function insertIntoOrder($id){
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211) or die ("Could not connect");
+		$serviceArr= array();
+		$service_duration = 0;
+		if (intval($id)) {
+
+			$keyValueArray = array();
+    		$response = '';
+			$keyValueArray['leadmanager.id'] = intval($id);
+
+			$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*",'','',true);
+			$servicedata = $this->getServiceDetailsforLead($id);
+			if($memcache){
+				$pricelist = $memcache->get('pricelist_dropdown');
+				$mhcclient = $memcache->get('mhcclient');
+				$leadsource = $memcache->get('leadsource');
+			}else{
+				$pricelist = $dashboard->pricelistAll();
+				$mhcclient = $dashboard->mhcclient();
+				$leadsource =$dashboard->leadsource();
+			}
+
+			foreach ($servicedata as $key => $service) {
+
+				$serviceArr[] = $service['service_inquiry'];
+				$katgory[] = $this->getcategoryforServiceId($service['service_inquiry']);
+				$service_duration = max($service_duration,$service['service_duration']);
+
+			}
+
+			foreach ($dataArr as $k => $value) {
+
+				$client = $mhcclient[$value['mhcclient_id']];
+
+				$values['leadmanager_id'] = $value['id'];
+				$values['parent_id'] = $service_duration>1?-1:0;
+				$values['name'] = $client['client_firstname'];
+				$values['lead_source'] = $value['lead_source'];
+				$values['mobile_no'] = $client['client_mobile_no'];
+				$values['alternate_no'] = $client['alternate_no'];
+				$values['email_id'] = $client['client_email_id'];
+				$values['address'] = $client['address'];
+				$values['landmark'] = $client['landmark'];
+				$values['location'] = $client['location'];
+				$values['city'] = $client['city'];
+				$values['state'] = $client['state'];
+				$values['pincode'] = $client['pincode'];
+				$values['price'] = $value['price'];
+				$values['commission'] = $value['commission'];
+				$values['billing_name'] = $client['client_firstname'].' '.$client['client_lastname'];
+				$values['billing_email'] = $client['client_email_id'];
+				$values['billing_address'] = $client['address'];
+				$values['billing_name2'] = $leadsource[$value['lead_source']];
+				$values['taxed_cost'] = $value['taxed_cost'];
+				$values['billing_amount2'] = $value['partner_amount'];
+				$values['order_id'] = $value['order_id'];
+				$values['author_id'] = $_SESSION['tmobi']['UserId'];
+				$values['author_name'] = "";
+				$values['insert_date']		= date('Y-m-d H:i:s');
+				$values['update_date']		= date('Y-m-d H:i:s');
+				$values['status']= 0;
+				$values['ip']= getIP();
+				
+				$values['service'] = implode(',',$serviceArr);				
+				$values['invoice_id'] = $this->generateInvoiceId($client['client_firstname'],$client['client_lastname'],$serviceArr,$values['city'],$id);
+				// print_r($value['mhcclient_id']);
+				
+				$response =  $this -> db -> insertDataIntoTable($values, 'order');
+				// echo "Hi this is test";
+				// print_r($service_duration);
+				// exit();
+				// create child orders 
+				// get the id of parent order and insert the same details that many times
+
+				if ($service_duration>1) {
+
+					for ($i=0; $i < $service_duration; $i++) {
+
+						$values['parent_id'] = $response;
+						$values['child_name'] = 'Day'.($i +1);
+						$child_response =  $this -> db -> insertDataIntoTable($values, 'order');
+
+					}
+
+					# code...
+				}
+
+
+			}
+			
+		}
+
+	}
+
+	function insert_order($values){
+		return $this -> db -> insertDataIntoTable($values, 'order');
+	}
+
+    function insertLeadIntoOrder($id){
     	$memcache = new Memcache;
 		$memcache->connect('localhost', 11211) or die ("Could not connect");
     	if(intval($id)){
@@ -366,19 +544,22 @@ class LeadManager {
 			//$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
 			//$joinArray[] = array('type'=>'left','table'=>'mhcclient as client','condition'=>'client.id=leadmanager.mhcclient_id');
 			$dataArr = $this -> db -> getDataFromTable($keyValueArray, $this -> tableName, "leadmanager.*",'','',true);
-				if($memcache){
-				$pricelist = $memcache->get('pricelist_dropdown');
-				$mhcclient = $memcache->get('mhcclient');
-				$leadsource = $memcache->get('leadsource');
+			$servicedata = $this->getServiceDetailsforLead($id);
+			
+			if($memcache){
+			$pricelist = $memcache->get('pricelist_dropdown');
+			$mhcclient = $memcache->get('mhcclient');
+			$leadsource = $memcache->get('leadsource');
 			}else{
 				$pricelist = $dashboard->pricelistAll();
 				$mhcclient = $dashboard->mhcclient();
 				$leadsource =$dashboard->leadsource();
 			}
-
+			
 			foreach ($dataArr as $k=>$value) {
 				$client = $mhcclient[$value['mhcclient_id']];
-				$serviceArr[] = $value['service_inquiry1'];
+				
+				
 				$serviceArr[] = $value['service_inquiry2'];
 				$serviceArr[] = $value['service_inquiry3'];
 				$katgory1 = $this->getcategoryforServiceId($value['service_inquiry1']);
@@ -562,22 +743,30 @@ class LeadManager {
 
     }
 
-	function getPriceList($city,$inqs,$varianttype){
-		 $keyValueArray['city'] = $city;
+	function getPriceList($city,$inqs,$varianttype,$leadsource){
+		 
 		 // $keyValueArray['varianttype'] = $varianttype;
+		 $memcache = new Memcache;
+		$memcache->connect('localhost', 11211);
+		$variantmaster = $memcache->get('varianttype');
+		//print_r($varianttype);
 		 $total = 0;
 		 $indx = 0;
 		 // $this->logs->writelogs($this->folderName,"Prices f the services: ".json_encode($inqs) );
 		 foreach ($inqs as $inq) {
 		 	$keyValueArray = array();
+
 			 if($inq != ""){
+			 	//print_r($varianttype[$indx]);
+			 	$keyValueArray['city'] = $city;
 				 $keyValueArray['name'] = $inq;
-				 $keyValueArray['varianttype'] = $varianttype[$indx];
-				 $dataArr = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "taxed_cost", '', '',false);
+				 $keyValueArray['varianttype'] = array_search($varianttype[$indx], $variantmaster);
+				 //$keyValueArray['lead_source'] = $leadsource;
+				 $dataArr = $this -> db -> getDataFromTable($keyValueArray, 'pricelist', "price", '', '',false);
 				 // print_r($dataArr);
 				 // print_r($varianttype[$indx]);
 				 $this->logs->writelogs($this->folderName,"Prices of the services: ".json_encode($dataArr) );
-				 $total =$total+$dataArr[0]['taxed_cost'];
+				 $total =$total+$dataArr[0]['price'];
 				 // $this->logs->writelogs($this->folderName,"Prices of the services: ".json_encode($dataArr) );
 			 }
 			 $indx = $indx +1;
@@ -975,6 +1164,7 @@ Click to pay online
 	function get_mhcclient_mobile($mobile){
 		$keyValueArray['client_mobile_no'] = $mobile;
 		$dataArr = $this -> db ->getDataFromTable($keyValueArray, 'mhcclient', "*", '', '', false);
+		//print_r($dataArr);
 		return $dataArr;
 	}
 
@@ -1051,6 +1241,9 @@ Click to pay online
 		return $response;
 	}
 
+	/**
+	* To insert multiple services
+	*/
 	public function insertServiceTable($query){
 		return $this -> db ->query($query);
 	}
@@ -1061,6 +1254,9 @@ Click to pay online
 		return $response;
 	}
 
+	/**
+	* To get service by leadmanager id
+	*/
 	public function getServiceTable($id) {
 		$tablename = "service";
 		$whereArr = array('leadmanager_id'=>$id);
@@ -1068,7 +1264,20 @@ Click to pay online
 		//$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
 		return $response;
 	}
+	/**
+	* To get service lead stage by id
+	*/
+	public function getServiceById($id) {
+		$tablename = "service";
+		$whereArr = array('id'=>$id);
+		$response = $this -> db -> getDataFromTable($whereArr, $tablename,"lead_stage");
+		//$this->logs->writelogs($this->folderName,"Update: ".json_encode($response));
+		return $response;
+	}
 
+	/**
+	* To delete service
+	*/
 	public function deleteServiceTable($query){
 		return $this -> db ->query($query);
 	}

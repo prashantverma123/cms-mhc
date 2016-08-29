@@ -15,12 +15,18 @@ class Employee {
 
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();
+		$this -> dashboard = new Dashboard();
 		checkRole('employee');
 	}
 
 
 	/**************************** END OF CONSTRUCTOR **************************/
 	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(),$filterData= array(), $status = '',$sort='') {
+		$memcache = new Memcache;
+		@$memcache->connect('localhost', 11211);
+		$memcache_cities = $memcache->get('city');
+		if(!$memcache_cities)
+			$memcache_cities = $this -> dashboard->city();
 		$offset = $offset*$recperpage;
 		$keyValueArray = array();
 		if ($status == '-1') {
@@ -52,7 +58,17 @@ class Employee {
 
 				$j = 1;
 				foreach ($fields as $field) {
-					$main_sql .= $field." like '%".$searchData['filter']."%'";
+					//if($_SESSION['tmobi']['role'] =="admin")
+					if($_SESSION['tmobi']['role'] =="admin"){
+						if($field == 'city'){
+							$cityid = array_keys($memcache_cities,$searchData['filter']);
+							$main_sql .= $field." like '%".$cityid[0]."%'";
+						}else{
+							$main_sql .= $field." like '%".$searchData['filter']."%'";
+						}
+					}else{
+							$main_sql .= $field." like '%".$searchData['filter']."%'";
+						}
 					if($j < count($fields)){
 						$main_sql .= " OR ";
 					}

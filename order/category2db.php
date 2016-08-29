@@ -64,10 +64,11 @@ switch($action){
 				$updateArr['city'] 	= $_POST['city'];
 				$updateArr['state'] 	= $_POST['state'];
 				$updateArr['pincode'] 	= $_POST['pincode'];
-				$updateArr['service'] 	= $_POST['service'];
+				//$updateArr['service'] 	= $_POST['service'];
 				$updateArr['price'] 	= $_POST['price'];
 				$updateArr['commission'] 	= $_POST['commission'];
 				$updateArr['taxed_cost'] 	= $_POST['taxed_cost'];
+				$updateArr['client_payment_expected'] 	= $_POST['client_payment_expected'];
 				$updateArr['billing_name'] 			= $_POST['billing_name'];
 				$updateArr['billing_address'] 			= $_POST['billing_address'];
 				$updateArr['billing_email'] 			= $_POST['billing_email'];
@@ -114,6 +115,11 @@ switch($action){
 			case "sendInvoiceMail":
 			$arr = $_POST;
 			$row = $modelObj->send_invoice_email($arr);
+			$arrReturn['result'] = $row;
+			break;
+			case "sendSingleInvoiceMail":
+			$arr = $_POST;
+			$row = $modelObj->singleInvoice($arr);
 			$arrReturn['result'] = $row;
 			break;
 			case "add_order_feedback":
@@ -248,6 +254,11 @@ switch($action){
 			else:
 			$arrReturn['result'] = 'failed';
 			endif;
+			break;
+			case "getChildRows":
+			$order_id =$_POST['order_id'];		
+			$returnVal = $modelObj->getChildRowsfortheOrderId($order_id);
+			$arrReturn = $returnVal;
 			break;
 }
 echo json_encode($arrReturn);

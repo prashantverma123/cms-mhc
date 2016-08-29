@@ -7,7 +7,7 @@ $flag   		= isset($_GET['flag']) ? $_GET['flag'] : '';
 $filename 		= 'addForm.php';
 $titlename 		= 'Dashboard';
 $modelObj->memcacheData();
-
+$mhcclient =  $memcache->get('mhcclient');
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -54,6 +54,7 @@ $modelObj->memcacheData();
          <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
          <!-- BEGIN PAGE CONTAINER-->
          <div class="container-fluid">
+
             <!-- BEGIN PAGE HEADER-->
             <div class="row-fluid">
                <div class="span12">
@@ -70,81 +71,20 @@ $modelObj->memcacheData();
             <!-- END PAGE HEADER-->
             <?php $modules = getModuleByRole($_SESSION['tmobi']['role']); ?>
             <!-- BEGIN PAGE CONTENT-->
-            <div class="row-fluid">
-               <div class="span12">
-                  <div class="tabbable tabbable-custom boxless">
-                    <div class="tab-content">
-                          <!-- <div class="header-stats-container" style="width:100%;height:100px;" >
-                         <?php //foreach ($modules as $module): ?>
-                         <div class="boxContainer statistics <?php //echo $module['module']; ?>">
-                           <h4 style="text-align:center;"><?php //echo $module['module']; ?></h4>
-                           <p style="text-align:center;"><?php //echo $modelObj->get_statistics($module['module']); ?></p>
-                         </div>
-                        <?php //endforeach; ?>
-                       </div> -->
-
-                      <div class="complaint">
-                        <div class="complaint-head"><h4>Order Complaints</h4></div>
-                         <div class="order-complaint">
-                        <div class="portlet-body">
-
-                          <div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
-                              <table class="table table-striped table-bordered table-hover" id="">
-                               <thead>
-
-                                <tr>
-                                 <th class="hidden-480">Name</th>
-                                 <th class="hidden-480">Email ID</th>
-                                  <th class="hidden-480">Mobile No</th>
-                                 <th class="hidden-480">Feedback</th>
-                                <th>Duration</th>
-                                </tr>
-                              </thead>
-                               <tbody>
-                              <?php $result_data = $modelObj->getOrderComplaint();
-                                if($result_data && count($result_data) > 0):
-                                foreach ($result_data as $key){
-                              ?>
-                                <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
-                                <td class="hidden-480"><?php print $key['name'];?></td>
-                                <td class="hidden-480"><?php print $key['email_id'];?></td>
-                                <td class="hidden-480"><?php print $key['mobile_no'];?></td>
-                                <td class="hidden-480"><?php print $key['order_feedback'];?></td>
-                                <td class="hidden-480"><?php print $key['duration'];?></td>
-                                </tr>
-                            <?php } endif; ?>
-                               </tbody>
-                            </table>
-                              </div>
-
-                           </div>
-                        </div>
-                      </div>
-                    </div>
-
-
-                  </div>
-               </div>
-
-               <div class="span12">
-                  <div class="tabbable tabbable-custom boxless">
-                    <div class="tab-content">
-                          <!-- <div class="header-stats-container" style="width:100%;height:100px;" >
-                         <?php //foreach ($modules as $module): ?>
-                         <div class="boxContainer statistics <?php //echo $module['module']; ?>">
-                           <h4 style="text-align:center;"><?php //echo $module['module']; ?></h4>
-                           <p style="text-align:center;"><?php //echo $modelObj->get_statistics($module['module']); ?></p>
-                         </div>
-                        <?php //endforeach; ?>
-                       </div> -->
-
-                      <div class="complaint">
-                        <div class="complaint-head"><h4>1 Day Followups</h4></div>
-                         <div class="order-complaint">
-                        <div class="portlet-body">
-
-                          <div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
-                              <table class="table table-striped table-bordered table-hover" id="">
+      <div class="span11" id="content" style="min-height: 420px;">
+          <div class="row-fluid">
+          <div ondesktop="span6" ontablet="span8" class="box yellow span6">
+          <div class="box-header">
+            <h2><i class="halflings-icon white list"></i><span class="break"></span>1 Day Followups</h2>
+            <div class="box-icon">
+              <a class="btn-minimize" href="#"><i class="halflings-icon white chevron-up"></i></a>
+              <a class="btn-close" href="#"><i class="halflings-icon white remove"></i></a>
+            </div>
+          </div>
+          <div class="box-content">
+          
+              <div role="grid" class="dashboard-list metro dataTables_wrapper form-inline" id="sample_3_wrapper">
+                              <table class="table table-striped table-bordered table-hover" id="dashboard1">
                                <thead>
 
                                 <tr>                                 
@@ -159,27 +99,146 @@ $modelObj->memcacheData();
                               <?php $result_data = $modelObj->get1dayfollowups();
                                 if($result_data && count($result_data) > 0):
                                 foreach ($result_data as $key){
+                                  $client = $mhcclient[$key['mhcclient_id']];
+                                  //print_r($client);
                               ?>
                                 <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
                                 <td class="hidden-480"><?php print $key['lead_owner'];?></td>
-                                <td class="hidden-480"><?php print $key['client_firstname'];?></td>
-                                <td class="hidden-480"><?php print $key['client_mobile_no'];?></td>
-                                <td class="hidden-480"><?php print $key['client_email_id'];?></td>                                
+                                <td class="hidden-480"><?php print $client['client_firstname'];?></td>
+                                <td class="hidden-480"><?php print $client['client_mobile_no'];?></td>
+                                <td class="hidden-480"><?php if($client['client_email_id']!='') print $client['client_email_id']; else echo "--"; ?></td>                                
                                 </tr>
-                            <?php } endif; ?>
+                            <?php } else: echo "<td colspan='5' style='text-align:center;'>No records found</td>"; endif; ?>
                                </tbody>
                             </table>
                               </div>
-                              
-                           </div>
-                        </div>
-                      </div>
-                    </div>
-
-
-                  </div>
-               </div>
+          </div>
+          </div>
+           <div ondesktop="span6" ontablet="span8" class="box green span6">
+          <div class="box-header">
+            <h2><i class="halflings-icon white list"></i><span class="break"></span>Today's Followups</h2>
+            <div class="box-icon">
+              <a class="btn-minimize" href="#"><i class="halflings-icon white chevron-up"></i></a>
+              <a class="btn-close" href="#"><i class="halflings-icon white remove"></i></a>
             </div>
+          </div>
+          <div class="box-content ">
+            <div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
+                              <table class="table table-striped table-bordered table-hover dashboard1" id="">
+                               <thead>
+
+                                <tr>                                 
+                                 <th class="hidden-480">Lead Owner</th>
+                                  <th class="hidden-480">Name</th>
+                                 <th class="hidden-480">Mobile No</th>
+                                 <th class="hidden-480">Email Id</th>
+                                
+                                </tr>
+                              </thead>
+                               <tbody>
+                              <?php $followup = $modelObj->getdayfollowups();
+                                if($followup && count($followup) > 0):
+                                foreach ($followup as $key1){
+                                  $client = $mhcclient[$key1['mhcclient_id']];
+                              ?>
+                                <tr class="odd gradeX" id="row_id_<?php print $key1['id'];?>">
+                                <td class="hidden-480"><?php print $key1['lead_owner'];?></td>
+                                <td class="hidden-480"><?php print $client['client_firstname'];?></td>
+                                <td class="hidden-480"><?php print $client['client_mobile_no'];?></td>
+                                <td class="hidden-480"><?php if($client['client_email_id']!='') print $client['client_email_id']; else echo "--"; ?></td>                                
+                                </tr>
+                            <?php } else: echo "<td colspan='5' style='text-align:center;'>No records found</td>"; endif; ?>
+                               </tbody>
+                            </table>
+                              </div>
+           
+          </div>
+          </div>    
+          </div>
+          <div class="row-fluid">
+             <div ondesktop="span6" ontablet="span8" class="box yellow span6">
+          <div class="box-header">
+            <h2><i class="halflings-icon white list"></i><span class="break"></span>Yesterday's Followups</h2>
+            <div class="box-icon">
+              <a class="btn-minimize" href="#"><i class="halflings-icon white chevron-up"></i></a>
+              <a class="btn-close" href="#"><i class="halflings-icon white remove"></i></a>
+            </div>
+          </div>
+          <div class="box-content">
+          
+              <div role="grid" class="dashboard-list metro dataTables_wrapper form-inline" id="sample_3_wrapper">
+                              <table class="table table-striped table-bordered table-hover" id="dashboard1">
+                               <thead>
+
+                                <tr>                                 
+                                 <th class="hidden-480">Lead Owner</th>
+                                  <th class="hidden-480">Name</th>
+                                 <th class="hidden-480">Mobile No</th>
+                                 <th class="hidden-480">Email Id</th>
+                                
+                                </tr>
+                              </thead>
+                               <tbody>
+                              <?php $result_data = $modelObj->getyesterdayfollowups();
+                                if($result_data && count($result_data) > 0):
+                                foreach ($result_data as $key){
+                                  $client = $mhcclient[$key['mhcclient_id']];
+                                  //print_r($client);
+                              ?>
+                                <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
+                                <td class="hidden-480"><?php print $key['lead_owner'];?></td>
+                                <td class="hidden-480"><?php print $client['client_firstname'];?></td>
+                                <td class="hidden-480"><?php print $client['client_mobile_no'];?></td>
+                                <td class="hidden-480"><?php if($client['client_email_id']!='') print $client['client_email_id']; else echo "--"; ?></td>                                
+                                </tr>
+                            <?php } else: echo "<td colspan='5' style='text-align:center;'>No records found</td>"; endif; ?>
+                               </tbody>
+                            </table>
+                              </div>
+          </div>
+          </div>
+          <div ondesktop="span6" ontablet="span8" class="box red span6">
+          <div class="box-header">
+            <h2><i class="halflings-icon white list"></i><span class="break"></span>Order Complaints</h2>
+            <div class="box-icon">
+              <a class="btn-minimize" href="#"><i class="halflings-icon white chevron-up"></i></a>
+              <a class="btn-close" href="#"><i class="halflings-icon white remove"></i></a>
+            </div>
+          </div>
+          <div class="box-content ">
+             <div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
+                <table class="table table-striped table-bordered table-hover dashboard1" id="">
+                 <thead>
+
+                  <tr>
+                   <th class="hidden-480">Name</th>
+                   <th class="hidden-480">Email ID</th>
+                    <th class="hidden-480">Mobile No</th>
+                   <th class="hidden-480">Feedback</th>
+                  <th>Duration</th>
+                  </tr>
+                </thead>
+                 <tbody>
+                <?php $result_data = $modelObj->getOrderComplaint();
+                  if($result_data && count($result_data) > 0):
+                  foreach ($result_data as $key){
+                ?>
+                  <tr class="odd gradeX" id="row_id_<?php print $key['id'];?>">
+                  <td class="hidden-480"><?php print $key['name'];?></td>
+                  <td class="hidden-480"><?php print $key['email_id'];?></td>
+                  <td class="hidden-480"><?php print $key['mobile_no'];?></td>
+                  <td class="hidden-480"><?php print $key['order_feedback'];?></td>
+                  <td class="hidden-480"><?php print $key['duration'];?></td>
+                  </tr>
+              <?php } else: echo "<tr><td colspan='5' style='text-align:center;'>No records found</td><tr>"; endif; ?>
+                 </tbody>
+              </table>
+                </div>
+
+          </div>
+          </div>
+          </div>
+      </div>
             <!-- END PAGE CONTENT-->
          </div>
          <!-- END PAGE CONTAINER-->
@@ -253,7 +312,39 @@ if($('#'+div_name).is(':visible')) {
 		$('#sponsor_image').attr('src', '<?php print IMAGEPATH;?>/min_blck.png');
     }
 }
-(function($){
+$(function () {
+  $('table').on('scroll', function () {
+    $("table > *").width($("table").width() + $("table").scrollLeft());
+  });
+});
+    $("tbody").mCustomScrollbar({
+    theme:"light-3",
+    scrollButtons:{
+      enable:false
+    },
+    mouseWheel:{ preventDefault: true },
+    scrollbarPosition: 'inside',
+    autoExpandScrollbar:true,
+    theme: 'dark',
+     axis:"yx",
+                setWidth: "auto"
+  });
+
+
+ /*$("table").mCustomScrollbar({
+    theme:"light-3",
+    scrollButtons:{
+      enable:false
+    },
+    mouseWheel:{ preventDefault: true },
+    scrollbarPosition: 'inside',
+    autoExpandHorizontalScroll:true,
+    theme: 'dark',
+     axis:"x",
+      setWidth: "470px"
+  });
+*/
+/*(function($){
       $(window).load(function(){
         
         $(".order-complaint").mCustomScrollbar({
@@ -264,5 +355,5 @@ if($('#'+div_name).is(':visible')) {
           scrollInertia:400
         });
       });
-    })(jQuery);
+    })(jQuery);*/
 </script>

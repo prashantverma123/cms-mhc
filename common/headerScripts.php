@@ -4,7 +4,7 @@
    <link href="<?php print CSSFILEPATH;?>/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css"/>
    <link href="<?php print CSSFILEPATH;?>/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
 
-   <link href="<?php print JSFILEPATH;?>/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+   <link href="<?php print CSSFILEPATH;?>/font-awesome.css" rel="stylesheet" type="text/css"/>
    <link href="<?php print CSSFILEPATH;?>/style-metro.css" rel="stylesheet" type="text/css"/>
    <link href="<?php print CSSFILEPATH;?>/style.css?v=0.1" rel="stylesheet" type="text/css"/>
    <link href="<?php print CSSFILEPATH;?>/style-responsive.css" rel="stylesheet" type="text/css"/>

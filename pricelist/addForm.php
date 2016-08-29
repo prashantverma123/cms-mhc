@@ -3,12 +3,18 @@
 if($pricelist_id > 0){
 $returned_data = (array)json_decode($modelObj->getEditData($pricelist_id));
 $data = (array)$returned_data[0];
-print_r($data);
 }
+/*if($memcacheConn):
 $leadsources = $memcache->get('leadsource');
 $categories = $memcache->get('category');
 $varianttype = $memcache->get('varianttype');
 $cities = $memcache->get('city');
+else:
+$leadsources = $dashObj->leadsource();
+$categories = $dashObj->category();
+$varianttype =  $dashObj->varianttype();
+$cities =  $dashObj->city();
+endif;*/
 ?>
 	<div class="portlet box green">
 	  <div class="portlet-title">
@@ -29,7 +35,7 @@ $cities = $memcache->get('city');
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
-						<label class="control-label">Lead Source <span class="required">*</span></label>
+						<label class="control-label">Lead Source </label>
 						<div class="controls">
 						 <select tabindex="1" class="large m-wrap" id="lead_source" name="lead_source">
 						 <?php 
@@ -54,7 +60,7 @@ $cities = $memcache->get('city');
 					 <div class="control-group">
 					   <label class="control-label"> Name <span class="required">*</span></label>
 						 <div class="controls">
-								<input type="text" placeholder="Please Enter Service Name" value="<?php echo isset($data)?$data['name']:''; ?>" id="name" name="name" class="m-wrap span12">
+								<input tabindex="2" type="text" placeholder="Please Enter Service Name" value="<?php echo isset($data)?$data['name']:''; ?>" id="name" name="name" class="m-wrap span12">
 								<span class="help-block" id="service_name_error"> </span>
 						 </div>
 					</div>
@@ -63,7 +69,7 @@ $cities = $memcache->get('city');
 				  <div class="span6 ">
 					 <div class="control-group">
 						<label class="control-label">Category <span class="required">*</span></label>
-							<select tabindex="1" class="large m-wrap" id="category_type" name="category_type">
+							<select tabindex="3" class="large m-wrap" id="category_type" name="category_type">
 							 <?php 
 							 if($categories)
 							 echo optionsGeneratorNew($categories,$data['category_type']);
@@ -82,7 +88,7 @@ $cities = $memcache->get('city');
  						 <div class="controls">
  							 <!-- <input type="text" id="city" name="city" value="<?php //echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
  							 <span class="help-block" id="efburl_error"> </span> -->
- 						 <select tabindex="1" class="large m-wrap" id="varianttype" name="varianttype">
+ 						 <select tabindex="4" class="large m-wrap" id="varianttype" name="varianttype">
  							<?php 
  							if($varianttype)
  							echo optionsGeneratorNew($varianttype,$data['varianttype']);
@@ -99,7 +105,7 @@ $cities = $memcache->get('city');
 						<div class="controls">
 							<!-- <input type="text" id="city" name="city" value="<?php //echo isset($data)?$data['city']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span> -->
-						<select tabindex="1" class="large m-wrap" id="city" name="city">
+						<select tabindex="5" class="large m-wrap" id="city" name="city">
 						 <?php 
 						 if($cities)
 						 echo optionsGeneratorNew($cities,$data['city']); 
@@ -110,7 +116,35 @@ $cities = $memcache->get('city');
 					 </div>
 					</div>
  				 </div>
-
+ 				  <div class="row-fluid">
+				  <div class="span4 ">
+					 <div class="control-group">
+					   <label class="control-label"> Team Leader <span class="required">*</span></label>
+						 <div class="controls">
+								<input type="text" tabindex="6" placeholder="Please Enter Service Name" value="<?php echo isset($data)?$data['teamleader_deployment']:'0'; ?>" id="teamleader_deployment" name="teamleader_deployment" class="m-wrap span12">
+								<span class="help-block" id="service_name_error"> </span>
+						 </div>
+					</div>
+				  </div>
+				  <div class="span4 ">
+					 <div class="control-group">
+					   <label class="control-label"> Janitor <span class="required">*</span></label>
+						 <div class="controls">
+								<input type="text" tabindex="7" placeholder="Please Enter Service Name" value="<?php echo isset($data)?$data['janitor_deployment']:'0'; ?>" id="janitor_deployment" name="janitor_deployment" class="m-wrap span12">
+								<span class="help-block" id="service_name_error"> </span>
+						 </div>
+					</div>
+				  </div>
+				  <div class="span4 ">
+					 <div class="control-group">
+					   <label class="control-label"> Supervisor <span class="required">*</span></label>
+						 <div class="controls">
+								<input type="text" tabindex="8" placeholder="Please Enter Service Name" value="<?php echo isset($data)?$data['supervisor_deployment']:'0'; ?>" id="supervisor_deployment" name="supervisor_deployment" class="m-wrap span12">
+								<span class="help-block" id="service_name_error"> </span>
+						 </div>
+					</div>
+				  </div>
+				</div>
 
 				 <div class="row-fluid">
 				  <!--/span-->
@@ -118,7 +152,7 @@ $cities = $memcache->get('city');
 					 <div class="control-group">
 						<label class="control-label">Price <span class="required">*</span></label>
 							<div class="controls">
-							   <input type="text" id="price" name="price" value="<?php echo isset($data)?$data['price']:''; ?>" class="m-wrap span7">
+							   <input type="text" tabindex="9" id="price" name="price" value="<?php echo isset($data)?$data['price']:''; ?>" class="m-wrap span7">
 							</div>
 					 </div>
 				  </div>
@@ -126,26 +160,14 @@ $cities = $memcache->get('city');
 			   </div>
 
 
-				<div class="row-fluid">
-				  <!--/span-->
-				  <div class="span6 ">
-					 <div class="control-group">
-						<label class="control-label">Commission</label>
-						<div class="controls">
-						   <input type="text" id="commission" name="commission" value="<?php echo isset($data)?$data['commission']:''; ?>" class="m-wrap span12">
-							<span class="help-block" id="efburl_error"> </span>
-						</div>
-					 </div>
-				  </div>
-				  <!--/span-->
-			   </div>
+				
 
 			   <div class="row-fluid">
 				  <div class="span6 ">
 					 <div class="control-group">
 						<label class="control-label">Taxed Cost</label>
 						<div class="controls">
-							<input type="text" id="taxed_cost" name="taxed_cost" value="<?php echo isset($data)?$data['taxed_cost']:''; ?>" class="m-wrap span12">
+							<input type="text" tabindex="10" id="taxed_cost" name="taxed_cost" value="<?php echo isset($data)?$data['taxed_cost']:''; ?>" class="m-wrap span12">
  						<span class="help-block" id="efburl_error"> </span>
 						</div>
 					 </div>
@@ -155,21 +177,43 @@ $cities = $memcache->get('city');
 				  <!--/span-->
 			   </div>
 
-
+			   <div class="row-fluid">
+				  <!--/span-->
+				  <div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Commission</label>
+						<div class="controls">
+						   <input type="text" tabindex="11" id="commission" name="commission" value="<?php echo isset($data)?$data['commission']:''; ?>" class="m-wrap span12">
+							<span class="help-block" id="efburl_error"> </span>
+						</div>
+					 </div>
+				  </div>
+				  <!--/span-->
+			   </div>
 
 			<div class="form-actions">
 				<span style="color:#FF0000;margin-bottom:20px;display:none;" id="record_modified">
 					Record Modified Successful ...
 				</span>
-			    <button class="btn blue" type="submit" onClick="return saveData('frm_about_pricelist','savePrice');"><i class="icon-ok"></i> Save</button>
+			    <button class="btn blue" tabindex="12" type="submit" onClick="return saveData('frm_about_pricelist','savePrice');"><i class="icon-ok"></i> Save</button>
 			    <?php /*?><!-- <a href="<?php print SITEPATH;?>/pricelist/display.php" ><button class="btn" type="button">Cancel</button></a>--><?php */?>
-			  	<a  href="javascript:void();" onclick="window.location.href='<?php print SITEPATH;?>/pricelist/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
+			  	<a  href="javascript:void();" tabindex="13" onclick="window.location.href='<?php print SITEPATH;?>/pricelist/display.php'" ><button class="btn" type="button">Back To Listing</button></a>
 			</div>
 		 </form>
 		 <!-- END FORM-->
 	  </div>
 	</div>
 <script>
+
+$(document).ready(function(){
+	var total_tax = "<?php echo $total_tax; ?>";
+	$('#taxed_cost').change(function(){
+		var price = Math.floor(parseFloat($(this).val())/(1+parseFloat(total_tax)/100));
+		$('#price').val(price);
+	})
+	
+})
+
 <?php if($pricelist_id != '' && $flag != 'new'){ ?>
 $(document).ready(function() {
   change_tab(1);
@@ -184,7 +228,7 @@ function saveData(frm_id, action){
 				$('#frm_about_pricelist').validate({
 				rules:{
 					name:"required",
-					lead_source: "required",
+					//lead_source: "required",
 					city:"required",
 					varianttype:"required",
 					price:"required",
@@ -242,6 +286,7 @@ function saveData(frm_id, action){
 		window.location.href = "<?php echo SITEPATH;?>/pricelist/display.php";
 		<?php } ?>
     }
+
 </script>
 <link type="text/css" href="<?php print JSFILEPATH;?>/jquery-ui-1.8.11.custom/css/ui-lightness/jquery-ui-1.8.11.custom.css" rel="stylesheet" />
 <link rel="start" href="<?php print JSFILEPATH;?>/jquery-ui-1.8.11.custom/development-bundle/themes/base/jquery.ui.all.css" />

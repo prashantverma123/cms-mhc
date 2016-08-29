@@ -114,13 +114,35 @@ class Tax {
 	
 
 	public function insertTable($values) {
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211);
 		$response =  $this -> db -> insertDataIntoTable($values, $this -> tableName);
+		$taxes = $memcache->get('taxes');
+		if($response){
+			$taxes[] = array('name'=>$values['name'],'value'=>$values['value']);
+			$memcache->set('taxes',$taxes);
+			$alltax = 0;
+			foreach ($taxes as $tax) {
+					$alltax = $alltax + $tax['value'];
+			}
+			$memcache->set('total_tax',$alltax);
+		}
 		$this->logs->writelogs($this->folderName,"Insertion: ".$response);
 		return $response;
 	}// eof insertTable
 
 	public function updateTable($values, $whereArr) {
-		$r = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName,true);
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211);
+		$keyValueArray['status'] = '0';
+		$r = $this -> db -> updateDataIntoTable($values, $whereArr, $this -> tableName);
+		$dataArr = $this -> db ->getDataFromTable($keyValueArray, $this -> tableName, "name,value", '', '',false);
+		$memcache->set('taxes',$dataArr);
+		$alltax = 0;
+		foreach ($dataArr as $tax) {
+				$alltax = $alltax + $tax['value'];
+		}
+		$memcache->set('total_tax',$alltax);
 		//$this->logs->writelogs($this->folderName,"Update: ".$response);
 		return $r;
 	}// eof updatetable

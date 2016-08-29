@@ -30,6 +30,7 @@ function pay ( $params, $salt )
  */
 function pay_page ( $params, $salt )
 {
+	//print_r($params);
 	$db = Database::Instance();
 	$modelObj = new Pay();
 	$leadmanagerObj = new Leadmanager();
@@ -45,7 +46,11 @@ function pay_page ( $params, $salt )
 		}else{
 			$updateArr['payment_status'] 	= 'failed';
 		}
-		$whereArr = array('order_id' => $_POST['udf1'] );
+		if($_POST['udf3'] == 0){
+			$whereArr = array('order_id' => $_POST['udf1'] );
+		}else{
+			$whereArr = array('id' => $_POST['udf4'] );
+		}
 		$orderObj->updateTable($updateArr,$whereArr);
 
 

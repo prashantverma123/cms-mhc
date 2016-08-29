@@ -6,6 +6,12 @@ $original_cmsuser_id =  decryptdata($cmsuser_id);
 $flag   		= isset($_GET['flag']) ? $_GET['flag'] : '';
 $filename 		= 'addForm.php';
 $titlename 		= 'Add CMS User';
+$memcache_cities=$memcache->get('city');
+if(!$memcache_cities)
+$memcache_cities=$dashObj->city();
+$memcache_role=$memcache->get('role');
+if(!$memcache_role)
+$memcache_role=$dashObj->role();
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->

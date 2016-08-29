@@ -6,6 +6,22 @@ $original_pricelist_id =  decryptdata($pricelist_id);
 $flag   		= isset($_GET['flag']) ? $_GET['flag'] : '';
 $filename 		= 'addForm.php';
 $titlename 		= 'Add Price Details';
+
+$leadsources = $memcache->get('leadsource');
+if(!$leadsources)
+$leadsources = $dashObj->leadsource();
+$categories = $memcache->get('category');
+if(!$categories)
+$categories = $dashObj->category();
+$varianttype = $memcache->get('varianttype');
+if(!$varianttype)
+$varianttype =  $dashObj->varianttype();
+$cities = $memcache->get('city');
+if(!$cities)
+$cities =  $dashObj->city();
+$total_tax = $memcache->get('total_tax');
+if(!$total_tax)
+$total_tax = $dashboardObj->total_tax();
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->

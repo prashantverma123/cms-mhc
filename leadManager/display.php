@@ -6,6 +6,36 @@ $original_product_id =  decryptdata($leadmanager_id);
 $flag   		= isset($_GET['flag']) ? $_GET['flag'] : '';
 $filename 		= 'addForm.php';
 $titlename 		= 'Add Lead Manager Basic Info';
+
+$cities = $memcache->get('city');
+if(!$cities)
+$cities = $dashboardObj->city();
+$leadsources = $memcache->get('leadsource');
+if(!$leadsources)
+$leadsources = $dashboardObj->leadsource();
+$lead_dropdown = $memcache->get('pricelist_dropdown');
+if(!$lead_dropdown)
+$lead_dropdown = $dashboardObj->pricelistAll();
+$leadstage = $memcache->get('leadstage');
+if(!$leadstage)
+$leadstage = $dashboardObj->leadstage();
+$pricelist = $memcache->get('pricelist');
+if(!$pricelist)
+$pricelist = $dashboardObj->pricelist();
+$variant = $memcache->get('varianttype');
+if(!$variant)
+$variant = $dashboardObj->varianttype();
+$taxes = $memcache->get('taxes');
+if(!$taxes)
+$taxes = $dashboardObj->taxes();
+$total_tax = $memcache->get('total_tax');
+if(!$total_tax)
+$total_tax = $dashboardObj->total_tax();
+print($total_tax);
+$mhcclient = $memcache->get('mhcclient');
+if(!$mhcclient)
+$mhcclient = $dashboardObj->mhcclient();
+
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -69,6 +99,7 @@ $titlename 		= 'Add Lead Manager Basic Info';
             <!-- BEGIN PAGE CONTENT-->
             <div class="row-fluid">
                <div class="span12">
+                   <div style="float:right"><span>Total Leads:</span><span class="orderscount" id="leadmanager-count"></span></div>
                   <div class="tabbable tabbable-custom boxless">
                      <ul class="nav nav-tabs">
                         <li class="<?php if($leadmanager_id == '' || $leadmanager_id =='0'){ echo 'active'; } ?>"  id="li_pat0"><a data-toggle="tab" href="#tab_1" onClick="change_tab(0);">Lead Manager Listing</a></li>

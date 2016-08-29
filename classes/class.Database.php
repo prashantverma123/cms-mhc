@@ -95,6 +95,29 @@ public function query($sql, $debug=0, $ismongo=''){
 	return $return;
 }
 
+public function multiquery($sql, $debug=0, $ismongo=''){
+  //echo $sql;
+  if(is_object($this->result)){
+    $this->result->close();
+  }
+  $this->sql = $sql ;
+  if( $this->result = $this->connection->query($this->sql) ){
+    if($debug == 1){
+      echo $sql;
+    }
+    $return = $this->result;
+  }else{
+    $this->error = $this->connection->error ;
+    if($debug == 1){
+      print "failed query";
+      print $this->error ;
+    }
+    $return = false;
+  }
+  return $return;
+}
+
+
   public function getRowCount(){
     return $this->result->num_rows ;
   }
@@ -110,6 +133,11 @@ public function query($sql, $debug=0, $ismongo=''){
   public function fetch(){
 
     return $this->result->fetch_array(MYSQLI_ASSOC);echo 'hello';
+  }
+
+  public function multifetch($reslt){
+
+    return $reslt->fetch_array(MYSQLI_ASSOC);echo 'hello';
   }
 
   public function getResultSet(){
@@ -152,7 +180,7 @@ public function query($sql, $debug=0, $ismongo=''){
 				break;
 	}
 
-	$this->trackLog($sql, $log_id, $res);
+	 $this->trackLog($sql, $log_id, $res);
     return $insertID;
   }
 

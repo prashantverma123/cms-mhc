@@ -7,6 +7,15 @@
 	$action   		= isset($_GET['action']) ? $_GET['action'] : '';
 	$leadmanager_id = isset($_POST['leadmanager_id']) ? $_POST['leadmanager_id'] : '';
 	$call 			= isset($_POST['call']) ? $_POST['call'] : '';
+	$memcache_leadstage = $memcache->get('leadstage');
+	if(!$memcache_leadstage)
+	$memcache_leadstage = $dashboardObj->leadstage();
+	$memcache_total_tax = $memcache->get('total_tax');
+	if(!$memcache_total_tax)
+	$memcache_total_tax = $dashboardObj->total_tax();
+	$memcache_manpower = $memcache->get('manpower');
+	if(!$memcache_manpower)
+		$memcache_manpower = $dashboardObj->manpower();
 switch($action){
 	case 'delete_leadmanager':
 				$updateArr['status'] = '-1';
@@ -65,7 +74,8 @@ switch($action){
 				$insertArr['lead_owner'] 	= $_POST['lead_owner'];
 				$insertArr['followup_by'] 	= $_POST['followup_by'];
 				$insertArr['job_status']	= 'pending';
-				$insertArr['lead_stage']    = $_POST['lead_stage'];
+				//$insertArr['lead_stage']    = $_POST['lead_stage'];
+				$insertArr['lead_stage']    = 1;
 				if($_POST['reminder']!=''){
 					$insertArr['reminder'] = date("Y-m-d", strtotime($_POST['reminder']));
 				}else{
@@ -73,9 +83,9 @@ switch($action){
 				}
 				
 				$insertArr['additional_note'] 	= $_POST['additional_note'];
-				$insertArr['teamLeader_deployment'] 		= $_POST['teamLeader_deployment'];
-				$insertArr['supervisor_deployment'] 		= $_POST['supervisor_deployment'];
-				$insertArr['janitor_deployment'] 		= $_POST['janitor_deployment'];
+				// $insertArr['teamLeader_deployment'] 		= $_POST['teamLeader_deployment'];
+				// $insertArr['supervisor_deployment'] 		= $_POST['supervisor_deployment'];
+				//$insertArr['janitor_deployment'] 		= $_POST['janitor_deployment'];
 				$insertArr['promo_code'] 	= $_POST['promo_code'];
 				$insertArr['discount'] 	= $_POST['discount'];
 				$insertArr['price'] 	= $_POST['price'];
@@ -91,7 +101,7 @@ switch($action){
 				$insertArr['taxed_cost'] 	= $_POST['taxed_cost'];
 				$insertArr['invoice_type'] 	= $_POST['invoice_type'];
 				$insertArr['is_reminder']    = $_POST['is_reminder'];
-				$insertArr['order_id'] = uniqid ('MHC'.rand(0,9));;
+				$insertArr['order_id'] = uniqid ('MHC'.rand(0,9));
 
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
 				$insertArr['author_name']		= $_SESSION['tmobi']['AdminName'];
@@ -104,8 +114,16 @@ switch($action){
 
 				/***SERVICE STARTS HERE***/
 				if(count($_POST['service_inquiry']) > 0):
-						$stmt = "INSERT INTO service (`id`, `leadmanager_id`, `service_inquiry`, `service_date`, `service_time`, `contract_start_date`,`contract_end_date`,`no_of_service`,`service_price`,`client_payment_expected`,`partner_receivable`,`partner_payable`, `service_discount`, `service_booked`, `varianttype_id`, `sqft`, `frequency`,`is_amc`,`service_duration`) VALUES ";
+						$stmt = "INSERT INTO service (`id`, `leadmanager_id`, `lead_stage`,`service_inquiry`, `service_date`, `service_time`, `contract_start_date`,`contract_end_date`,`no_of_service`,`service_price`,`client_payment_expected`,`partner_receivable`,`partner_payable`, `service_discount`, `service_booked`, `varianttype_id`, `sqft`, `frequency`,`is_amc`,`service_duration`) VALUES ";
+						//$order_stmt = "INSERT INTO `order` (`id`, `leadmanager_id`, `name`, `lead_source`, `mobile_no`, `alternate_no`, `email_id`, `address`, `landmark`, `location`, `city`, `state`, `pincode`, `service`, `service_date`, `service_date2`, `service_date3`, `service_time`, `teamleader_deployment`, `supervisor_deployment`, `janitor_deployment`, `price`, `commission`, `taxed_cost`, `job_start`, `job_end`, `job_status`, `order_feedback`, `order_id`, `payment_status`, `payment_mode`, `payment_info`, `deployment`, `invoice_id`, `billing_name`, `billing_email`, `billing_address`, `billing_name2`, `billing_address2`, `billing_email2`, `billing_amount2`, `received_amount`, `invoice_sent`, `travel_cost`, `material_cost`, `author_id`, `author_name`, `insert_date`, `update_date`, `ip`, `status`) VALUES ";
+					
 						foreach ($_POST['service_inquiry'] as $k =>$service) {
+							$orderArr = array();
+							if($_POST['invoice_type'] == 0){
+								$invoice_id = $modelObj->generateInvoiceId($_POST['client_firstname'],$_POST['client_lastname'],$_POST['service_inquiry'],$_POST['city'],$returnVal);
+							}else{
+								$invoice_id = $modelObj->generateInvoiceId($_POST['client_firstname'],$_POST['client_lastname'],array($_POST['service_inquiry'][$k]),$_POST['city'],$returnVal);
+							}
 							if($_POST['service_inquiry'][$k] != '' && $_POST['varianttype'][$k]!=''):
 								$service_inquiry 	= $_POST['service_inquiry'][$k];
 								$service_price	= $_POST['service_price'][$k];
@@ -114,9 +132,10 @@ switch($action){
 								$inquiry_booked 	= $_POST['service_inquiry_booked'.$k];
 								$client_pay_expected = $_POST['client_payment_expected'][$k];
 								$partner_payable = $_POST['partner_payable'][$k];
-								$no_of_service = $_POST['no_of_service'][$k];
+								$no_of_service = $_POST['no_of_service'][$k]!=''?$_POST['no_of_service'][$k]:0;
 								$service_duration = $_POST['service_duration'][$k];
 								$partner_receivable = $_POST['partner_receivable'][$k];
+								$lead_stage = $_POST['lead_stage'][$k];
 								if($_POST['contract_start_date'][$k]!=''){
 									$contract_start =date("Y-m-d", strtotime($_POST['contract_start_date'][$k]));
 								}else{
@@ -130,7 +149,7 @@ switch($action){
 								$is_amc = $_POST['is_amc'.$k];
 								if($_POST['service_date'][$k]!=''){
 									$service_date = date("Y-m-d", strtotime($_POST['service_date'][$k]));
-									$service_time		= $_POST['service_time'][$k];
+									$service_time		= date("H:i", strtotime($_POST['service_time'][$k]));
 								}
 								else{
 									$service_date= null;
@@ -138,9 +157,204 @@ switch($action){
 								}
 								$varianttype = $_POST['varianttype'][$k];
 								$sqft 	= $_POST['sqft'][$k];
-								$stmt .= "('','$returnVal', '$service_inquiry', '$service_date', '$service_time','$contract_start','$contract_end', '$no_of_service','$service_price','$client_pay_expected','$partner_receivable','$partner_payable', '$service_discount', '$inquiry_booked', '$varianttype', '$sqft', '$frequency','$is_amc','$service_duration')";
+								$stmt .= "('','$returnVal','$lead_stage', '$service_inquiry', '$service_date', '$service_time','$contract_start','$contract_end', '$no_of_service','$service_price','$client_pay_expected','$partner_receivable','$partner_payable', '$service_discount', '$inquiry_booked', '$varianttype', '$sqft', '$frequency','$is_amc','$service_duration')";
 								if(count($_POST['service_inquiry']) > $k+1){
 									$stmt .= ",";
+								}
+								//when lead service closed ,insert into order table
+								if($memcache_leadstage[$lead_stage] == 'Closed')
+								{
+									$orderArr = array();
+									$orderArr['leadmanager_id'] = $returnVal;
+									$orderArr['parent_id'] = $service_duration>1?-1:0;
+									$orderArr['name'] = $_POST['client_firstname'].' '.$_POST['client_lastname'];
+									$orderArr['lead_source'] = $_POST['lead_source'];
+									$orderArr['mobile_no'] = $_POST['client_mobile_no'];
+									$orderArr['alternate_no'] = $_POST['alternate_no'];
+									$orderArr['email_id'] = $_POST['client_email_id'];
+									$orderArr['address'] = $_POST['address'];
+									$orderArr['landmark'] = $_POST['landmark'];
+									$orderArr['location'] = $_POST['location'];
+									$orderArr['city'] = $_POST['city'];
+									$orderArr['pincode'] = $_POST['pincode'];
+									$orderArr['service'] = $_POST['service_inquiry'][$k];
+									$orderArr['service_date'] = $service_date;
+									$orderArr['service_time'] = $service_time;
+									/********comes from pricelist*******/
+									if(($memcache_manpower[$_POST['service_inquiry'][$k]]['teamleader']) != null && !empty($memcache_manpower[$_POST['service_inquiry'][$k]]['teamleader'])) {
+										$orderArr['teamleader_deployment'] = $memcache_manpower[$_POST['service_inquiry'][$k]]['teamleader'];
+									} else {
+										$orderArr['teamleader_deployment'] = 0;
+									}
+
+									if(($memcache_manpower[$_POST['service_inquiry'][$k]]['supervisor']) != null && !empty($memcache_manpower[$_POST['service_inquiry'][$k]]['supervisor'])) {
+										$orderArr['supervisor_deployment'] = $memcache_manpower[$_POST['service_inquiry'][$k]]['supervisor'];
+									} else {
+										$orderArr['supervisor_deployment'] = 0;
+									}
+
+
+									if(($memcache_manpower[$_POST['service_inquiry'][$k]]['janitor']) != null && !empty($memcache_manpower[$_POST['service_inquiry'][$k]]['janitor'])) {
+										$orderArr['janitor_deployment'] = $memcache_manpower[$_POST['service_inquiry'][$k]]['janitor'];
+									} else {
+										$orderArr['janitor_deployment'] = 0;
+									}
+
+									$orderArr['price'] = $_POST['service_price'][$k]/1+($memcache_total_tax/100);
+									$orderArr['taxed_cost'] = $_POST['service_price'][$k];
+									$orderArr['billing_name'] = $_POST['client_firstname'].' '.$_POST['client_lastname'];
+									$orderArr['billing_email'] = $_POST['client_email_id'];
+									$orderArr['billing_address'] = $_POST['address'];
+									$orderArr['billing_name2'] = $_POST['lead_stage'][$k];
+									$orderArr['billing_address2'] = '';
+									$orderArr['billing_email2'] = '';
+									$orderArr['partner_payable'] = $partner_payable;
+									$orderArr['partner_receivable'] =  $partner_receivable;
+									$orderArr['client_payment_expected'] =  $client_pay_expected;
+									$orderArr['billing_amount2'] = $_POST['partner_receivable'][$k];
+									$orderArr['author_id']			= $_SESSION['tmobi']['UserId'];
+									$orderArr['author_name']		= $_SESSION['tmobi']['AdminName'];
+									$orderArr['insert_date']		= date('Y-m-d H:i:s');
+									$orderArr['status']= 0;
+									$orderArr['mhcclient_id'] = $mhcclientid;
+									$orderArr['order_id'] = $insertArr['order_id'];
+									$orderArr['invoice_id'] = $invoice_id;
+									$orderArr['invoice_type'] =  $_POST['invoice_type'];
+									$orderArr['ip']= getIP();
+								}
+								//print_r($orderArr);exit();
+								if($memcache_leadstage[$lead_stage] == 'Closed' && $is_amc == ''){
+									$orderID = $modelObj->insert_order($orderArr);
+									if ($service_duration>1) {
+										for ($i=0; $i < $service_duration; $i++) {
+											$orderArr['parent_id'] = $orderID;
+											$orderArr['child_name'] = 'Day'.($i +1);
+											$child_response = $modelObj->insert_order($orderArr);
+										}
+									}
+								}
+								elseif($memcache_leadstage[$lead_stage] == 'Closed' && $is_amc == '1'){
+									$orderArr['is_amc'] = 1;
+									$no_of_service_times = floor($frequency*$no_of_service);
+									$diff= date_diff(date_create($contract_start),date_create($contract_end));
+									$date_diff =  $diff->format("%a");
+									
+									$service_diff_no = floor($date_diff/$no_of_service_times);
+									$start_date = $contract_start;
+									$end_date = $contract_end;
+									if ($frequency!='' && $no_of_service!='') {
+										if($frequency == 5){
+											if($start_date <= $end_date){ //for mon to fri
+												$time =strtotime($start_date);
+												if (date("N", $time) < 6) { // if M-F
+													if(date("Y-m-d", $time) <= $end_date){
+									            		$orderArr['service_date'] = date("Y-m-d", $time);
+									            		$orderID = $modelObj->insert_order($orderArr);
+									            	}
+									            	 $j = 1;
+								            	}else{
+								            		 $j = 0;
+								            	}
+									      		while ($j < $no_of_service_times) { //loop through until reached the amount of weekdays
+											            $time = strtotime("+1 day", $time); //Increase day by 1
+											            if (date("N", $time) < 6) { // if M-F
+											            	if(date("Y-m-d", $time) <= $end_date){
+											            		$orderArr['service_date'] = date("Y-m-d", $time);
+											            		$orderID = $modelObj->insert_order($orderArr);
+											            	}
+											                $j++;
+											            }
+									        	}
+											}
+										}elseif($frequency == 6){ //for mon to sat
+											if($start_date <= $end_date){
+												$time =strtotime($start_date);
+												if (date("N", $time) < 7) { // if M-Sat
+													if(date("Y-m-d", $time) <= $end_date){
+									            		$orderArr['service_date'] = date("Y-m-d", $time);
+									            		$orderID = $modelObj->insert_order($orderArr);
+									            	}
+									            	 $j = 1;
+								            	}else{
+								            		 $j = 0;
+								            	} 
+									      		while ($j < $no_of_service_times) { //loop through until reached the amount of weekdays
+											            $time = strtotime("+1 day", $time); //Increase day by 1
+											            if (date("N", $time) < 7) { //test if M-Sat
+											            	if(date("Y-m-d", $time) <= $end_date){
+											            		$orderArr['service_date'] = date("Y-m-d", $time);
+											            		$orderID = $modelObj->insert_order($orderArr);
+											            	}
+											                $j++; //Increase by 1
+											            }
+									        	}
+											}
+										}
+										elseif($frequency == 2){ //for sat to sun
+											if($start_date <= $end_date){
+												$time =strtotime($start_date);
+												if (date("N", $time) < 7) { // if M-F
+													if(date("Y-m-d", $time) <= $end_date){
+									            		
+									            	}else{
+									            		$orderArr['service_date'] = date("Y-m-d", $time);
+									            		$orderID = $modelObj->insert_order($orderArr);
+									            	}
+									            	 $j = 1;
+								            	}else{
+								            		 $j = 0;
+								            	}
+									      		while ($j < $no_of_service_times) { //loop through until reached the amount of weekdays
+											            $time = strtotime("+1 day", $time); //Increase day by 1
+											            if (date("N", $time) < 6) { //test if Sat-Sun
+											            	
+											                //Increase by 1
+											            }else{
+											            	if(date("Y-m-d", $time) <= $end_date){
+											            		$orderArr['service_date'] = date("Y-m-d", $time);
+											            		$orderID = $modelObj->insert_order($orderArr);
+											            	}
+											            	 $j++;
+											            }
+									        	}
+											}
+										} elseif($frequency == -1){ //for sat to sun
+											$diff= date_diff(date_create($contract_start),date_create($contract_end));
+											$date_diff =  $diff->format("%a");
+											$service_diff_no = floor($date_diff/$no_of_service);
+											for($i = 1;$i<=floor($no_of_service);$i++){
+												if($start_date <= $end_date){
+													$start_date = date('Y-m-d',strtotime($start_date ."+$service_diff_no days"));
+													if($start_date <= $end_date){
+														$orderArr['service_date'] = $start_date;
+														$orderID = $modelObj->insert_order($orderArr);
+													}
+													else{
+														$orderArr['service_date'] = $end_date;
+														$orderID = $modelObj->insert_order($orderArr);
+													}
+												}
+											}
+										}else{
+											$diff= date_diff(date_create($contract_start),date_create($contract_end));
+											$date_diff =  $diff->format("%a");
+											$service_diff_no = floor($date_diff/$no_of_service);
+											for($i = 1;$i<=floor($no_of_service);$i++){
+												if($start_date <= $end_date){
+													$start_date = date('Y-m-d',strtotime($start_date ."+$service_diff_no days"));
+													if($start_date <= $end_date){
+														$orderArr['service_date'] = $start_date;
+														//$start_date = $start_date +1;
+														$orderID = $modelObj->insert_order($orderArr);
+													}
+													else{
+														$orderArr['service_date'] = $end_date;
+														$orderID = $modelObj->insert_order($orderArr);
+													}
+												}
+											}
+										}
+									}
 								}
 							endif;
 						}
@@ -160,7 +374,8 @@ switch($action){
 				$updateArr['lead_owner'] 	= $_POST['lead_owner'];
 				$updateArr['followup_by'] 	= $_POST['followup_by'];
 				//$updateArr['job_status']	= $_POST['job_status'];
-				$updateArr['lead_stage']    = $_POST['lead_stage'];
+				//$updateArr['lead_stage']    = $_POST['lead_stage'];
+				$updateArr['lead_stage']    = 1;
 				if($_POST['reminder']!=''){
 					$updateArr['reminder'] = date("Y-m-d", strtotime($_POST['reminder']));
 				}else{
@@ -170,7 +385,7 @@ switch($action){
 				$updateArr['supervisor_deployment'] 		= $_POST['supervisor_deployment'];
 				$updateArr['janitor_deployment'] 		= $_POST['janitor_deployment'];
 				$updateArr['additional_note'] 	= $_POST['additional_note'];
-				$updateArr['service_duration'] = $_POST['service_duration'][$k];
+				//$updateArr['service_duration'] = $_POST['service_duration'][$k];
 				if(count($_POST['service_inquiry']) > 0):
 						$count =count($_POST['service_inquiry']);
 						if(in_array(null, $_POST['service_inquiry'])){
@@ -181,7 +396,7 @@ switch($action){
 								}
 							}
 						}
-						$stmt = "INSERT INTO service (`id`, `leadmanager_id`, `service_inquiry`, `service_date`, `service_time`, `contract_start_date`,`contract_end_date`,`no_of_service`,`service_price`,`client_payment_expected`,`partner_receivable`,`partner_payable`, `service_discount`, `service_booked`, `varianttype_id`, `sqft`, `frequency`,`is_amc`,`service_duration`) VALUES ";
+						$stmt = "INSERT INTO service (`id`, `leadmanager_id`,`lead_stage`, `service_inquiry`, `service_date`, `service_time`, `contract_start_date`,`contract_end_date`,`no_of_service`,`service_price`,`client_payment_expected`,`partner_receivable`,`partner_payable`, `service_discount`, `service_booked`, `varianttype_id`, `sqft`, `frequency`,`is_amc`,`service_duration`) VALUES ";
 						//$count = count($_POST['service_inquiry']);
 
 						foreach ($_POST['service_inquiry'] as $k =>$service) {
@@ -196,21 +411,21 @@ switch($action){
 
 								if($_POST['service_date'][$k]!=''){
 									$serviceUpdateArr['service_date'] = date("Y-m-d", strtotime($_POST['service_date'][$k]));
-									$serviceUpdateArr['service_time']		= $_POST['service_time'][$k];
+									$serviceUpdateArr['service_time']		= date("H:i", strtotime($_POST['service_time'][$k]));
 								}
 								else{
 									$serviceUpdateArr['service_date']= null;
 									$serviceUpdateArr['service_time'] = null;
 								}
 								if($_POST['contract_start_date'][$k]!=''){
-									$serviceUpdateArr['contract_start'] =date("Y-m-d", strtotime($_POST['contract_start_date'][$k]));
+									$serviceUpdateArr['contract_start_date'] =date("Y-m-d", strtotime($_POST['contract_start_date'][$k]));
 								}else{
-									$serviceUpdateArr['contract_start'] = null;
+									$serviceUpdateArr['contract_start_date'] = null;
 								}
 								if($_POST['contract_end_date'][$k]!=''){
-									$serviceUpdateArr['contract_end'] =date("Y-m-d", strtotime($_POST['contract_end_date'][$k]));
+									$serviceUpdateArr['contract_start_date'] =date("Y-m-d", strtotime($_POST['contract_end_date'][$k]));
 								}else{
-									$serviceUpdateArr['contract_end'] = null;
+									$serviceUpdateArr['contract_start_date'] = null;
 								}
 								$serviceUpdateArr['varianttype_id'] = $_POST['varianttype'][$k];
 								$serviceUpdateArr['sqft'] 	= $_POST['sqft'][$k];
@@ -219,8 +434,75 @@ switch($action){
 								$serviceUpdateArr['partner_receivable'] = $_POST['partner_receivable'][$k];
 								$serviceUpdateArr['is_amc'] = $_POST['is_amc'.$k];
 								$serviceUpdateArr['no_of_service'] = $_POST['no_of_service'][$k];
+								$serviceUpdateArr['service_duration'] = $_POST['service_duration'][$k];
+								$serviceUpdateArr['lead_stage'] = $_POST['lead_stage'][$k];
 								$serviceWhereArr = array('id' => $_POST['service_id'][$k] );
 								$modelObj->updateServiceTable($serviceUpdateArr,$serviceWhereArr);
+								$getservice = $modelObj->getServiceById($_POST['service_id'][$k]);
+								$orderArr = array();
+									$orderArr['leadmanager_id'] = $leadmanager_id;
+									$orderArr['parent_id'] = $service_duration>1?-1:0;
+									$orderArr['name'] = $_POST['client_firstname'].' '.$_POST['client_lastname'];
+									$orderArr['lead_source'] = $_POST['lead_source'];
+									$orderArr['mobile_no'] = $_POST['client_mobile_no'];
+									$orderArr['alternate_no'] = $_POST['alternate_no'];
+									$orderArr['email_id'] = $_POST['client_email_id'];
+									$orderArr['address'] = $_POST['address'];
+									$orderArr['landmark'] = $_POST['landmark'];
+									$orderArr['location'] = $_POST['location'];
+									$orderArr['city'] = $_POST['city'];
+									$orderArr['pincode'] = $_POST['pincode'];
+									$orderArr['service'] = $_POST['service_inquiry'][$k];
+									$orderArr['service_date'] = $service_date;
+									$orderArr['service_time'] = $service_time;
+									/********comes from pricelist*******/
+									
+									if(($memcache_manpower[$_POST['service_inquiry'][$k]]['teamleader']) != null && !empty($memcache_manpower[$_POST['service_inquiry'][$k]]['teamleader'])) {
+										$orderArr['teamleader_deployment'] = $memcache_manpower[$_POST['service_inquiry'][$k]]['teamleader'];
+									} else {
+										$orderArr['teamleader_deployment'] = 0;
+									}
+
+									if(($memcache_manpower[$_POST['service_inquiry'][$k]]['supervisor']) != null && !empty($memcache_manpower[$_POST['service_inquiry'][$k]]['supervisor'])) {
+										$orderArr['supervisor_deployment'] = $memcache_manpower[$_POST['service_inquiry'][$k]]['supervisor'];
+									} else {
+										$orderArr['supervisor_deployment'] = 0;
+									}
+
+
+									if(($memcache_manpower[$_POST['service_inquiry'][$k]]['janitor']) != null && !empty($memcache_manpower[$_POST['service_inquiry'][$k]]['janitor'])) {
+										$orderArr['janitor_deployment'] = $memcache_manpower[$_POST['service_inquiry'][$k]]['janitor'];
+									} else {
+										$orderArr['janitor_deployment'] = 0;
+									}
+
+
+									$orderArr['price'] = $_POST['service_price'][$k]/1+($memcache_total_tax/100);
+									$orderArr['taxed_cost'] = $_POST['service_price'][$k];
+									$orderArr['billing_name'] = $_POST['client_firstname'].' '.$_POST['client_lastname'];
+									$orderArr['billing_email'] = $_POST['client_email_id'];
+									$orderArr['billing_address'] = $_POST['address'];
+									$orderArr['billing_name2'] = $_POST['lead_stage'][$k];
+									$orderArr['billing_address2'] = '';
+									$orderArr['billing_email2'] = '';
+									$orderArr['billing_amount2'] = $_POST['partner_receivable'][$k];
+									$orderArr['partner_payable'] = $partner_payable;
+									$orderArr['partner_receivable'] =  $partner_receivable;
+									$orderArr['client_payment_expected'] =  $client_pay_expected;
+									$orderArr['order_id'] = $_POST['order_id'];
+									$orderArr['invoice_id'] = $_POST['invoice_id'];
+									$orderArr['author_id']			= $_SESSION['tmobi']['UserId'];
+									$orderArr['author_name']		= $_SESSION['tmobi']['AdminName'];
+									$orderArr['insert_date']		= date('Y-m-d H:i:s');
+									$orderArr['status']= 0;
+									$orderArr['mhcclient_id'] = $_POST['mhcclient_id'];
+									$orderArr['invoice_type'] =  $_POST['invoice_type'];
+									$orderArr['ip']= getIP();
+								if($memcache_leadstage[$getservice[0]['lead_stage']] == 'Closed'){ //update order
+									$whereUpdateOrder = array('');
+								}else{ //entry into order table
+
+								}
 							}else{	
 							if($_POST['service_inquiry'][$k] != '' && $_POST['varianttype'][$k]!=''):
 								$service_inquiry 	= $_POST['service_inquiry'][$k];
@@ -230,7 +512,7 @@ switch($action){
 								$inquiry_booked 	= $_POST['service_inquiry_booked'.$k];
 								if($_POST['service_date'][$k]!=''){
 									$service_date = date("Y-m-d", strtotime($_POST['service_date'][$k]));
-									$service_time		= $_POST['service_time'][$k];
+									$service_time		= date("H:i", strtotime($_POST['service_time'][$k]));
 								}
 								else{
 									$service_date= null;
@@ -253,9 +535,91 @@ switch($action){
 								$partner_payable = $_POST['partner_payable'][$k];
 								$partner_receivable = $_POST['partner_receivable'][$k];
 								$is_amc = $_POST['is_amc'.$k];
-								$stmt .= "('','$leadmanager_id', '$service_inquiry', '$service_date', '$service_time','$contract_start','$contract_end', '$no_of_service','$service_price','$client_pay_expected','$partner_receivable','$partner_payable', '$service_discount', '$inquiry_booked', '$varianttype', '$sqft', '$frequency','$is_amc','$service_duration')";
+								$service_duration = $_POST['service_duration'][$k];
+								$lead_stage = $_POST['lead_stage'][$k];
+								$is_amc = $_POST['is_amc'][$k];
+								$stmt .= "('','$leadmanager_id','$lead_stage', '$service_inquiry', '$service_date', '$service_time','$contract_start','$contract_end', '$no_of_service','$service_price','$client_pay_expected','$partner_receivable','$partner_payable', '$service_discount', '$inquiry_booked', '$varianttype', '$sqft', '$frequency','$is_amc','$service_duration')";
 								if($count > $k+1){
 									$stmt .= ",";
+								}
+								//INSERT ENTRY INTO ORDER
+								if($memcache_leadstage[$lead_stage] == 'Closed'){
+									$orderArr = array();
+									$orderArr['leadmanager_id'] = $leadmanager_id;
+									$orderArr['parent_id'] = $service_duration>1?-1:0;
+									$orderArr['name'] = $_POST['client_firstname'].' '.$_POST['client_lastname'];
+									$orderArr['lead_source'] = $_POST['lead_source'];
+									$orderArr['mobile_no'] = $_POST['client_mobile_no'];
+									$orderArr['alternate_no'] = $_POST['alternate_no'];
+									$orderArr['email_id'] = $_POST['client_email_id'];
+									$orderArr['address'] = $_POST['address'];
+									$orderArr['landmark'] = $_POST['landmark'];
+									$orderArr['location'] = $_POST['location'];
+									$orderArr['city'] = $_POST['city'];
+									$orderArr['pincode'] = $_POST['pincode'];
+									$orderArr['service'] = $_POST['service_inquiry'][$k];
+									$orderArr['service_date'] = $service_date;
+									$orderArr['service_time'] = $service_time;
+									/********comes from pricelist*******/
+									$orderArr['teamleader_deployment'] = $memcache_manpower[$_POST['service_inquiry'][$k]]['teamleader'];
+									$orderArr['supervisor_deployment'] = $memcache_manpower[$_POST['service_inquiry'][$k]]['supervisor'];
+									$orderArr['janitor_deployment'] = $memcache_manpower[$_POST['service_inquiry'][$k]]['janitor'];
+									$orderArr['price'] = $_POST['service_price'][$k]/1+($memcache_total_tax/100);
+									$orderArr['taxed_cost'] = $_POST['service_price'][$k];
+									$orderArr['billing_name'] = $_POST['client_firstname'].' '.$_POST['client_lastname'];
+									$orderArr['billing_email'] = $_POST['client_email_id'];
+									$orderArr['billing_address'] = $_POST['address'];
+									$orderArr['billing_name2'] = $_POST['lead_stage'][$k];
+									$orderArr['billing_address2'] = '';
+									$orderArr['billing_email2'] = '';
+									$orderArr['billing_amount2'] = $_POST['partner_receivable'][$k];
+									$orderArr['partner_payable'] = $partner_payable;
+									$orderArr['partner_receivable'] =  $partner_receivable;
+									$orderArr['client_payment_expected'] =  $client_pay_expected;
+									$orderArr['order_id'] = $_POST['order_id'];
+									$orderArr['invoice_id'] = $_POST['invoice_id'];
+									$orderArr['invoice_type'] =  $_POST['invoice_type'];
+									$orderArr['author_id']			= $_SESSION['tmobi']['UserId'];
+									$orderArr['author_name']		= $_SESSION['tmobi']['AdminName'];
+									$orderArr['insert_date']		= date('Y-m-d H:i:s');
+									$orderArr['status']= 0;
+									$orderArr['mhcclient_id'] = $mhcclientid;
+									$orderArr['ip']= getIP();
+									
+								}
+								if($memcache_leadstage[$lead_stage] == 'Closed' && $is_amc == ''){
+									$orderID = $modelObj->insert_order($orderArr);
+									if ($service_duration>1) {
+										for ($i=0; $i < $service_duration; $i++) {
+											$orderArr['parent_id'] = $orderID;
+											$orderArr['child_name'] = 'Day'.($i +1);
+											$child_response = $modelObj->insert_order($orderArr);
+										}
+
+									}
+								}
+								elseif($memcache_leadstage[$lead_stage] == 'Closed' && $is_amc == '1'){
+									$days = floor($frequency/$no_of_service);
+									$diff= date_diff(date_create($contract_start),date_create($contract_end));
+									$date_diff =  $diff->format("%a");
+									$nos = $date_diff/$days;
+									$start_date = $contract_start;
+									$end_date = $contract_end;
+									if ($frequency!='' && $no_of_service!='') {
+										for($i = 1;$i<=floor($nos);$i++){
+											if($start_date <= $end_date){
+												$start_date = date('Y-m-d',strtotime($start_date ."+$days days"));
+												if($start_date <= $end_date){
+													$orderArr['service_date'] = $start_date;
+													$orderID = $modelObj->insert_order($orderArr);
+												}
+												else{
+													$orderArr['service_date'] = $end_date;
+													$orderID = $modelObj->insert_order($orderArr);
+												}
+											}
+										}
+									}
 								}
 							endif;
 							}
@@ -315,7 +679,8 @@ switch($action){
 		$city = $_POST['city'];
 		$inq[] = $_POST['inq1'];
 		$varianttype[] = $_POST['varianttype1'];
-		$returnVal = $modelObj->getPriceList($city,$inq,$varianttype);
+		$leadsource =$_POST['leadsource'];
+		$returnVal = $modelObj->getPriceList($city,$inq,$varianttype,$leadsource);
 		$arrReturn['result'] = $returnVal;
 		break;
 		case "update_leadstage":
@@ -346,6 +711,10 @@ switch($action){
 		break;
 		case "getAddress":
 		$row = $modelObj->getAddressTable($_POST['mhcclient_id']);
+		$arrReturn = $row;
+		break;
+		case "getServicesList":
+		$row = $modelObj->getServiceDetailsforLead($_POST['leadmanager_id']);
 		$arrReturn = $row;
 		break;
 }

@@ -18,8 +18,10 @@ switch($action){
 				$insertArr['source_url'] 			= $_POST['source_url'];
 				$insertArr['source_phone'] 		= $_POST['source_phone'];
 				$insertArr['source_email_id'] 		= $_POST['source_email_id'];
+				$insertArr['parent_id'] 		= $_POST['parent_id'];
 				$insertArr['source_address'] 			= $_POST['source_address'];
 				$insertArr['commission_type'] 			= $_POST['commission_type'];
+				$insertArr['is_partner'] 			= $_POST['is_partner'];
 				$insertArr['author_id']			= $_SESSION['tmobi']['UserId'];
 				$insertArr['author_name']			= "Prashant";
 				$insertArr['insert_date']		= date('Y-m-d H:i:s');
@@ -40,6 +42,8 @@ switch($action){
 				$updateArr['source_email_id'] 	= $_POST['source_email_id'];
 				$updateArr['source_address'] 		= $_POST['source_address'];
 				$updateArr['commission_type'] 		= $_POST['commission_type'];
+				$updateArr['is_partner'] 		= $_POST['is_partner'];
+				$updateArr['parent_id'] 		= $_POST['parent_id'];
 
 				$whereArr = array('id' => $source_id );
 				$returnVal = $modelObj->updateTable($updateArr,$whereArr);

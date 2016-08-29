@@ -60,5 +60,16 @@ switch($action){
 		$result = $modelObj->get_employee_attendance($employee_id,$attendance,$date);
 		$arrReturn['result'] = $result;
 	break;
+	case "save_attendance_all":
+		$attendance 	= isset($_POST['attendance']) ? $_POST['attendance'] : '';
+		$dates 	= isset($_POST['date']) ? explode(',',$_POST['date']) : '';
+		foreach ($dates as $date) {
+			if($date!='')
+			$result = $modelObj->get_employee_attendance($employee_id,$attendance,$date);
+		}
+		//print_r($date);
+		///$result = $modelObj->get_employee_attendance($employee_id,$attendance,$date);
+		$arrReturn['result'] = $result;
+	break;
 }
 echo json_encode($arrReturn);

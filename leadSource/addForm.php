@@ -31,9 +31,35 @@ if($source_id > 0){
 						</div>
 					 </div>
 				  </div>
+
+				  <div class="span6 ">
+					 <div class="control-group">
+						<label class="control-label">Is Vendor</label>
+						<div class="controls">
+						   <input type="checkbox" <?php echo (isset($_POST['is_partner'])?"value='1'":"value='0'")?> <?php if($data['is_partner']=='0'): echo "checked"; else: ""; endif; ?> id="is_partner" name="is_partner" class="m-wrap span12">
+						   <span class="help-block" id="is_partner_error"> </span>
+						</div>
+					 </div>
+				  </div>
+
+
 				  <!--/span-->
 
 				  <!--/span-->
+			   </div>
+			   <div class="row-fluid">
+					<div class="span6 ">
+	 				<div class="control-group">
+	 				 <label class="control-label">Parent Source<!--<span class="required">*</span>--></label>
+	 				 <div class="controls">
+	 				 	<select class="medium m-wrap" id="parent_id" name="parent_id">				   
+						   <?php echo $modelObj->optionsGenerator('leadsource', 'name', 'id', ""," where parent_id='-1'"); ?>
+						</select>
+	 						<!-- <input type="checkbox" <?php echo (isset($_POST['parent_id'])?"value='1'":"value='0'")?> <?php if($data['parent_id']=='0'): echo "checked"; else: ""; endif; ?> id="is_partner" name="is_partner" class="m-wrap span12"> -->
+	 						<span class="help-block" id="parent_id_error"> </span>
+	 				 </div>
+	 				</div>
+	 			 </div>
 			   </div>
 			   <div class="row-fluid">
 					 <div class="span6 ">
@@ -133,7 +159,7 @@ function saveData(frm_id, action){
          $('#frm_lead_source').validate({
 		rules:{
 			source_name:"required",
-			source_email_id:"email",
+			/*source_email_id:"email",*/
 			source_url:{
 				required:true,
 				url:true

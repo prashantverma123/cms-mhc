@@ -1,4 +1,5 @@
 <?php
+require_once("../payment/instamojo.php");
 class Order {
 	protected $finalData = array();
 	private $db;
@@ -13,26 +14,30 @@ class Order {
 		$this -> className = "order";
 		$this -> db = Database::Instance();
 		$this -> logs = new Logging();
-		checkRole('order');
+		//checkRole('order');
 	}
 
 
 	/**************************** END OF CONSTRUCTOR **************************/
-	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(),$filterData= array(), $status = '',$sort='') {
+	public function getListingData($search='', $offset='', $recperpage='', $searchData= array(),$filterData= array(), $status = '',$sort='',$is_amc='0') {
+		// print_r("Hi");
+		// exit();
 		$offset = $offset * $recperpage;
 		$keyValueArray = array();
+
 		if ($status == '-1') {
 			$keyValueArray['`'.$this -> tableName.'`.status'] = -1;
 		} else {
 			$keyValueArray['notequal'] = '`'.$this -> tableName."`.status != -1";
 		}
 	    $main_sql = '1=1';
-
+	    $keyValueArray['is_amc'] = $is_amc;
 			if (count($filterData)>0) {
 					if($_SESSION['tmobi']['role'] !="admin")
 					$main_sql .= ' and ';
 					$k = 1;
 				foreach ($filterData as $key => $value) {
+					if($value!=''):
 					if($_SESSION['tmobi']['role'] =="admin")
 					{
 						if($key == 'city'){ //to skip the city 
@@ -50,9 +55,11 @@ class Order {
 						$main_sql .= " OR ";
 					}
 					$k++;
+					endif;
 				}
 
 			}
+			//echo $main_sql;
 		if(count($searchData)>0){
 			if($search){
 				if($searchData['filter']!='')
@@ -61,12 +68,40 @@ class Order {
 
 				$j = 1;
 				foreach ($fields as $field) {
+					echo $field;
 					if($searchData['filter']!=''){
-						$main_sql .= '`order`.'.$field." like '%".$searchData['filter']."%'";
-						if($j < count($fields)){
-							$main_sql .= " OR ";
+						if($field == 'city'){
+							$city_sql = '`city`.name'." like '%".$searchData['filter']."%' ";
+							$city_where['sqlclause'] = $city_sql;
+							$cityArr = $this -> db -> getDataFromTable($city_where,'city', " id ", '', '', false);
+							if(count($cityArr) > 0){
+								$serviceArr = array();
+								foreach ($cityArr as $city) {
+									$serviceArr = $this -> db -> getDataFromTable(array('city'=>$city['id']),'order', " leadmanager_id ", '', '', false);
+									//print_r($serviceArr);
+									//echo count($serviceArr);
+									//$main_sql .= " OR ";
+									if(count($serviceArr)>0){
+										foreach ($serviceArr as $s=>$service) {
+											$main_sql .= '`order`.leadmanager_id="'.$service['leadmanager_id'].'"';
+											if($s < count($serviceArr)-1){
+												$main_sql .= " OR ";
+											}
+										}
+									}
+								}
+							}else{
+								//$main_sql .= " AND ";
+								$main_sql .= '`order`.id=""';
+							}
 						}
-						$j++;
+						else{
+							$main_sql .= '`order`.'.$field." like '%".$searchData['filter']."%'";
+							if($j < count($fields)){
+								$main_sql .= " OR ";
+							}
+							$j++;
+						}
 					}
 				}
 			}
@@ -88,14 +123,15 @@ class Order {
 		}else{
 			$sort =  '`'.$this -> tableName.'`.insert_date DESC';
 		}
+		$keyValueArray['parent_id <'] = 1;
 		//$joinArray[] = array('type'=>'left','table'=>'leadsource','condition'=>'leadsource.id=order.lead_source');
-		$joinArray[] = array('type'=>'left','table'=>'remarks','condition'=>'remarks.order_id=order.id');
+		$joinArray[] = array('type'=>'left','table'=>'remarks','condition'=>'remarks.order_id=`order`.id');
 		//$joinArray[] = array('type'=>'left','table'=>'city','condition'=>'city.id=order.city');
 		//$joinArray[] = array('type'=>'left','table'=>'pricelist','condition'=>'pricelist.id=order.service');
 		//$joinArray[] = array('type'=>'left','table'=>'pricelist','condition'=>"pricelist.id = SUBSTRING_INDEX(SUBSTRING_INDEX(`order`.service, ',', FIND_IN_SET(pricelist.id,`order`.service)), ',', -1)");
 		//$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,leadsource.name as leadsource_name,GROUP_CONCAT(pricelist.name ORDER BY pricelist.id SEPARATOR '|') as 'services'", $sort, $limit,$joinArray, true);
-		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,remarks.remark", $sort, $limit,$joinArray, false);
-
+		$dataArr = $this -> db ->getAssociatedDataFromTable($keyValueArray, $this -> tableName, "`order`.*,remarks.remark", $sort, $limit,$joinArray, true);
+		$this -> finalData = array();
 		if (count($dataArr) > 0) {
 			$finalData['rowcount'] = count($dataArr);
 			$i = 0;
@@ -209,6 +245,18 @@ class Order {
 		return $sql_count;
 	}// eof getPaginationQuery
 
+	public function getChildRowsfortheOrderId($orderid){
+		$keyValueArray = array();
+		$keyValueArray['parent_id'] = $orderid;
+
+
+		//SELECT DATEDIFF(end_date,start_date) AS days FROM events_events WHERE  id='$event_id'
+		$dataArr = $this -> db -> getDataFromTable($keyValueArray,"order", " *", " id ASC ", $limit, false);
+		//print_r($orderid);
+		//exit();
+		return $dataArr;
+	}
+
 	public function getEditData($id) {
 		if (intval($id)) {
 			$keyValueArray = array();
@@ -317,54 +365,221 @@ class Order {
         return $options_str;
     }
 
-    function send_invoice_email($billArr){
-		$keyValueArray = array();
+    function send_SingleOrMultipleInvoice($bilArr){
+    	if ($bilArr['invoice_type']==0) {
+
+    		// single invoice
+    		$this->singleInvoice($bilArr);
+
+    	} else {
+
+    		// multiple invoice
+    		$this->send_invoice_email($bilArr);
+    	}
+    	
+    }
+
+    function singleInvoice($billArr){
+
+    	$memcache = new Memcache;
+		$memcache->connect('localhost', 11211) or die ("Could not connect");
+		$userdetails = $memcache->get('mhcclient');
+		$servicename = $memcache->get('pricelist');
+		$memcache_leadsource= $memcache->get('leadsource');
+		$memcache_partneremails = $memcache->get('partneremails');
+
+    	$keyValueArray = array();
 		$id = $billArr['order_id'];
-		//$keyValueArray['leadmanager.order_id'] = $id;
+		$keyValueArray['`order`.leadmanager_id'] = $billArr['bill_leadid'];
+
+		$result = $this -> db -> getDataFromTable($keyValueArray, 'order', "`order`.id,`order`.order_id,`order`.leadmanager_id,`order`.mhcclient_id,`order`.invoice_id,`order`.service,`order`.service_date,`order`.service_time,`order`.invoice_sent,`order`.discount,`order`.partner_receivable,`order`.partner_payable,`order`.price,`order`.taxed_cost,`order`.commission,`order`.invoice_type",'','',false);
+
+		
+
+		$whereArr = array();
+		$l = encryptdata($result[0]['leadmanager_id']);
+		$m = encryptdata($result[0]['order_id']);
+		$singleOrder = array();
+
+		// print_r($result[0]['id']);
+		// exit();
+		foreach ($result as $key => $order) {
+
+			$singleOrder['id'][] = $order['id'];
+			$singleOrder['order_id'] = $order['order_id'];
+			$singleOrder['leadmanager_id'] = $order['leadmanager_id'];
+			$singleOrder['mhcclient_id'] = $order['mhcclient_id'];
+			$singleOrder['invoice_id'] = $order['invoice_id'];
+			$singleOrder['service'][] = $servicename[$order['service']];
+			$singleOrder['service_date'][] = $order['service_date'];
+			$singleOrder['service_time'][] = $order['service_time'];
+			$singleOrder['invoice_sent'] = $order['invoice_sent'];
+			$singleOrder['invoice_type'] = $order['invoice_type'];
+			$singleOrder['discount'] = $singleOrder['discount'] + $order['discount'];
+			$singleOrder['partner_receivable'] = $singleOrder['partner_receivable'] +$order['partner_receivable'];
+			$singleOrder['partner_payable'] =$singleOrder['partner_payable'] + $order['partner_payable'];
+			$singleOrder['price'] = $singleOrder['price'] + $order['price'];
+			$singleOrder['taxed_cost'] = $singleOrder['taxed_cost'] +$order['taxed_cost'];
+			$singleOrder['commission'] = $singleOrder['commission'] + $order['commission'];	
+			
+		}
+			$orderdetails = encryptdata(serialize($singleOrder));
+			
+
+		// print_r(implode(" <br /> ",$singleOrder['service']));
+
+		// exit();
+
+		if($result && $billArr['billing_email']!=''){
+			$subject = "Mr Home Care- Invoice";
+			//$to = $result[0]['client_email_id'].';prashant.verma@mrhomecare.in';
+			//$to ='pra0408@gmail.com'.';trushali.bahira@mrhomecare.in;trushali1088@gmail.com';
+			$to = $billArr['billing_email'];
+			//$cc = 'accounts@mrhomecare.in';
+			$cc = 'trushali1088@gmail.com';
+			$from = 'Mr Home care-'.INVOICE_FROM_EMAILID;
+			$body = '';
+			$taxArr = $this->getTax($singleOrder['taxed_cost']);
+			$b_name=$billArr['billing_name'];
+			$b_add=$billArr['billing_address'];
+			$b_mobile=$userdetails[$singleOrder['mhcclient_id']]['client_mobile_no'];
+			$b_amt=$singleOrder['taxed_cost'];
+			$invoice_id=$singleOrder['invoice_id'];
+			$services=implode(" <br /> ",$singleOrder['service']);
+			$taxHtml = $taxArr['taxHtml'];
+			$total_amount = $singleOrder['taxed_cost'] - $taxArr['total_tax_amount'];
+			$body = $this->getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amount,$m,$l,$orderdetails,$mypaymentlink,$to);
+			$r = sendEmail($to,$from,$subject,$body,$cc);
+			if($billArr['isPartner'] == 1){
+				$body = '';
+				//$to ='pra0408@gmail.com'.';trushali.bahira@mrhomecare.in';
+				//$to = $billArr['billing_email2'];
+				$to = 'accounts@mrhomecare.in';
+				if(count($memcache_partneremails[$billArr['billing_name2']])>0){
+					if($memcache_partneremails[$billArr['billing_name2']][$billArr['bill_city']]){
+						$cc = $memcache_partneremails[$billArr['billing_name2']][$billArr['bill_city']];
+					}
+				}else{
+					$cc = 'others.accounts@mrhomecare.in';
+				}
+				$from = 'Mr Home care-'.INVOICE_FROM_EMAILID;
+				$total_amount =0;
+				$taxArr = $this->getTax($billArr['billing_amount2']);
+				$b_name=$memcache_leadsource[$billArr['billing_name2']];
+				$b_add=$billArr['billing_address2'];
+				$b_mobile=$userdetails[$singleOrder['mhcclient_id']]['client_mobile_no'];
+				$b_amt=$billArr['billing_amount2'];
+				$taxHtml = $taxArr['taxHtml'];
+				$total_amt = $singleOrder['taxed_cost'] - $taxArr['total_tax_amount'];
+				$body = $this->getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amt,$m,$l,$orderdetails,$mypaymentlink,$to);
+				$r = sendEmail($to,$from,$subject,$body,$cc);
+			}
+			if($r)
+				return true;
+			else
+				return false;
+		}else{
+			return false;
+		}
+		//exit();
+
+
+		
+    }
+
+    function send_invoice_email($billArr){
+
+    	$memcache = new Memcache;
+		$memcache->connect('localhost', 11211) or die ("Could not connect");
+		$userdetails = $memcache->get('mhcclient');
+		$servicename = $memcache->get('pricelist');
+		$memcache_leadsource= $memcache->get('leadsource');
+		$memcache_partneremails = $memcache->get('partneremails');
+
+		$keyValueArray = array();
+		$qid = $billArr['order_id'];
+
+		$id = $billArr['order_id'];
 		$keyValueArray['order.id'] = $id;
-		$joinArray[] = array('type'=>'left','table'=>'`leadmanager`','condition'=>'`leadmanager`.order_id=`order`.order_id');
-		$joinArray[] = array('type'=>'left','table'=>'pricelist as p1','condition'=>'p1.id=leadmanager.service_inquiry1');
-		$joinArray[] = array('type'=>'left','table'=>'pricelist as p2','condition'=>'p2.id=leadmanager.service_inquiry2');
-		$joinArray[] = array('type'=>'left','table'=>'pricelist as p3','condition'=>'p3.id=leadmanager.service_inquiry3');
+		
 
 		//$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, 'leadmanager', "leadmanager.id,leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,p1.name as service1,p2.name as service2,p3.name as service3,`order`.invoice_id",'','',$joinArray,false);
-		$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, 'order', "`order`.order_id,leadmanager.id,leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,leadmanager.client_mobile_no,p1.name as service1,p2.name as service2,p3.name as service3,`order`.invoice_id",'','',$joinArray,true);
+		//$result = $this -> db -> getAssociatedDataFromTable($keyValueArray, 'order', "`order`.order_id,leadmanager.id,leadmanager.client_firstname,leadmanager.address,leadmanager.client_lastname,leadmanager.taxed_cost,leadmanager.order_id,leadmanager.client_email_id,leadmanager.client_mobile_no,p1.name as service1,p2.name as service2,p3.name as service3,`order`.invoice_id",'','',$joinArray,true);
+		$result = $this -> db -> getDataFromTable($keyValueArray, 'order', "`order`.id,`order`.order_id,`order`.leadmanager_id,`order`.mhcclient_id,`order`.invoice_id,`order`.service,`order`.service_date,`order`.service_time,`order`.invoice_sent,`order`.discount,`order`.partner_receivable,`order`.partner_payable,`order`.price,`order`.taxed_cost,`order`.commission,`order`.invoice_type",'','',false);
 		//print_r($result);
 		$whereArr = array();
 		$l = encryptdata($result[0]['id']);
 		$m = encryptdata($result[0]['order_id']);
 
+		$singleOrder = array();
+
+		foreach ($result as $key => $order) {
+
+			$singleOrder['id'][] = $order['id'];
+			$singleOrder['order_id'] = $order['order_id'];
+			$singleOrder['leadmanager_id'] = $order['leadmanager_id'];
+			$singleOrder['mhcclient_id'] = $order['mhcclient_id'];
+			$singleOrder['invoice_id'] = $order['invoice_id'];
+			$singleOrder['service'][] = $servicename[$order['service']];
+			$singleOrder['service_date'][] = $order['service_date'];
+			$singleOrder['service_time'][] = $order['service_time'];
+			$singleOrder['invoice_sent'] = $order['invoice_sent'];
+			$singleOrder['invoice_type'] = $order['invoice_type'];
+			$singleOrder['discount'] = $singleOrder['discount'] + $order['discount'];
+			$singleOrder['partner_receivable'] = $singleOrder['partner_receivable'] +$order['partner_receivable'];
+			$singleOrder['partner_payable'] =$singleOrder['partner_payable'] + $order['partner_payable'];
+			$singleOrder['price'] = $singleOrder['price'] + $order['price'];
+			$singleOrder['taxed_cost'] = $singleOrder['taxed_cost'] +$order['taxed_cost'];
+			$singleOrder['commission'] = $singleOrder['commission'] + $order['commission'];	
+			
+		}
+			$orderdetails = encryptdata(serialize($singleOrder));
+
 		if($result && $billArr['billing_email']!=''){
 			$subject = "Mr Home Care- Invoice";
 			//$to = $result[0]['client_email_id'].';prashant.verma@mrhomecare.in';
-			$to ='pra0408@gmail.com'.';trushali.bahira@mrhomecare.in';
+			//$to ='pra0408@gmail.com'.';trushali.bahira@mrhomecare.in;trushali1088@gmail.com';
+			$to = $billArr['billing_email'];
+			//$cc = "trushali1088@gmail.com";
+			$cc = 'accounts@mrhomecare.in';
 			$from = 'Mr Home care-'.INVOICE_FROM_EMAILID;
 			$body = '';
-			$taxArr = $this->getTax($billArr['billing_amount']);
+			$taxArr = $this->getTax($singleOrder['taxed_cost']);
 			$b_name=$billArr['billing_name'];
 			$b_add=$billArr['billing_address'];
-			$b_mobile=$result[0]['client_mobile_no'];
-			$b_amt=$billArr['billing_amount'];
-			$invoice_id=$result[0]['invoice_id'];
-			$services=$result[0]['service1']."<br />".$result[0]['service2']."<br />".$result[0]['service3'];
+			$b_mobile=$userdetails[$singleOrder['mhcclient_id']]['client_mobile_no'];
+			$b_amt=$singleOrder['taxed_cost'];
+			$invoice_id=$singleOrder['invoice_id'];
+			$services=implode(" <br /> ",$singleOrder['service']);
 			$taxHtml = $taxArr['taxHtml'];
-			$total_amount = $billArr['billing_amount'] - $taxArr['total_tax_amount'];
-			$body = $this->getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amount,$m,$l);
-			$r = sendEmail($to,$from,$subject,$body);
+			$total_amount = $singleOrder['taxed_cost'] - $taxArr['total_tax_amount'];
+			$body = $this->getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amount,$m,$l,$orderdetails,$mypaymentlink,$to);
+			$r = sendEmail($to,$from,$subject,$body,$cc);
 			if($billArr['isPartner'] == 1){
 				$body = '';
-				$to ='pra0408@gmail.com'.';trushali.bahira@mrhomecare.in';
+				//$to ='pra0408@gmail.com'.';trushali.bahira@mrhomecare.in;trushali1088@gmail.com';
+				//$to = $billArr['billing_email2'];
+				$to = 'accounts@mrhomecare.in';
+				//$to = 'trushali1088@gmail.com';
+		
+				if(count($memcache_partneremails[$billArr['billing_name2']])>0){
+					if($memcache_partneremails[$billArr['billing_name2']][$billArr['bill_city']]){
+						$cc = $memcache_partneremails[$billArr['billing_name2']][$billArr['bill_city']];
+					}
+				}else{
+					$cc = 'others.accounts@mrhomecare.in';
+				}
 				$from = 'Mr Home care-'.INVOICE_FROM_EMAILID;
 				$total_amount =0;
 				$taxArr = $this->getTax($billArr['billing_amount2']);
-				$b_name=$billArr['billing_name2'];
+				$b_name=$memcache_leadsource[$billArr['billing_name2']];
 				$b_add=$billArr['billing_address2'];
-				$b_mobile=$result[0]['client_mobile_no'];
+				$b_mobile=$userdetails[$singleOrder['mhcclient_id']]['client_mobile_no'];
 				$b_amt=$billArr['billing_amount2'];
 				$taxHtml = $taxArr['taxHtml'];
-				$total_amt = $billArr['billing_amount2'] - $taxArr['total_tax_amount'];
-				$body = $this->getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amt,$m,$l);
-				$r = sendEmail($to,$from,$subject,$body);
+				$total_amt = $singleOrder['taxed_cost'] - $taxArr['total_tax_amount'];
+				$body = $this->getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amt,$m,$l,$orderdetails,$mypaymentlink,$to);
+				$r = sendEmail($to,$from,$subject,$body,$cc);
 			}
 			if($r)
 				return true;
@@ -379,6 +594,8 @@ class Order {
 		$memcache = new Memcache;
 		$memcache->connect('localhost', 11211) or die ("Could not connect");
 		$taxes = $memcache->get('taxes');
+		$totalTax = $memcache->get('total_tax');
+		
 		if(!$taxes)
 		$taxes = $this -> db -> getDataFromTable($whereArr, 'tax', "tax.name,tax.value", "", '', false);
 		
@@ -386,10 +603,12 @@ class Order {
 		$total_tax_amount = 0;
 		$taxHtml = '';
 		if($taxes):
+			$cal_total_tax = $bill_amount/(1+$totalTax/100);
+			$cal_total_tax = floor($bill_amount-$cal_total_tax);
 			foreach ($taxes as $tax) {
 				$tax_breakup = '';
 				$tax_breakup = $tax['name']. ' @ '.$tax['value'].' % '.date('Y').'-'.(date('y')+ 1).'<br />';
-				$tax_amount = ($bill_amount*$tax['value'])/100;
+				$tax_amount = round($cal_total_tax*($tax['value']/$totalTax));
 				$total_tax_amount = $total_tax_amount + $tax_amount;
 				$taxHtml .= '<tr>
 				<td align="center">
@@ -397,14 +616,16 @@ class Order {
 				<td align="left">'.$tax_breakup.'
 				</td>
 				<td></td><td></td>
-				<td align="center">'.$tax_amount.'</td>
+				<td align="center">'.($tax_amount).'</td>
 				</tr>';
 			}
 		endif;
 		$taxArr = array('taxHtml'=>$taxHtml,'total_tax_amount'=>$total_tax_amount);
 		return $taxArr;
 	}
-	function getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amt,$m,$l){
+	function getEmailBody($b_name,$b_add,$b_mobile,$b_amt,$invoice_id,$services,$taxHtml,$total_amt,$m,$l,$orderdetails='',$mypaymentlink='',$to=''){
+			$mypaymentlink = $this->createInstamojoPayment($services,$b_amt,$to);
+
 			$body  = '<div bgcolor="#f6f8f1"><table cellspacing="0" cellpadding="0" border="1" align="center" style="width:80%">
 			<tbody>
 			<tr>
@@ -506,12 +727,12 @@ class Order {
 			<b>'.$services.'</b>
 			</td>
 			</tr>
-			<tr>
+			<!--tr>
 			<td>Date:</td>
 			<td>
 			<b>'.date('d M, Y',strtotime(date('Y-m-d'))).'</b>
 			</td>
-			</tr>
+			</tr-->
 			<tr>
 			</tr>
 			</tbody></table>
@@ -582,7 +803,7 @@ class Order {
 			</td>
 			<td>
 			<p style="border:none;float:center;font-weight:700;text-align:center">
-			'.$b_amt.'
+			Rs. '.$b_amt.'
 			</p>
 			</td>
 			</tr>
@@ -600,7 +821,7 @@ class Order {
 			<tr>
 			<td colspan="2">Comapny PAN No:AAJCM6704H</td>
 			<td align="right" colspan="3">
-			<a target="_blank" style="padding:1%;border:1px solid #fec11f;color:white;background-color:#fec11f;text-decoration:none" href="'.SITEPATH."/payment/paynow.php?m=".$m."&l=".$l.'">
+			<a target="_blank" style="padding:1%;border:1px solid #fec11f;color:black;background-color:#fec11f;text-decoration:none" href="'.$mypaymentlink ."?m=".$m."&l=".$l."&s=".$orderdetails.'">
 			Click to pay online
 			</a>
 			</td>
@@ -620,7 +841,7 @@ class Order {
 			</tr>
 			</tbody>
 			</table>
-			<div class="" style="margin-left:20%;width:50%;">
+			<div class="" style="margin-left:5%;width:95%">
 			  <p style=" text-decoration: underline">Declaration</p>
 			  <p> We declare that this invoice shows the actual price of the goods described and that al the particuars are true and correct</p>
 			</div>
@@ -683,5 +904,36 @@ class Order {
 		$this->logs->writelogs('remarks',"Update: ".json_encode($response));
 		return $response;
 	}
+
+	function createInstamojoPayment($service,$amount,$email){
+    	$api = new Instamojo\Instamojo('2b8c809c62df5657174b0ef8cf4c2213', 'f8691d38b1291e934398d02c39608917'); //live url
+    	//$api = new Instamojo\Instamojo('36aaaf1c7fcfd3b42e3cae8c357a18e3', '03da5987850348298e6646c2dec37f52'); //testlink
+		$paymentUrl = '';
+
+		try {
+   
+		$response = $api->paymentRequestCreate(array(
+        "purpose" => $service,
+        "amount" => $amount,
+        "send_email" => false,
+        "email" => $email,
+        "redirect_url" => "",
+        "webhook" => SITEPATH."/payment/instapayu.php"
+        ));
+
+		 //print_r($response);
+    // $debug->debug(implode(" ",$response));
+	$paymentUrl = $response['longurl'];
+	//print_r($paymentUrl);
+		
+	
+	return  $paymentUrl;
+	}
+		catch (Exception $e) {
+		    print('Error: ' . $e->getMessage());
+		    exit();
+		    // return  $e->getMessage();
+		}
+    }
 }
 ?>

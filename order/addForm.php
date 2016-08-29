@@ -5,6 +5,8 @@ if($order_id > 0){
 }
 $leadsources = $memcache->get('leadsource');
 $cities = $memcache->get('city');
+$t = $modelObj->getTax(3000);
+print_r($t);
 ?>
 	<div class="portlet box green">
 	  <div class="portlet-title">
@@ -88,7 +90,7 @@ $cities = $memcache->get('city');
 					 <div class="control-group">
 						<label class="control-label">Email Id<span class="required">*</span></label>
 							<div class="controls">
-							   <input type="text" id="email_id" name="email_id" value="<?php echo isset($data)?$data['email_id']:''; ?>" class="m-wrap span7">
+							   <input type="email" id="email_id" name="email_id" value="<?php echo isset($data)?$data['email_id']:''; ?>" class="m-wrap span7">
 							   
 								 <div id="email_error"class=" alert alert-danger" style="display:none" >
 	 						   Please Enter Correct Email Id
@@ -291,7 +293,7 @@ $cities = $memcache->get('city');
 					 <div class="control-group">
 						<label class="control-label">Client Billing Amount</label>
 						<div class="controls">
-							<input type="text" id="taxed_cost" name="taxed_cost" value="<?php echo isset($data)?$data['taxed_cost']:''; ?>" class="m-wrap span12">
+							<input type="text" id="client_payment_expected" name="client_payment_expected" value="<?php echo isset($data)?$data['client_payment_expected']:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span>
 						</div>
 					 </div>
@@ -327,7 +329,7 @@ $cities = $memcache->get('city');
 					 <div class="control-group">
 						<label class="control-label">Partner Billing Name</label>
 						<div class="controls">
-							<input type="text" id="billing_name2" name="billing_name2" value="<?php echo isset($data)?$data['billing_name2']:''; ?>" class="m-wrap span12">
+							<input type="text" id="billing_name2" name="billing_name2" value="<?php echo isset($data)?$leadsources[$data['billing_name2']]:''; ?>" class="m-wrap span12">
 							<span class="help-block" id="efburl_error"> </span>
 						</div>
 					 </div>

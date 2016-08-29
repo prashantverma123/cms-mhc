@@ -5,13 +5,14 @@ $chkLogin = $session->get('AdminLogin');
 $userId = $session->get('UserId');
 $cities = $memcache->get('city');
 $designation = $memcache->get('designation');
-
 ?>
 <div class="portlet-body">
 	<form method="get" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
-	<select name="sort"><option value="asc" <?php if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>Ascending</option><option value="desc" <?php if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>Descending</option></select>
+	<!-- <select name="sort"><option value="asc" <?php //if($_GET['sort'] == 'acs'): echo 'selected';else: ''; endif; ?>>Ascending</option><option value="desc" <?php //if($_GET['sort'] == 'desc'): echo 'selected';else: ''; endif; ?>>Descending</option></select> -->
+	<label class="checkbox-inline" style="float:left;width:94px;margin-top:8px;"><input tabindex="1" type="radio" name="sort" value="asc" <?php if($_GET['sort'] == 'asc'): echo "checked"; else: ""; endif; ?>>Ascending</label>
+	<label class="checkbox-inline" style="float:left;width:104px;margin-top:8px;"><input tabindex="1" type="radio" name="sort" value="desc" <?php if($_GET['sort'] == 'desc'): echo "checked"; else: ""; endif; ?>>Descending</label>
 		<input type="text" name="filter" value="<?php if($_GET['filter'] != ''): echo $_GET['filter']; else: ''; endif; ?>" placeholder="Filter" />
-		<!--input type="hidden" name="p" value="<?php echo $_GET['p']; ?>" /-->
+		<!--input type="hidden" name="p" value="<?php //echo $_GET['p']; ?>" /-->
 	<button type="submit">Submit</button>
 	</form>
 	<div role="grid" class="dataTables_wrapper form-inline" id="sample_3_wrapper">
@@ -40,9 +41,10 @@ $designation = $memcache->get('designation');
 		   		$searchData['filter'] = $_GET['filter'];
 		   		$sort = $_GET['sort'];
 		   }
-		   $recperpage=PER_PAGE_ROWS;
-			 $filterData = array('city' =>$_SESSION['tmobi']['city']);
-			$result_data = $modelObj->getListingData('name,email', $page,$recperpage,$searchData,$filterData,'',$sort);
+		    $recperpage=PER_PAGE_ROWS;
+			$filterData = array('city' =>$_SESSION['tmobi']['city']);
+			 
+			$result_data = $modelObj->getListingData('name,email,city', $page,$recperpage,$searchData,$filterData,'',$sort);
 
 			foreach ($result_data['rows'] as $j=>$key){
 				// if($key['parent_id'] == 0){
